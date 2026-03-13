@@ -906,6 +906,23 @@ document.querySelectorAll('.train-tab').forEach(tab => {
     tab.addEventListener('click', () => renderTraining(tab.dataset.day));
 });
 
+// ========== THEME TOGGLE ==========
+const themeToggle = document.getElementById('theme-toggle');
+let currentTheme = localStorage.getItem('ariseTheme') || 'dark';
+
+function setTheme(theme) {
+    currentTheme = theme;
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('ariseTheme', theme);
+    themeToggle.textContent = theme === 'light' ? '☀️' : '🌙';
+}
+
+setTheme(currentTheme);
+
+themeToggle.addEventListener('click', () => {
+    setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+});
+
 // ========== EXPORT & RESET ==========
 document.getElementById('btn-export').addEventListener('click', () => {
     const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
