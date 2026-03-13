@@ -197,9 +197,14 @@ function calcStreak() {
 }
 
 function calcDaysInSystem() {
-    const start = new Date(data.startDate);
-    const now = new Date();
-    return Math.max(1, Math.floor((now - start) / 86400000) + 1);
+    const today = getToday();
+    const start = data.startDate || today;
+    // Parse as local dates to avoid timezone issues
+    const [sy, sm, sd] = start.split('-').map(Number);
+    const [ty, tm, td] = today.split('-').map(Number);
+    const startDate = new Date(sy, sm - 1, sd);
+    const todayDate = new Date(ty, tm - 1, td);
+    return Math.max(1, Math.round((todayDate - startDate) / 86400000) + 1);
 }
 
 function getWeekNumber() {
@@ -647,7 +652,12 @@ if ('serviceWorker' in navigator) {
 data = loadData();
 
 function init() {
-    if (!data.startDate) { data.startDate = getToday(); saveData(); }
+    const today = getToday();
+    // Fix: if startDate is missing or in the future, reset it
+    if (!data.startDate || data.startDate > today) {
+        data.startDate = today;
+        saveData();
+    }
     updateDashboard();
     renderQuests();
     updateQuestStates();

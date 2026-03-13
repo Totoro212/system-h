@@ -1,7 +1,7 @@
 {
-    "name": "Система Охотника",
-    "short_name": "Охотник",
-    "description": "Система прокачки в стиле Solo Leveling",
+    "name": "ARISE",
+    "short_name": "ARISE",
+    "description": "Level up system",
     "start_url": "./",
     "scope": "./",
     "display": "standalone",
