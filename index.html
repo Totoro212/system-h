@@ -95,14 +95,24 @@
             <button class="btn-add hidden" id="btn-add-bonus">+ Добавить бонусный</button>
         </section>
 
-        <!-- KEYS / MILESTONES -->
-        <section id="page-keys" class="page">
+        <!-- CODEX -->
+        <section id="page-codex" class="page">
             <div class="header">
-                <h1>🗝️ КЛЮЧИ</h1>
-                <button class="btn-edit-toggle" id="btn-edit-keys">✏️</button>
+                <h1>📜 КОДЕКС</h1>
+                <button class="btn-edit-toggle" id="btn-edit-habits">✏️</button>
             </div>
-            <div class="keys-list" id="keys-list"></div>
-            <button class="btn-add hidden" id="btn-add-key">+ Добавить ключ</button>
+
+            <div class="section-title-row">
+                <span class="section-title">ЕЖЕДНЕВНЫЕ ПРИВЫЧКИ</span>
+                <span class="habit-counter" id="habit-counter">0/0</span>
+            </div>
+            <div class="habit-list" id="habit-list"></div>
+            <button class="btn-add hidden" id="btn-add-habit">+ Добавить привычку</button>
+
+            <div class="section-title-row" style="margin-top:24px">
+                <span class="section-title">СВОД ПРАВИЛ</span>
+            </div>
+            <div id="codex-reference"></div>
         </section>
 
         <!-- TRAINING -->
@@ -120,7 +130,7 @@
             <div id="train-content"></div>
         </section>
 
-        <!-- STATS + HISTORY -->
+        <!-- STATS + HISTORY + KEYS -->
         <section id="page-stats" class="page">
             <div class="header">
                 <h1>📊 СТАТЫ</h1>
@@ -140,6 +150,9 @@
                     <span class="total-value" id="stats-total-days">0</span>
                 </div>
             </div>
+
+            <h2 class="section-title" style="margin: 20px 0 12px">🗝️ КЛЮЧИ</h2>
+            <div class="keys-list" id="keys-list"></div>
 
             <h2 class="section-title" style="margin: 20px 0 12px">📅 ИСТОРИЯ</h2>
             <div class="month-nav" style="margin-bottom: 12px">
@@ -179,13 +192,13 @@
                 <span class="nav-icon">⚔️</span>
                 <span class="nav-label">Квесты</span>
             </button>
-            <button class="nav-btn" data-page="keys">
-                <span class="nav-icon">🗝️</span>
-                <span class="nav-label">Ключи</span>
-            </button>
             <button class="nav-btn" data-page="training">
                 <span class="nav-icon">💪</span>
                 <span class="nav-label">Трейн</span>
+            </button>
+            <button class="nav-btn" data-page="codex">
+                <span class="nav-icon">📜</span>
+                <span class="nav-label">Кодекс</span>
             </button>
             <button class="nav-btn" data-page="stats">
                 <span class="nav-icon">📊</span>

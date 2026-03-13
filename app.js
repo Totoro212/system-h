@@ -450,9 +450,9 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 function refreshPage(page) {
     if (page === 'dashboard') updateDashboard();
     if (page === 'quests') { renderQuests(); updateQuestStates(); }
-    if (page === 'keys') renderKeys();
-    if (page === 'training') renderTraining('push');
-    if (page === 'stats') { updateStats(); updateCalendar(); }
+    if (page === 'codex') { renderHabits(); renderCodexReference(); }
+    if (page === 'training') renderTraining(currentTrainDay || 'push');
+    if (page === 'stats') { updateStats(); renderKeys(); updateCalendar(); }
 }
 
 // ========== DASHBOARD ==========
@@ -715,10 +715,6 @@ function renderKeys() {
         `;
         container.appendChild(div);
     });
-
-    // Hide edit button for keys since they're auto
-    document.getElementById('btn-edit-keys').style.display = 'none';
-    document.getElementById('btn-add-key').style.display = 'none';
 }
 
 // ========== STATS ==========
@@ -807,6 +803,225 @@ function showPointsPopup(text) {
     p.textContent = text;
     document.body.appendChild(p);
     setTimeout(() => p.remove(), 1000);
+}
+
+// ========== CODEX ==========
+const DEFAULT_HABITS = [
+    { id: 'bed', name: '🛏️ Заправить кровать' },
+    { id: 'hygiene', name: '🧼 Гигиена (душ, зубы, лицо)' },
+    { id: 'read', name: '📖 20 мин чтения' },
+    { id: 'readaloud', name: '🗣️ 10 мин чтения вслух' },
+    { id: 'noscreen', name: '📵 Без экрана за 30 мин до сна' },
+    { id: 'meal', name: '🍳 Нормальный приём пищи' },
+    { id: 'tidy', name: '🧹 Порядок в комнате' }
+];
+
+const CODEX_REFERENCE = [
+    {
+        icon: '👔', title: 'Внешний вид',
+        rules: [
+            'Одежда по размеру — не мешком, не в обтяжку',
+            'Без принтов и кричащих логотипов — однотон = взрослый вид',
+            'Базовые цвета: чёрный, белый, серый, тёмно-синий, хаки',
+            'Обувь чистая ВСЕГДА — люди смотрят на обувь',
+            'Гладь рубашки. Стирай кроссовки. Следи за состоянием вещей',
+            'Аксессуары: меньше = лучше. Часы > браслеты и цепочки'
+        ]
+    },
+    {
+        icon: '🗣️', title: 'Речь',
+        rules: [
+            'Говори медленнее — быстрая речь = нервозность',
+            'Убери слова-паразиты: «ну», «типа», «короче», «как бы»',
+            'Не оправдывайся: «Я считаю, что...» вместо «Ну, я просто подумал...»',
+            'Не извиняйся без причины: «У меня вопрос» вместо «Извини, можно спросить?»',
+            'Читай вслух 10 мин/день — тренировка дикции и словарного запаса',
+            'Задавай вопросы, а не заполняй тишину',
+            'Не перебивай. Не жалуйся. Не матерись через слово'
+        ]
+    },
+    {
+        icon: '🏋️', title: 'Тело и здоровье',
+        rules: [
+            'Душ каждый день, дезодорант — обязательно',
+            'Чистые ногти, зубы 2 раза в день, уход за кожей',
+            'Стрижка каждые 3–4 недели',
+            'Осанка: плечи назад, грудь вперёд, подбородок параллельно полу',
+            'Стой у стены 2 мин/день (затылок, лопатки, ягодицы, пятки)',
+            'Белок каждый приём пищи. Вода 2+ литра. Минимум сахара',
+            'Сон 7–9 часов. Ложись и вставай в одно время'
+        ]
+    },
+    {
+        icon: '🧠', title: 'Интеллект',
+        rules: [
+            'Читай минимум 20 мин/день — нон-фикшн + художественная',
+            'Формируй СВОЁ мнение, не повторяй чужие из тиктока',
+            'Каждый день 30 мин осознанной практики кода',
+            'Критическое мышление: «Где доказательства? Кому выгодно?»',
+            'Соцсети не больше 30 мин/день',
+            'Скажи «Я не знаю» когда не знаешь — это зрелость'
+        ]
+    },
+    {
+        icon: '💰', title: 'Финансы',
+        rules: [
+            'Трать меньше, чем зарабатываешь. Всегда',
+            'Не покупай вещи, чтобы впечатлить людей',
+            'Инвестируй в навыки, не в вещи',
+            'Откладывай 10% от любого дохода',
+            'Программирование — твоё оружие для заработка. Прокачивай'
+        ]
+    },
+    {
+        icon: '🤝', title: 'Социалка',
+        rules: [
+            'Смотри в глаза при разговоре — мягко и уверенно',
+            'Запоминай имена. Повтори при знакомстве: «Приятно, Максим»',
+            'Будь пунктуальным — приходи на 5 мин раньше',
+            'Помогай без ожидания ответа',
+            'Не сплетничай — если обсуждаешь за спиной, все это знают',
+            'Благодари конкретно: «Спасибо, что помог с этим»',
+            'Слово = закон. Сказал — сделай'
+        ]
+    },
+    {
+        icon: '🏠', title: 'Быт',
+        rules: [
+            'Заправляй кровать каждое утро (30 сек → тон дня)',
+            'Не копи грязную посуду. Убирай раз в неделю',
+            'Выброси хлам: не используешь 6 мес → не нужно',
+            'Проветривай комнату. Приятный запах',
+            'Умей готовить 5 блюд: яичница, паста, рис+мясо, салат, суп'
+        ]
+    },
+    {
+        icon: '⚔️', title: 'Дисциплина',
+        rules: [
+            'Делай то, что нужно, даже когда не хочется',
+            'Признавай ошибки быстро и без оправданий',
+            'Не жалуйся — решай проблему или прими её',
+            'Контролируй реакции — ты не контролируешь мир, но контролируешь себя',
+            'Будь спокоен под давлением — это отличает лидера от толпы',
+            'Каждый день на 1% лучше, чем вчера'
+        ]
+    }
+];
+
+// Habits storage (separate from main data)
+function loadHabits() {
+    const saved = localStorage.getItem('ariseHabits');
+    if (saved) {
+        const h = JSON.parse(saved);
+        if (!h.list) h.list = DEFAULT_HABITS;
+        if (!h.completed) h.completed = {};
+        return h;
+    }
+    return { list: DEFAULT_HABITS, completed: {} };
+}
+
+function saveHabits() {
+    localStorage.setItem('ariseHabits', JSON.stringify(habits));
+}
+
+let habits = loadHabits();
+let habitEditMode = false;
+
+function getHabitsToday() {
+    const today = getToday();
+    if (!habits.completed[today]) habits.completed[today] = [];
+    return habits.completed[today];
+}
+
+function renderHabits() {
+    const container = document.getElementById('habit-list');
+    const today = getToday();
+    const completedToday = getHabitsToday();
+    const total = habits.list.length;
+    const done = completedToday.length;
+
+    document.getElementById('habit-counter').textContent = `${done}/${total}`;
+
+    let html = '';
+    habits.list.forEach(h => {
+        const isDone = completedToday.includes(h.id);
+        html += `
+        <div class="habit-item${isDone ? ' completed' : ''}${habitEditMode ? ' editing' : ''}" data-id="${h.id}">
+            <div class="habit-check${isDone ? ' checked' : ''}" onclick="toggleHabit('${h.id}')"></div>
+            <span class="habit-name${isDone ? ' done' : ''}">${h.name}</span>
+            ${habitEditMode ? `<button class="btn-habit-delete" onclick="deleteHabit('${h.id}')">✕</button>` : ''}
+        </div>`;
+    });
+    container.innerHTML = html;
+
+    // WIS bonus check
+    if (done === total && total > 0) {
+        const bonusKey = `habitBonus_${today}`;
+        if (!localStorage.getItem(bonusKey)) {
+            data.stats.wis = (data.stats.wis || 0) + 1;
+            data.totalPoints += 1;
+            saveData();
+            localStorage.setItem(bonusKey, '1');
+            showPointsPopup('+1 WIS (привычки)');
+        }
+    }
+
+    // Show/hide add button
+    document.getElementById('btn-add-habit').classList.toggle('hidden', !habitEditMode);
+}
+
+function toggleHabit(id) {
+    if (habitEditMode) return;
+    const today = getToday();
+    const completed = getHabitsToday();
+    const idx = completed.indexOf(id);
+    if (idx >= 0) { completed.splice(idx, 1); }
+    else { completed.push(id); }
+    habits.completed[today] = completed;
+    saveHabits();
+    renderHabits();
+}
+
+function deleteHabit(id) {
+    habits.list = habits.list.filter(h => h.id !== id);
+    saveHabits();
+    renderHabits();
+}
+
+// Edit mode toggle
+document.getElementById('btn-edit-habits').addEventListener('click', () => {
+    habitEditMode = !habitEditMode;
+    document.getElementById('btn-edit-habits').classList.toggle('active', habitEditMode);
+    renderHabits();
+});
+
+// Add habit
+document.getElementById('btn-add-habit').addEventListener('click', () => {
+    const name = prompt('Название новой привычки (с эмодзи):');
+    if (!name || !name.trim()) return;
+    habits.list.push({ id: 'h' + Date.now().toString(36), name: name.trim() });
+    saveHabits();
+    renderHabits();
+});
+
+// Reference rendering
+function renderCodexReference() {
+    const container = document.getElementById('codex-reference');
+    let html = '';
+    CODEX_REFERENCE.forEach(cat => {
+        html += `
+        <div class="codex-card" onclick="this.classList.toggle('expanded')">
+            <div class="codex-card-header">
+                <span class="codex-card-icon">${cat.icon}</span>
+                <span class="codex-card-title">${cat.title}</span>
+                <span class="codex-card-expand">▼</span>
+            </div>
+            <div class="codex-card-body">
+                ${cat.rules.map(r => `<div class="codex-rule">• ${r}</div>`).join('')}
+            </div>
+        </div>`;
+    });
+    container.innerHTML = html;
 }
 
 // ========== TRAINING ==========
