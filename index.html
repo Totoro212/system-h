@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0a0a1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>Система Охотника</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app">
+        <!-- DASHBOARD -->
+        <section id="page-dashboard" class="page active">
+            <div class="header">
+                <h1 class="logo">⚔️ СИСТЕМА ОХОТНИКА</h1>
+                <div class="day-counter" id="day-counter">ДЕНЬ 1</div>
+            </div>
+
+            <div class="rank-card">
+                <div class="rank-glow"></div>
+                <div class="rank-label">ТЕКУЩИЙ РАНГ</div>
+                <div class="rank-name" id="rank-name">E-РАНГ</div>
+                <div class="rank-title" id="rank-title">Новичок</div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" id="rank-progress"></div>
+                    <span class="progress-label" id="progress-label">0 / 100</span>
+                </div>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">🔥</div>
+                    <div class="stat-value" id="total-points">0</div>
+                    <div class="stat-label">Очки</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-value" id="streak-count">0</div>
+                    <div class="stat-label">Streak</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">✅</div>
+                    <div class="stat-value" id="today-done">0/5</div>
+                    <div class="stat-label">Сегодня</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-icon">🗝️</div>
+                    <div class="stat-value" id="keys-unlocked">0/7</div>
+                    <div class="stat-label">Ключи</div>
+                </div>
+            </div>
+
+            <div id="penalty-banner" class="penalty-banner hidden">
+                <div class="penalty-icon">☠️</div>
+                <div class="penalty-text">
+                    <strong>ЗОНА ШТРАФА</strong>
+                    <p>Выполни штраф, чтобы продолжить</p>
+                </div>
+                <button class="btn-penalty" id="btn-clear-penalty">Отработал</button>
+            </div>
+
+            <div class="weekly-rule-card">
+                <div class="rule-header">🎯 ПРАВИЛО НЕДЕЛИ</div>
+                <div class="rule-text" id="weekly-rule">Приходи вовремя. Всегда.</div>
+            </div>
+        </section>
+
+        <!-- QUESTS -->
+        <section id="page-quests" class="page">
+            <div class="header">
+                <h1>⚔️ КВЕСТЫ</h1>
+                <div class="quest-date" id="quest-date"></div>
+            </div>
+
+            <div class="section-title-row">
+                <h2 class="section-title">📋 Ежедневные квесты</h2>
+                <button class="btn-edit-toggle" id="btn-edit-main">✏️</button>
+            </div>
+            <div class="quest-list" id="main-quests"></div>
+            <button class="btn-add hidden" id="btn-add-main">+ Добавить квест</button>
+
+            <div class="section-title-row">
+                <h2 class="section-title">⭐ Бонусные квесты</h2>
+                <button class="btn-edit-toggle" id="btn-edit-bonus">✏️</button>
+            </div>
+            <div class="quest-list" id="bonus-quests"></div>
+            <button class="btn-add hidden" id="btn-add-bonus">+ Добавить бонусный</button>
+        </section>
+
+        <!-- KEYS / MILESTONES -->
+        <section id="page-keys" class="page">
+            <div class="header">
+                <h1>🗝️ КЛЮЧИ</h1>
+                <button class="btn-edit-toggle" id="btn-edit-keys">✏️</button>
+            </div>
+            <div class="keys-list" id="keys-list"></div>
+            <button class="btn-add hidden" id="btn-add-key">+ Добавить ключ</button>
+        </section>
+
+        <!-- STATS -->
+        <section id="page-stats" class="page">
+            <div class="header">
+                <h1>📊 СТАТЫ</h1>
+            </div>
+            <div class="stats-bars" id="stats-bars"></div>
+            <div class="total-stats-card">
+                <div class="total-stat">
+                    <span class="total-label">Всего очков</span>
+                    <span class="total-value" id="stats-total-points">0</span>
+                </div>
+                <div class="total-stat">
+                    <span class="total-label">Лучший streak</span>
+                    <span class="total-value" id="stats-best-streak">0</span>
+                </div>
+                <div class="total-stat">
+                    <span class="total-label">Дней в системе</span>
+                    <span class="total-value" id="stats-total-days">0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- HISTORY -->
+        <section id="page-history" class="page">
+            <div class="header">
+                <h1>📅 ИСТОРИЯ</h1>
+                <div class="month-nav">
+                    <button class="month-btn" id="prev-month">◀</button>
+                    <span id="month-label"></span>
+                    <button class="month-btn" id="next-month">▶</button>
+                </div>
+            </div>
+            <div class="calendar-grid">
+                <div class="cal-header">Пн</div>
+                <div class="cal-header">Вт</div>
+                <div class="cal-header">Ср</div>
+                <div class="cal-header">Чт</div>
+                <div class="cal-header">Пт</div>
+                <div class="cal-header">Сб</div>
+                <div class="cal-header">Вс</div>
+            </div>
+            <div class="calendar-days" id="calendar-days"></div>
+            <div class="calendar-legend">
+                <span class="legend-item"><span class="legend-dot green"></span> Все квесты</span>
+                <span class="legend-item"><span class="legend-dot yellow"></span> Частично</span>
+                <span class="legend-item"><span class="legend-dot red"></span> Пропуск</span>
+            </div>
+        </section>
+
+        <!-- BOTTOM NAV -->
+        <nav class="bottom-nav">
+            <button class="nav-btn active" data-page="dashboard">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Главная</span>
+            </button>
+            <button class="nav-btn" data-page="quests">
+                <span class="nav-icon">⚔️</span>
+                <span class="nav-label">Квесты</span>
+            </button>
+            <button class="nav-btn" data-page="keys">
+                <span class="nav-icon">🗝️</span>
+                <span class="nav-label">Ключи</span>
+            </button>
+            <button class="nav-btn" data-page="stats">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Статы</span>
+            </button>
+            <button class="nav-btn" data-page="history">
+                <span class="nav-icon">📅</span>
+                <span class="nav-label">История</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- Level Up Modal -->
+    <div class="modal-overlay hidden" id="modal-overlay">
+        <div class="modal" id="level-up-modal">
+            <div class="modal-glow"></div>
+            <div class="modal-title" id="modal-title">LEVEL UP!</div>
+            <div class="modal-content" id="modal-content"></div>
+            <button class="modal-btn" id="modal-close">Принять</button>
+        </div>
+    </div>
+
+    <!-- Edit Quest Modal -->
+    <div class="modal-overlay hidden" id="edit-modal-overlay">
+        <div class="modal edit-modal">
+            <div class="modal-glow"></div>
+            <div class="modal-title" id="edit-modal-title">Редактировать</div>
+            <div class="edit-form">
+                <label class="edit-label">Иконка + Название
+                    <input type="text" class="edit-input" id="edit-name" placeholder="🏋️ Тренировка">
+                </label>
+                <label class="edit-label">Описание
+                    <input type="text" class="edit-input" id="edit-desc" placeholder="60 мин — силовая или кардио">
+                </label>
+                <label class="edit-label" id="edit-stat-label">Стат (STR, END, INT, WIS, DSC)
+                    <select class="edit-input edit-select" id="edit-stat">
+                        <option value="str">STR — Сила</option>
+                        <option value="end">END — Выносливость</option>
+                        <option value="int">INT — Интеллект</option>
+                        <option value="wis">WIS — Мудрость</option>
+                        <option value="dsc">DSC — Дисциплина</option>
+                    </select>
+                </label>
+            </div>
+            <div class="edit-actions">
+                <button class="modal-btn btn-secondary" id="edit-cancel">Отмена</button>
+                <button class="modal-btn" id="edit-save">Сохранить</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
