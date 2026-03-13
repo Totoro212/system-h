@@ -600,6 +600,27 @@ function showPointsPopup(text) {
     setTimeout(() => p.remove(), 1000);
 }
 
+// ========== EXPORT & RESET ==========
+document.getElementById('btn-export').addEventListener('click', () => {
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `hunter-backup-${getToday()}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+    showModal('💾 ДАННЫЕ СОХРАНЕНЫ', 'Файл скачан.\nИспользуй его для восстановления прогресса если что-то случится.');
+});
+
+document.getElementById('btn-reset').addEventListener('click', () => {
+    if (!confirm('⚠️ Ты уверен? ВСЕ данные будут удалены: очки, статы, streak, история.')) return;
+    if (!confirm('☠️ ТОЧНО? Это действие НЕЛЬЗЯ отменить. Сначала сохрани данные если нужно.')) return;
+    localStorage.removeItem('hunterSystem');
+    location.reload();
+});
+
 // ========== PWA ==========
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});

@@ -1,10 +1,11 @@
-const CACHE_NAME = 'hunter-system-v2';
+const CACHE_NAME = 'hunter-system-v3';
 const ASSETS = [
     './',
     './index.html',
     './style.css',
     './app.js',
-    './manifest.json'
+    './manifest.json',
+    './icon-512.png'
 ];
 
 self.addEventListener('install', (event) => {
