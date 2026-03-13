@@ -102,7 +102,21 @@
             <button class="btn-add hidden" id="btn-add-key">+ Добавить ключ</button>
         </section>
 
-        <!-- STATS -->
+        <!-- TRAINING -->
+        <section id="page-training" class="page">
+            <div class="header">
+                <h1>💪 ТРЕНИРОВКА</h1>
+                <div class="quest-date" id="train-day-label">PUSH</div>
+            </div>
+            <div class="train-tabs">
+                <button class="train-tab active" data-day="push">PUSH</button>
+                <button class="train-tab" data-day="pull">PULL</button>
+                <button class="train-tab" data-day="legs">LEGS</button>
+            </div>
+            <div id="train-content"></div>
+        </section>
+
+        <!-- STATS + HISTORY -->
         <section id="page-stats" class="page">
             <div class="header">
                 <h1>📊 СТАТЫ</h1>
@@ -123,21 +137,11 @@
                 </div>
             </div>
 
-            <div class="data-actions">
-                <button class="btn-action btn-export" id="btn-export">💾 Сохранить данные</button>
-                <button class="btn-action btn-reset" id="btn-reset">🗑️ Сбросить</button>
-            </div>
-        </section>
-
-        <!-- HISTORY -->
-        <section id="page-history" class="page">
-            <div class="header">
-                <h1>📅 ИСТОРИЯ</h1>
-                <div class="month-nav">
-                    <button class="month-btn" id="prev-month">◀</button>
-                    <span id="month-label"></span>
-                    <button class="month-btn" id="next-month">▶</button>
-                </div>
+            <h2 class="section-title" style="margin: 20px 0 12px">📅 ИСТОРИЯ</h2>
+            <div class="month-nav" style="margin-bottom: 12px">
+                <button class="month-btn" id="prev-month">◀</button>
+                <span id="month-label"></span>
+                <button class="month-btn" id="next-month">▶</button>
             </div>
             <div class="calendar-grid">
                 <div class="cal-header">Пн</div>
@@ -153,6 +157,11 @@
                 <span class="legend-item"><span class="legend-dot green"></span> Все квесты</span>
                 <span class="legend-item"><span class="legend-dot yellow"></span> Частично</span>
                 <span class="legend-item"><span class="legend-dot red"></span> Пропуск</span>
+            </div>
+
+            <div class="data-actions" style="margin-top: 18px">
+                <button class="btn-action btn-export" id="btn-export">💾 Экспорт</button>
+                <button class="btn-action btn-reset" id="btn-reset">🗑️ Сброс</button>
             </div>
         </section>
 
@@ -170,13 +179,13 @@
                 <span class="nav-icon">🗝️</span>
                 <span class="nav-label">Ключи</span>
             </button>
+            <button class="nav-btn" data-page="training">
+                <span class="nav-icon">💪</span>
+                <span class="nav-label">Трейн</span>
+            </button>
             <button class="nav-btn" data-page="stats">
                 <span class="nav-icon">📊</span>
                 <span class="nav-label">Статы</span>
-            </button>
-            <button class="nav-btn" data-page="history">
-                <span class="nav-icon">📅</span>
-                <span class="nav-label">История</span>
             </button>
         </nav>
     </div>

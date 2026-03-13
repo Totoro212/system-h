@@ -102,6 +102,72 @@ const WEEKLY_RULES = [
     'Сравнивай себя только с собой вчерашним.'
 ];
 
+// ========== TRAINING PLAN ==========
+const TRAINING = {
+    push: {
+        title: 'PUSH — грудь, плечи, трицепс',
+        time: '~45 мин',
+        warmup: [
+            'Jumping jacks — 45 сек',
+            'Бег на месте — 45 сек',
+            'Вращения плечами — 10×',
+            'Круговые вращения руками — 10×',
+            '8–10 лёгких отжиманий от пола'
+        ],
+        exercises: [
+            { name: 'Отжимания на брусьях', sets: '4×13', rest: '90 сек', muscles: 'грудь, трицепс, дельта', tip: 'Наклон вперёд 30° = больше грудь' },
+            { name: 'Отжимания — широкий хват', sets: '3×14', rest: '60 сек', muscles: 'грудь (акцент), дельта', tip: 'Касайся грудью пола' },
+            { name: 'Алмазные отжимания', sets: '3×12', rest: '60 сек', muscles: 'трицепс (акцент), грудь', tip: 'Локти вдоль тела, полная амплитуда' },
+            { name: 'Пайк-отжимания', sets: '3×10', rest: '90 сек', muscles: 'дельта, трицепс', tip: 'Перевёрнутая V, голова к полу' },
+            { name: 'Разводки гантелей (бок)', sets: '3×14', rest: '45 сек', muscles: 'средний пучок дельт', tip: '7 кг, мизинец выше большого пальца' },
+            { name: '⭐ Жим гантелей стоя', sets: '3×10–12', rest: '60 сек', muscles: 'дельты, трицепс', tip: '7 кг, опционально' }
+        ],
+        cooldown: ['Растяжка груди — 30 сек', 'Растяжка трицепса — 30 сек', 'Растяжка плеч — 30 сек', 'Дыхание 4с вдох → 6с выдох × 5']
+    },
+    pull: {
+        title: 'PULL — спина, бицепс',
+        time: '~45 мин',
+        warmup: [
+            'Jumping jacks — 45 сек',
+            'Бег на месте — 45 сек',
+            'Вращения плечами — 10×',
+            'Вращения запястий — 10×',
+            '3–5 лёгких подтягиваний или вис 15 сек'
+        ],
+        exercises: [
+            { name: 'Подтягивания — широкий хват', sets: '4×9', rest: '120 сек', muscles: 'широчайшие, бицепс', tip: 'Тяни локти вниз и назад, 2–3с негатив' },
+            { name: 'Подтягивания — обратный хват', sets: '3×10', rest: '90 сек', muscles: 'бицепс (акцент), широчайшие', tip: 'Ладони к себе, свести лопатки' },
+            { name: 'Австралийские подтягивания', sets: '3×13', rest: '60 сек', muscles: 'средняя спина, задние дельты', tip: 'Тело прямое, грудь к перекладине' },
+            { name: 'Тяга гантели в наклоне', sets: '3×12 /руку', rest: '60 сек', muscles: 'широчайшие, бицепс', tip: '10–15 кг, задержка 2с вверху' },
+            { name: 'Обратные разводки', sets: '3×14', rest: '45 сек', muscles: 'задний пучок дельт', tip: '7 кг, наклон 45°, свести лопатки' },
+            { name: '⭐ Молотковые сгибания', sets: '3×12', rest: '60 сек', muscles: 'бицепс, брахиалис', tip: '7 кг, не раскачивай тело' },
+            { name: 'Вис на турнике', sets: '3×30 сек', rest: '—', muscles: 'хват, предплечья', tip: 'Декомпрессия позвоночника' }
+        ],
+        cooldown: ['Растяжка бицепса — 30 сек', 'Дыхание 4с вдох → 6с выдох × 5']
+    },
+    legs: {
+        title: 'LEGS + CORE — ноги, ягодицы, пресс',
+        time: '~45 мин',
+        warmup: [
+            'Jumping jacks — 45 сек',
+            'Бег на месте (колени высоко) — 45 сек',
+            'Вращения тазом — 10×',
+            'Вращения коленей — 10×',
+            '10 приседаний без веса'
+        ],
+        exercises: [
+            { name: 'Приседания (с гантелями)', sets: '4×13', rest: '90 сек', muscles: 'квадрицепсы, ягодицы', tip: '10–15 кг гоблет, 3с вниз, пауза 2с' },
+            { name: 'Выпады', sets: '3×14 /ногу', rest: '60 сек', muscles: 'ягодицы (акцент), квадрицепсы', tip: '10+ кг, колено почти касается пола' },
+            { name: 'Румынская тяга', sets: '3×12', rest: '90 сек', muscles: 'хамстринги, ягодицы', tip: '10–15 кг, спина ПРЯМАЯ' },
+            { name: 'Ягодичный мостик', sets: '3×18', rest: '60 сек', muscles: 'ягодицы', tip: 'Пауза 3с вверху, 15+ кг на таз' },
+            { name: 'Подъём ног в висе', sets: '3×13', rest: '60 сек', muscles: 'пресс, косые', tip: 'Не раскачивайся!' },
+            { name: 'Планка', sets: '3×45 сек', rest: '45 сек', muscles: 'весь кор', tip: 'Тело — прямая линия' },
+            { name: '⭐ Подъёмы на носки', sets: '3×23', rest: '—', muscles: 'икры', tip: 'Полная амплитуда, опционально' }
+        ],
+        cooldown: ['Растяжка квадрицепса — 30 сек', 'Растяжка хамстрингов — 30 сек', 'Растяжка сгибателей бедра — 30 сек', 'Дыхание 4с вдох → 6с выдох × 5']
+    }
+};
+
 const STAT_NAMES = {
     str: 'STR — Сила',
     end: 'END — Выносливость',
@@ -199,7 +265,6 @@ function calcStreak() {
 function calcDaysInSystem() {
     const today = getToday();
     const start = data.startDate || today;
-    // Parse as local dates to avoid timezone issues
     const [sy, sm, sd] = start.split('-').map(Number);
     const [ty, tm, td] = today.split('-').map(Number);
     const startDate = new Date(sy, sm - 1, sd);
@@ -247,8 +312,8 @@ function refreshPage(page) {
     if (page === 'dashboard') updateDashboard();
     if (page === 'quests') { renderQuests(); updateQuestStates(); }
     if (page === 'keys') renderKeys();
-    if (page === 'stats') updateStats();
-    if (page === 'history') updateCalendar();
+    if (page === 'training') renderTraining('push');
+    if (page === 'stats') { updateStats(); updateCalendar(); }
 }
 
 // ========== DASHBOARD ==========
@@ -604,6 +669,60 @@ function showPointsPopup(text) {
     document.body.appendChild(p);
     setTimeout(() => p.remove(), 1000);
 }
+
+// ========== TRAINING ==========
+let currentTrainDay = 'push';
+
+function renderTraining(day) {
+    currentTrainDay = day;
+    const plan = TRAINING[day];
+    const container = document.getElementById('train-content');
+    document.getElementById('train-day-label').textContent = plan.time;
+
+    document.querySelectorAll('.train-tab').forEach(t => {
+        t.classList.toggle('active', t.dataset.day === day);
+    });
+
+    let html = `<div class="train-section">
+        <div class="train-section-title">🔥 РАЗМИНКА</div>
+        <div class="train-warmup">
+            ${plan.warmup.map(w => `<div class="warmup-item">${w}</div>`).join('')}
+        </div>
+    </div>`;
+
+    html += `<div class="train-section">
+        <div class="train-section-title">💪 УПРАЖНЕНИЯ</div>`;
+
+    plan.exercises.forEach((ex, i) => {
+        html += `
+        <div class="exercise-card">
+            <div class="ex-header">
+                <span class="ex-num">${i + 1}</span>
+                <span class="ex-name">${ex.name}</span>
+            </div>
+            <div class="ex-details">
+                <div class="ex-tag">${ex.sets}</div>
+                <div class="ex-tag rest">⏱ ${ex.rest}</div>
+            </div>
+            <div class="ex-muscles">${ex.muscles}</div>
+            <div class="ex-tip">💡 ${ex.tip}</div>
+        </div>`;
+    });
+    html += '</div>';
+
+    html += `<div class="train-section">
+        <div class="train-section-title">🧊 ЗАМИНКА</div>
+        <div class="train-warmup">
+            ${plan.cooldown.map(c => `<div class="warmup-item">${c}</div>`).join('')}
+        </div>
+    </div>`;
+
+    container.innerHTML = html;
+}
+
+document.querySelectorAll('.train-tab').forEach(tab => {
+    tab.addEventListener('click', () => renderTraining(tab.dataset.day));
+});
 
 // ========== EXPORT & RESET ==========
 document.getElementById('btn-export').addEventListener('click', () => {
