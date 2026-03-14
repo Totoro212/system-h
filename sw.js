@@ -1,4 +1,4 @@
-const CACHE_NAME = 'hunter-system-v3';
+const CACHE_NAME = 'hunter-system-v4';
 const ASSETS = [
     './',
     './index.html',
@@ -28,7 +28,7 @@ self.addEventListener('fetch', (event) => {
     event.respondWith(
         fetch(event.request)
             .then(networkResponse => {
-                // Cache the new response for future offline use
+                // Return fresh data from network and update cache quietly
                 const responseClone = networkResponse.clone();
                 caches.open(CACHE_NAME).then(cache => {
                     cache.put(event.request, responseClone);
@@ -36,7 +36,7 @@ self.addEventListener('fetch', (event) => {
                 return networkResponse;
             })
             .catch(() => {
-                // If network fails, try the cache
+                // If offline, try cache
                 return caches.match(event.request);
             })
     );
