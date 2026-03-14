@@ -18,7 +18,14 @@ const ALL_BONUS_QUESTS = [
     { id: 'journal', name: '📓 Дневник', desc: 'Записать мысли и планы', stat: 'wis' },
     { id: 'walk', name: '🚶 Прогулка', desc: '30 минут на свежем воздухе', stat: 'end' },
     { id: 'finance', name: '💰 Финансы', desc: 'Записать расходы за день', stat: 'dsc' },
-    { id: 'family', name: '📞 Близкие', desc: 'Позвонить/написать родным', stat: 'wis' }
+    { id: 'family', name: '📞 Близкие', desc: 'Позвонить/написать родным', stat: 'wis' },
+    { id: 'sunlight', name: '☀️ Солнечный свет', desc: '10 мин на улице до 10:00 (Кортизол)', stat: 'wis' },
+    { id: 'nsdr', name: '🧘 NSDR / Нидра', desc: '15 мин глубокой релаксации мозга', stat: 'end' },
+    { id: 'cold', name: '🧊 Ледяной душ', desc: '1-3 мин холода (Дофамин +250%)', stat: 'dsc' },
+    { id: 'zone2', name: '🫀 Кардио Зона 2', desc: '45+ мин монотонной работы', stat: 'end' },
+    { id: 'nodopamine', name: '📵 Утро без экранов', desc: '1 час без телефона после сна', stat: 'dsc' },
+    { id: 'focus90', name: '🎯 Спринт Фокуса', desc: '90 мин Deep Work без перерыва', stat: 'int' },
+    { id: 'cooldown', name: '🌬️ Сон в холоде', desc: 'Проветрить спальню до 18-19°C', stat: 'wis' }
 ];
 
 // ========== AUTO-UNLOCK KEYS ==========
@@ -84,6 +91,27 @@ const AUTO_KEYS = [
         check: (d) => d.totalPoints >= 2000,
         progress: (d) => `${Math.min(d.totalPoints, 2000)} / 2000`,
         reward: 200
+    },
+    {
+        name: '🌌 Легенда Системы',
+        desc: 'Достигни 5000 Очков Ранга',
+        check: (d) => d.totalPoints >= 5000,
+        progress: (d) => `${Math.min(data.totalPoints, 5000)} / 5000`,
+        reward: 500
+    },
+    {
+        name: '🔥 Титан Постоянства',
+        desc: 'Удерживай стрик в 100 дней',
+        check: (d) => d.bestStreak >= 100,
+        progress: (d) => `${Math.min(d.bestStreak, 100)} / 100`,
+        reward: 300
+    },
+    {
+        name: '🦾 Машина Тренировок',
+        desc: 'Выполни в сумме 100 силовых и кардио сессий',
+        check: (d) => ((d.stats.str || 0) + (d.stats.end || 0)) >= 100,
+        progress: (d) => `${Math.min((d.stats.str || 0) + (d.stats.end || 0), 100)} / 100`,
+        reward: 200
     }
 ];
 
@@ -105,10 +133,41 @@ const WEEKLY_CHALLENGES = [
     'Никакого фастфуда и снеков всю неделю',
     'Ложиться спать до 23:00',
     'Отказаться от кофеина после 14:00',
-    '15 минут медитации каждый день'
+    '15 минут медитации каждый день',
+    'Цифровой детокс (воскресенье без интернета)',
+    'Контрастный душ каждый день (мин. 30 сек)',
+    'Неделя абсолютной правды (не врать)',
+    'Неделя без единого матерного слова',
+    'Каждый день 10 000 шагов',
+    'Просыпаться в 6:00 всю неделю',
+    'Интервальное голодание (16/8) 7 дней'
 ];
 
 // ========== TRAINING PLAN ==========
+const PROGRAMS_CONFIG = {
+    ppl: { 
+        name: 'BASE (PPL)', 
+        note: '3-дневный базовый сплит (Push/Pull/Legs). Испольуется для построения фундамента и силы. Идеально для Фазы 1.',
+        days: ['push', 'pull', 'legs'] 
+    },
+    ul: { 
+        name: 'SPLIT (U/L)', 
+        note: '4-дневный сплит (Верх/Низ). Позволяет прорабатывать мышечные группы чаще. Для продвинутых пользователей.',
+        days: ['upper', 'lower'] 
+    },
+    extra: { 
+        name: 'SUPPORT', 
+        note: 'Дополнительные протоколы на кор и гибкость. Можно добавлять к основным тренировкам или делать в дни отдыха.',
+        days: ['core', 'flex'] 
+    },
+    pro: { 
+        name: 'ELITE', 
+        note: 'Высокоинтенсивные протоколы для экстремальной выносливости и силы. Требуют высокого уровня восстановления.',
+        days: ['titan', 'vo2max'],
+        unlock: 'str30'
+    }
+};
+
 const TRAINING = {
     push: {
         title: 'PUSH — грудь, плечи, трицепс',
@@ -339,6 +398,178 @@ const TRAINING = {
             }
         ],
         cooldown: ['Спокойная заминка (шаг или байк) — 5-10 минут (пока дыхание не станет полностью незаметным)']
+    },
+    upper: {
+        title: 'UPPER: Верхний Тяжелый Сплит',
+        time: '~50-60 мин',
+        note: 'Работа на плечевой пояс, спину и грудь. Программа для 4-дневного сплита (Upper/Lower). Фокус на прогрессивную перегрузку.',
+        warmup: {
+            items: ['Скакалка или гребля — 5 минут'],
+            mobility: ['Вращения плечами с резинкой (Dislocations) — 15 раз', 'Раскрытие грудного отдела на валике — 1 мин'],
+            specific: 'Отжимания: 2x15, легкие подтягивания (или тяга) 2x10'
+        },
+        exercises: [
+            {
+                name: 'Вертикальный жим стоя (OHP) ИЛИ Отжимания в стойке на руках у стены', sets: '4x6-8', rest: '2.5 мин',
+                muscles: 'Дельты, трицепс, кор',
+                weight: 'Тяжелый (Отказ за 1-2 повторения до конца)',
+                technique: ['Мощный жим вверх без помощи ног.', 'Пресс напряжен, ягодицы сжаты в замок, поясница не прогибается.', 'Плавно опускаем снаряд до уровня подбородка.'],
+                alt: 'Базовое движение для ширины плеч.'
+            },
+            {
+                name: 'Тяга штанги/гантелей в наклоне ИЛИ Австралийские подтягивания на низкой перекладине', sets: '4x8-10', rest: '2 мин',
+                muscles: 'Широчайшие, ромбовидные, бицепс',
+                weight: 'Рабочий вес',
+                technique: ['Спина прямая, угол наклона корпуса около 45 градусов.', 'Тянем локтями к поясу (не кистями к груди).', 'Задержка в верхней точке на 1 секунду, жестко сводим лопатки.'],
+                alt: 'Если используешь турник - делай фронтальные висы и тяги коленей к груди.'
+            },
+            {
+                name: 'Жим гантелей лежа под углом ИЛИ Отжимания ноги на возвышенности', sets: '3x8-12', rest: '2 мин',
+                muscles: 'Верх грудных, передняя дельта',
+                weight: 'Средне-тяжелый',
+                technique: ['Контролируемое опускание снаряда.', 'В нижней точке хорошая растяжка грудных.'],
+                alt: 'Отжимания ноги на стуле - отличная замена.'
+            },
+            {
+                name: 'Пулловер с гантелей ИЛИ Выходы силой (негативы)', sets: '3x10-12', rest: '1.5 мин',
+                muscles: 'Зубчатые, спина',
+                weight: 'Легкий вес',
+                technique: ['Чувствуй растяжение широчайших.', 'Не сгибай руки слишком сильно в локтях.']
+            },
+            {
+                name: 'Суперсет на Руки: Сгибания на бицепс + Французский жим', sets: '3x12', rest: '1 мин',
+                muscles: 'Бицепс, трицепс',
+                weight: 'Легкий-средний. Работа до отказа',
+                technique: ['Делай подход на бицепс, затем сразу подход на трицепс.', 'Пампинг в конце тренировки. Отдых только после суперсета.']
+            }
+        ],
+        cooldown: ['Растяжка грудных мышц в дверном проеме - 2 мин', 'Растяжка широчайших мышц (вис на перекладине) - 1 мин']
+    },
+    lower: {
+        title: 'LOWER: День Ног и Базы',
+        time: '~50-60 мин',
+        note: 'Жесткий день для нижней части тела. Качает не только мышцы, но и эндокринную систему.',
+        warmup: {
+            items: ['Беговая дорожка / Эллипс — 5-10 минут'],
+            mobility: ['Глубокие приседания без веса с задержкой внизу — 2x30 сек', 'Круговые движения тазобедренным суставом'],
+            specific: 'Приседания без веса 2x20'
+        },
+        exercises: [
+            {
+                name: 'Приседания со штангой / Сендбегом ИЛИ Болгарские сплит-приседы', sets: '4x6-8', rest: '3 мин',
+                muscles: 'Квадрицепсы, ягодицы',
+                weight: 'Тяжелый (самое тяжелое движение за неделю)',
+                technique: ['Опускайся плавно, напрягая пресс.', 'Следи за коленями (они не должны заваливаться внутрь).', 'Глубина: минимум до параллели бедра с полом.'],
+                alt: 'Приседания на одной ноге - идеальная альтернатива без железа.'
+            },
+            {
+                name: 'Румынская тяга (RDL) на прямых ногах', sets: '4x8-10', rest: '2.5 мин',
+                muscles: 'Бицепс бедра, ягодицы, поясница',
+                weight: 'Средне-тяжелый',
+                technique: ['Спина идеально прямая. Отводим таз назад.', 'Сгибание коленей минимальное.', 'Растяжение чувствуется на задней поверхности бедра.'],
+                alt: 'Если нет весов - ягодичный мостик на одной ноге с паузой.'
+            },
+            {
+                name: 'Выпады в ходьбе ИЛИ Зашагивания на тумбу', sets: '3x12 на каждую ногу', rest: '1.5 мин',
+                muscles: 'Квадрицепс, стабилизаторы',
+                weight: 'Легкие гантели (или без веса)',
+                technique: ['Шаг длинный = больше ягодицы. Шаг короткий = больше квадрицепс.', 'Корпус держи ровно.']
+            },
+            {
+                name: 'Подъем на икры стоя ИЛИ Ослиные подъемы', sets: '4x15-20', rest: '1 мин',
+                muscles: 'Икроножные',
+                weight: 'Своим весом (на одной ноге) или с гантелей',
+                technique: ['Полная растяжка внизу (пятка опускается ниже носка на ступеньке).', 'Пиковое сокращение вверху на 1 секунду.']
+            }
+        ],
+        cooldown: ['Лежать ногами вверх на стене - 3 мин', 'Растяжка квадрицепса - по 1 мин на ногу']
+    },
+    core: {
+        title: 'CORE GRIND: Стальной Корпус',
+        time: '~15-20 мин',
+        note: 'Специализированная программа на стабилизаторы, мышечный корсет и пресс. Можно делать в дни отдыха или после легкого кардио.',
+        warmup: {
+            items: ['Прыжки на месте — 3 мин'],
+            mobility: ['Наклоны корпуса (мельница)', 'Выгибание спины (кошка-корова)'],
+            specific: 'Скручивания: 1x20'
+        },
+        exercises: [
+            {
+                name: 'Скручивания (Crunches) без отрыва поясницы', sets: '3x20-25', rest: '45 сек',
+                muscles: 'Прямая мышца живота (верх)',
+                weight: 'Без веса',
+                technique: ['Поясница намертво приклеена к полу.', 'Отрываются только лопатки.', 'В пике максимальный выдох и напряжение (как будто тебя ударят в живот).'],
+                alt: 'Классика.'
+            },
+            {
+                name: 'Подъемы ног в висе (или лежа)', sets: '3x15-20', rest: '45 сек',
+                muscles: 'Прямая мышца живота (низ), подвздошная',
+                weight: 'Свой вес',
+                technique: ['Главное - подкручивать таз вверх, а не просто поднимать ноги.', 'Если делаешь в висе - не раскачивайся.', 'Опускай ноги медленно (негативная фаза).']
+            },
+            {
+                name: 'Русские скручивания (Russian Twists)', sets: '3x20 на сторону', rest: '45 сек',
+                muscles: 'Косые мышцы живота',
+                weight: 'Блин 5-10 кг или гантеля',
+                technique: ['Ноги можно оторвать от пола.', 'Скручивай именно корпус, а не просто перемещай руки.']
+            },
+            {
+                name: 'Планка Ренегата (Renegade Row) ИЛИ Касания плеч в планке', sets: '3x12 на каждую руку', rest: '1 мин',
+                muscles: 'Глубокие стабилизаторы, анти-ротация',
+                weight: 'Гантели плашмя',
+                technique: ['В упоре лежа (широкая стойка ног).', 'Поднимаешь одну руку (как в тяге), таз при этом не должен вращаться!', 'Сложнейшее упражнение на стабильность ядра.']
+            },
+            {
+                name: 'Вакуум в животе', sets: '3x макс. удержание', rest: '1 мин',
+                muscles: 'Поперечная мышца живота',
+                weight: 'Воздух',
+                technique: ['Встать на четвереньки или опереться руками в колени.', 'Сделать полный выдох.', 'Сделать ложный вдох, втягивая живот под ребра.', 'Держать сколько сможешь.', 'Помогает убрать выпирающий живот.']
+            }
+        ],
+        cooldown: ['Поза Кобры (растяжка пресса) - 1 мин', 'Дыхание диафрагмой (надувать живот) - 2 мин']
+    },
+    flex: {
+        title: 'FLEX & MOBILITY: Подвижность',
+        time: '~20 мин',
+        note: 'Восстановление ЦНС, снятие зажимов и улучшение кровотока. Идеально для Фазы 3 (Гармония) и дней отдыха.',
+        warmup: {
+            items: ['Легкий разогрев суставов — 3 мин. Важно: для растяжки тело должно быть теплым!'],
+            mobility: ['Ходьба на месте'],
+            specific: 'Круговые махи руками и ногами'
+        },
+        exercises: [
+            {
+                name: 'Растяжка груди у стены', sets: 'По 1 мин на руку', rest: 'Без отдыха',
+                muscles: 'Грудные',
+                weight: '—',
+                technique: ['Рука согнута в локте под 90 градусов у стены.', 'Разворачивай корпус в противоположную сторону.', 'Убирает "компьютерную шею" и сутулость.']
+            },
+            {
+                name: 'Глубокий присед (Slavic Squat)', sets: '2x 2-3 минуты', rest: 'Встать и походить',
+                muscles: 'Голеностоп, таз',
+                weight: '—',
+                technique: ['Пятки на полу!', 'Спина ровная (старайся).', 'Руки перед собой в замок, локтями расталкивай колени наружу.']
+            },
+            {
+                name: 'Скрутка позвоночника лежа (Cat Stretch)', sets: 'По 1 мин на сторону', rest: 'Без отдыха',
+                muscles: 'Поясница, позвоночник',
+                weight: '—',
+                technique: ['Лежа на спине, одно колено перекидываем через другую ногу и кладем на пол.', 'Противоположную руку вытягиваем и смотрим на нее.', 'Отличный хруст и расслабление дисков.']
+            },
+            {
+                name: 'Складка (растяжка задней цепи)', sets: '1x 2 минуты', rest: '—',
+                muscles: 'Бицепс бедра, поясница',
+                weight: '—',
+                technique: ['Сидя на полу, ноги вместе.', 'На выдохе тянемся животом к бедрам. НЕ лбом к коленям, а животом!', 'Держим позу, расслабляясь с каждым выдохом.']
+            },
+            {
+                name: 'Дыхание 4-7-8 (Релаксация)', sets: '4 цикла', rest: '—',
+                muscles: 'Парасимпатическая система',
+                weight: '—',
+                technique: ['Вдох через нос 4 секунды.', 'Почти до боли сожми легкие и задержи дыхание на 7 секунд.', 'Выдох через рот 8 секунд с шипящим звуком.']
+            }
+        ],
+        cooldown: ['Шавасана (Лежать на спине, закрыть глаза, полностью расслабиться) - 5 мин']
     }
 };
 
@@ -348,6 +579,8 @@ const TRAINING_INFO = {
         title: '📈 Прогрессия',
         sections: [
             { heading: '🔄 Еженедельная перегрузка', content: 'Каждую неделю делай ОДНО из:', list: ['+повторения (3×10 → 3×11)', '+подход (3×10 → 4×10)', '+вес (рюкзак 3 кг → 5 кг)', 'Усложнить упражнение (отжимания → ноги на стуле)', 'Замедлить темп (3 сек вниз, 1 сек вверх ↑TUT)'] },
+            { heading: '🔬 Научный Темп (3-1-1)', content: 'Контроль негативной фазы (Time Under Tension).', list: ['3 секунды медленно опускай вес', '1 секунда пауза в нижней точке (растяжение)', '1 секунда мощный позитивный жим/тяга вверх'] },
+            { heading: '🧠 Нейромышечная связь', content: 'Фокус внимания меняет активацию мышц:', list: ['PUSH: "Отталкивай пол/снаряд от себя"', 'PULL: "Тяни локтями, а не кистями"', 'LEGS: "Вдавливай пятки в пол"'] },
             { heading: '📋 Правило двойной прогрессии', content: 'Используй диапазон 8–12:', list: ['Начни с нижней границы (8 повторений)', 'Каждую неделю +1–2 повторения', 'Дошёл до 12 во всех подходах → УВЕЛИЧЬ ВЕС', 'Снова начни с 8 повторений'] },
             { heading: '🛑 Разгрузочная неделя (deload)', content: 'Каждые 12 недель: те же упражнения, но 50% подходов и повторений. Восстановление суставов, сухожилий, нервной системы.' },
             { heading: '🔀 Переход на 4 дня (через 4–8 недель)', content: 'Если 3 дня — мало: Пн PUSH → Вт PULL → Ср отдых → Чт LEGS → Пт UPPER → Сб-Вс отдых' },
@@ -418,7 +651,9 @@ function loadData() {
         penalty: false,
         customTraining: {},
         unlockedContent: [],
-        lastBonusRotation: ''
+        lastBonusRotation: '',
+        hardMode: false,
+        activeBet: null // { amount: number, targetDays: number, startDate: string, daysPassed: number }
     };
 }
 
@@ -465,8 +700,19 @@ function calcStreak() {
     checkDate.setDate(checkDate.getDate() - 1);
     while (true) {
         const ds = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
-        const dd = data.days[ds];
-        if (dd && (dd.isRestDay || (dd.main && dd.main.length >= mainCount))) {
+        const dData = data.days[ds];
+
+        if (!dData) break; // If no data for the day, break the streak
+
+        if (dData.isRestDay) {
+            streak++;
+            checkDate.setDate(checkDate.getDate() - 1);
+            continue;
+        }
+
+        // Streak requires all main quests OR if it's hard mode, just 2 specific main quests
+        const requiredMainLength = dData.hardMode ? 2 : data.mainQuests.length;
+        if (dData.main && dData.main.length >= requiredMainLength) {
             streak++;
             checkDate.setDate(checkDate.getDate() - 1);
         } else break;
@@ -619,7 +865,114 @@ function updateDashboard() {
 
     // Check auto-unlock keys
     checkAutoKeys();
+    
+    // Check Contract (Skin in the Game)
+    updateContractUI();
 }
+
+// ========== CONTRACT (SKIN IN THE GAME) ==========
+function updateContractUI() {
+    const setupUI = document.getElementById('contract-setup');
+    const activeUI = document.getElementById('contract-active');
+    
+    // Only show contract card if user has at least 50 points to bet to avoid cluttering new users
+    if (!data.activeBet && data.totalPoints < 50) {
+        document.getElementById('contract-card').style.display = 'none';
+        return;
+    }
+    
+    document.getElementById('contract-card').style.display = 'block';
+
+    if (data.activeBet) {
+        setupUI.style.display = 'none';
+        activeUI.style.display = 'block';
+        
+        // Check if failed
+        const streak = calcStreak();
+        if (streak === 0 && data.activeBet.daysPassed > 0) {
+            // Failed
+            showModal('🩸 КОНТРАКТ СОРВАН', `Ты потерял свой стрик. Твоя ставка в ${data.activeBet.amount} очков сгорает.`);
+            data.activeBet = null;
+            saveData();
+            updateContractUI();
+            return;
+        }
+        
+        // Calculate days passed based on data history (not just simple date diff to account for rest days)
+        let daysPassed = 0;
+        let d = new Date(data.activeBet.startDate);
+        const todayStr = getToday();
+        
+        while(true) {
+            const dStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+            if (dStr > todayStr) break;
+            
+            const dayData = data.days[dStr];
+            // If the day was processed and it's either done or a rest day, it counts towards the contract survival
+            if (dayData && (dayData.done || dayData.isRestDay)) {
+                daysPassed++;
+            }
+            d.setDate(d.getDate() + 1);
+        }
+        
+        data.activeBet.daysPassed = daysPassed - 1; // Since today might not be over yet, we just show UI progress
+        
+        // Check win condition
+        if (data.activeBet.daysPassed >= data.activeBet.targetDays) {
+            const reward = data.activeBet.amount * 3;
+            data.totalPoints += reward; // Gives them the 3x reward (so +2x net profit)
+            showModal('💵 КОНТРАКТ ВЫПОЛНЕН!', `Ты доказал свою силу.\nСтавка: ${data.activeBet.amount}\nВыигрыш: +${reward} очков!`);
+            data.activeBet = null;
+            saveData();
+            updateContractUI();
+            
+            // Re-render dashboard to update points
+            setTimeout(updateDashboard, 500);
+            return;
+        }
+        
+        const prog = Math.min(100, (data.activeBet.daysPassed / data.activeBet.targetDays) * 100);
+        document.getElementById('contract-progress-bar').style.width = `${prog}%`;
+        document.getElementById('contract-days-left').textContent = `${data.activeBet.daysPassed}/${data.activeBet.targetDays} ДНЕЙ`;
+        document.getElementById('contract-status-text').textContent = `На кону: ${data.activeBet.amount} очков. Потенциальный выигрыш: ${data.activeBet.amount * 3}. Не прерывай стрик!`;
+        
+    } else {
+        setupUI.style.display = 'block';
+        activeUI.style.display = 'none';
+    }
+}
+
+// Make a bet logic
+document.getElementById('btn-make-bet').addEventListener('click', () => {
+    const input = document.getElementById('contract-bet-amount');
+    const amount = parseInt(input.value);
+    
+    if (isNaN(amount) || amount <= 0) {
+        alert('Введите корректную сумму.');
+        return;
+    }
+    
+    if (amount > data.totalPoints) {
+        alert('У вас нет столько очков.');
+        return;
+    }
+    
+    if (confirm(`Ты ставишь ${amount} очков на то, что удержишь плотный график (стрик) 7 дней. Если сорвешься — очки сгорят. Хочешь заключить контракт?`)) {
+        // Deduct points immediately
+        data.totalPoints -= amount;
+        
+        data.activeBet = {
+            amount: amount,
+            targetDays: 7,
+            startDate: getToday(),
+            daysPassed: 0
+        };
+        
+        saveData();
+        input.value = '';
+        updateDashboard();
+    }
+});
 
 document.getElementById('btn-clear-penalty').addEventListener('click', () => {
     data.penalty = false;
@@ -652,15 +1005,30 @@ function checkAutoKeys() {
 let editModeMain = false;
 let editModeBonus = false;
 
-function renderQuestItem(quest, isBonus) {
+function renderQuestItem(quest, isBonus, isHardModeMain) {
     const div = document.createElement('div');
     div.className = `quest-item${isBonus ? ' bonus' : ''}`;
     div.dataset.quest = quest.id;
+    
+    let bonusHint = '';
+    
+    // Check Phase Multiplier to show a hint on the card
+    const todayData = getDayData(getToday());
+    const phaseMult = getPhaseMultiplier(quest.id, isBonus, todayData);
+    
+    if (isHardModeMain) {
+        bonusHint = `<div style="font-size: 0.65rem; color: var(--yellow); margin-top:2px;">💼 x2 Опыта</div>`;
+    } else if (phaseMult > 1.0) {
+        // Show phase bonus (e.g., Phase 1 Body focus, Phase 2 Mind focus)
+        let phaseText = phaseMult === 1.5 ? '🔥 Фокус Фазы (+50%)' : '✨ Бонус Синтеза (+20%)';
+        bonusHint = `<div style="font-size: 0.65rem; color: var(--green); margin-top:2px;">${phaseText}</div>`;
+    }
+
     div.innerHTML = `
         <div class="quest-check"></div>
         <div class="quest-info">
             <div class="quest-name">${quest.name}</div>
-            <div class="quest-desc">${quest.desc}</div>
+            <div class="quest-desc">${quest.desc}${bonusHint}</div>
         </div>
         <div class="quest-stat">${quest.stat.toUpperCase()}</div>
         <div class="quest-edit-btns">
@@ -694,13 +1062,26 @@ function renderQuests() {
     
     const todayData = getDayData(getToday());
     
+    // Hard Mode specific logic
+    let currentMain = [...data.mainQuests];
+    let currentBonus = [...data.bonusQuests];
+    
+    if (data.hardMode) {
+        // Find 'code' and 'activity' to keep in main
+        const newMain = currentMain.filter(q => q.id === 'code' || q.id === 'activity');
+        // Move the rest to bonus
+        const toBonus = currentMain.filter(q => q.id !== 'code' && q.id !== 'activity');
+        currentMain = newMain;
+        currentBonus = [...toBonus, ...currentBonus];
+    }
+
     if (todayData.isRestDay) {
         mc.innerHTML = '<div style="text-align: center; color: var(--text-dim); padding: 20px; font-style: italic;">Сегодня день восстановления. Набирайся сил! 😴</div>';
     } else {
-        data.mainQuests.forEach(q => mc.appendChild(renderQuestItem(q, false)));
+        currentMain.forEach(q => mc.appendChild(renderQuestItem(q, false, data.hardMode)));
     }
     
-    data.bonusQuests.forEach(q => bc.appendChild(renderQuestItem(q, true)));
+    currentBonus.forEach(q => bc.appendChild(renderQuestItem(q, true, false)));
     mc.classList.toggle('editing', editModeMain);
     bc.classList.toggle('editing', editModeBonus);
 }
@@ -721,10 +1102,11 @@ function updateQuestStates() {
 function checkStatMilestones() {
     if (!data.unlockedContent) data.unlockedContent = [];
     const thresholds = [
-        { stat: 'str', val: 30, code: 'str30', title: 'ФИЗИЧЕСКАЯ АДАПТАЦИЯ', text: 'Базовые тренировки больше не рвут мышечные волокна. Твое тело адаптировалось.\n\nТебе нужен метаболический стресс. Программа переработана.\n\n🔓 ДОСТУПЕН ПРОТОКОЛ "TITAN" (Вкладка Тренировок)' },
-        { stat: 'int', val: 30, code: 'int30', title: 'КОГНИТИВНАЯ АДАПТАЦИЯ', text: 'Твой мозг легко справляется с семантической рутиной. Пришло время поменять архитектуру мышления.\n\nБаза переработана.\n\n🔓 ДОСТУПНА ГЛАВА "АРХИТЕКТУРА СИСТЕМ" (Кодекс)' },
-        { stat: 'wis', val: 30, code: 'wis30', title: 'БИОХИМИЧЕСКАЯ АДАПТАЦИЯ', text: 'Ты научился базовой дисциплине. Теперь нужно подчинить себе нейромедиаторы.\n\nБаза переработана.\n\n🔓 ДОСТУПНА ГЛАВА "ФИЗИОЛОГИЯ ДОФАМИНА" (Кодекс)' },
-        { stat: 'end', val: 30, code: 'end30', title: 'КАРДИО-АДАПТАЦИЯ', text: 'Твое сердце бьется ровно на базовых нагрузках. Пришло время расширить бензобак.\n\nПрограмма переработана.\n\n🔓 ДОСТУПЕН ПРОТОКОЛ "VO2 MAX 4x4" (Вкладка Тренировок)' }
+        { stat: 'str', val: 30, code: 'str30', title: 'ФИЗИЧЕСКАЯ АДАПТАЦИЯ', text: 'Базовые тренировки больше не рвут мышечные волокна. Твое тело адаптировалось.\n\n🔓 ДОСТУПЕН ПРОТОКОЛ "TITAN" И СИСТЕМА "UPPER/LOWER"\n🔓 ГЛАВА "ПИТАНИЕ И ГОРМОНЫ" (Кодекс)' },
+        { stat: 'int', val: 30, code: 'int30', title: 'КОГНИТИВНАЯ АДАПТАЦИЯ', text: 'Твой мозг легко справляется с семантической рутиной. Пришло время поменять архитектуру мышления.\n\n🔓 ДОСТУПНА ГЛАВА "АРХИТЕКТУРА СИСТЕМ" (Кодекс)' },
+        { stat: 'wis', val: 30, code: 'wis30', title: 'БИОХИМИЧЕСКАЯ АДАПТАЦИЯ', text: 'Ты научился базовой дисциплине. Теперь нужно подчинить себе нейромедиаторы.\n\n🔓 ДОСТУПНА ГЛАВА "ФИЗИОЛОГИЯ ДОФАМИНА" (Кодекс)' },
+        { stat: 'end', val: 30, code: 'end30', title: 'КАРДИО-АДАПТАЦИЯ', text: 'Твое сердце бьется ровно на базовых нагрузках. Пришло время расширить бензобак.\n\n🔓 ДОСТУПЕН ПРОТОКОЛ "VO2 MAX 4x4", "CORE" И "FLEX"\n🔓 ГЛАВА "БИОХАКИНГ СНА" (Кодекс)' },
+        { stat: 'dsc', val: 30, code: 'dsc30', title: 'МЕНТАЛЬНАЯ КРЕПОСТЬ', text: 'Твоя воля стала твердой как сталь. Ты больше не раб своих импульсов.\n\n🔓 ДОСТУПНА ГЛАВА "ФИЛОСОФИЯ СТОИЦИЗМА" (Кодекс)' }
     ];
 
     thresholds.forEach(t => {
@@ -738,17 +1120,58 @@ function checkStatMilestones() {
     });
 }
 
+function getPhaseMultiplier(questId, isBonus, todayData) {
+    const daysInSystem = calcDaysInSystem();
+    let mult = 1.0;
+    
+    // Phase 1: Awakening (0-30 days). Focus on Body (Activity)
+    if (daysInSystem <= 30) {
+        if (questId === 'activity') mult = 1.5; // +50% XP for working out
+        // Forgiving: No penalty for skipping bonuses
+    } 
+    // Phase 2: Architect (31-90 days). Focus on Mind (Code, Self-dev)
+    else if (daysInSystem <= 90) {
+        if (questId === 'code' || questId === 'selfdev') mult = 1.5; // +50% XP
+    }
+    // Phase 3: Synthesis (91+ days). Focus on Harmony (Everything)
+    else {
+        // Grand bonus only if ALL quests (main + bonus) are done
+        // We evaluate this when opening the chest instead, 
+        // but let's give a small baseline boost to everything to offset difficulty.
+        mult = 1.2; 
+    }
+    
+    return mult;
+}
+
 function toggleQuest(questId, isBonus) {
     const today = getToday();
     const todayData = getDayData(today);
-    const list = isBonus ? todayData.bonus : todayData.main;
-    const quest = (isBonus ? data.bonusQuests : data.mainQuests).find(q => q.id === questId);
+    
+    // Hard Mode specific logic for determining which list it belongs to
+    // If it's hard mode, and the quest is a main quest BUT not 'code' or 'activity', treat it as a bonus
+    let actualIsBonus = isBonus;
+    if (data.hardMode && !isBonus) {
+        if (questId !== 'code' && questId !== 'activity') {
+            actualIsBonus = true;
+        }
+    }
+
+    const list = actualIsBonus ? todayData.bonus : todayData.main;
+    // Find quest object across both arrays since it might have been moved virtually
+    const quest = data.mainQuests.find(q => q.id === questId) || data.bonusQuests.find(q => q.id === questId);
     if (!quest) return;
 
     const item = document.querySelector(`.quest-item[data-quest="${questId}"]`);
     
     const currentMult = getMultiplier(calcStreak());
-    const pointsGained = 2 * currentMult;
+    
+    // Base points logic calculation
+    let basePoints = (!actualIsBonus && data.hardMode) ? 4 : 2;
+    // Apply Hero's Journey Phase multiplier
+    const phaseMult = getPhaseMultiplier(questId, actualIsBonus, todayData);
+    
+    const pointsGained = basePoints * currentMult * phaseMult;
 
     if (list.includes(questId)) {
         list.splice(list.indexOf(questId), 1);
@@ -767,7 +1190,9 @@ function toggleQuest(questId, isBonus) {
         if (quest.stat) data.stats[quest.stat] = (data.stats[quest.stat] || 0) + 1;
         showPointsPopup(`+${pointsGained > 2 ? pointsGained.toFixed(1) : pointsGained}`);
 
-        if (!isBonus && todayData.main.length === data.mainQuests.length) {
+        // Check chest completion condition
+        const requiredMainLength = data.hardMode ? 2 : data.mainQuests.length;
+        if (!actualIsBonus && todayData.main.length === requiredMainLength) {
             if (!todayData.chestOpened) {
                 document.getElementById('chest-modal-overlay').classList.remove('hidden');
                 document.getElementById('chest-closed').style.display = 'inline-block';
@@ -945,6 +1370,147 @@ function renderKeys() {
     });
 }
 
+// ========== MATRIX OF LIFE ==========
+function updateMatrix() {
+    const container = document.getElementById('matrix-container');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    const todayStr = getToday();
+    
+    // Find the end of the current week (Sunday)
+    let endDate = new Date();
+    let dow = endDate.getDay();
+    let daysToSunday = dow === 0 ? 0 : 7 - dow;
+    endDate.setDate(endDate.getDate() + daysToSunday);
+    
+    const WEEKS = 30; // ~7 months of history (fits nice, looks dense)
+    const totalDays = WEEKS * 7;
+    
+    let currentDate = new Date(endDate);
+    currentDate.setDate(currentDate.getDate() - totalDays + 1);
+    
+    for (let i = 0; i < totalDays; i++) {
+        const dStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth()+1).padStart(2,'0')}-${String(currentDate.getDate()).padStart(2,'0')}`;
+        
+        const box = document.createElement('div');
+        box.className = 'matrix-box empty';
+        
+        if (dStr <= todayStr) {
+            const dd = data.days[dStr];
+            if (dd) {
+                if (dd.isRestDay) {
+                    box.className = 'matrix-box rest';
+                } else if (dd.hardMode && dd.main && dd.main.length >= 2) {
+                    box.className = 'matrix-box hard';
+                } else if (!dd.hardMode && dd.main && dd.main.length >= data.mainQuests.length) {
+                    box.className = 'matrix-box done';
+                }
+            }
+        }
+        
+        // Quick format for tooltip (e.g. "14 Марта")
+        const months = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
+        const mName = months[currentDate.getMonth()];
+        box.title = `${currentDate.getDate()} ${mName}`;
+        
+        container.appendChild(box);
+        currentDate.setDate(currentDate.getDate() + 1);
+    }
+}
+
+// ========== RADAR CHART (АБСОЛЮТНЫЙ БАЛАНС) ==========
+function updateRadarChart() {
+    // Axes: STR, INT, WIS, END, DSC (Discipline = Rank Points scaled)
+    // We scale Discipline: 1 rank ~ 1000 pts. Let's make it comparable to stats.
+    // 5000 pts = ~50 stat. So DSC = points / 100.
+    const stats = data.stats;
+    const values = [
+        stats.str || 0,
+        stats.int || 0,
+        stats.wis || 0,
+        stats.end || 0,
+        Math.floor(data.totalPoints / 100) // DSC
+    ];
+    
+    const labels = ['СИЛА', 'ИНТЕЛЛЕКТ', 'МУДРОСТЬ', 'ВЫНОСЛ.', 'ДИСЦИПЛ.'];
+    const maxVal = Math.max(20, ...values); // Minimum scale is 20
+    
+    const centerX = 120;
+    const centerY = 120;
+    const radius = 90; // Max radius for the chart
+    
+    // Helper to get X, Y for a given angle and value
+    const getPoint = (val, max, angle, r) => {
+        const ratio = Math.min(1, val / max);
+        const distance = ratio * r;
+        const x = centerX + distance * Math.cos(angle);
+        const y = centerY + distance * Math.sin(angle);
+        return `${x},${y}`;
+    };
+
+    // 1. Draw Background Polygons (Web)
+    const drawBg = (id, scale) => {
+        const pts = [];
+        for (let i = 0; i < 5; i++) {
+            const angle = (Math.PI / 2) - (2 * Math.PI * i / 5);
+            pts.push(getPoint(scale, 1, angle, radius));
+        }
+        const el = document.getElementById(id);
+        el.setAttribute('points', pts.join(' '));
+        el.setAttribute('stroke-opacity', '0.4');
+    };
+    drawBg('radar-bg-3', 1.0);  // 100%
+    drawBg('radar-bg-2', 0.66); // 66%
+    drawBg('radar-bg-1', 0.33); // 33%
+
+    // 2. Draw Axes & Labels
+    const axesGrp = document.getElementById('radar-axes');
+    const labelsGrp = document.getElementById('radar-labels');
+    axesGrp.innerHTML = '';
+    labelsGrp.innerHTML = '';
+    
+    let polyPoints = [];
+
+    for (let i = 0; i < 5; i++) {
+        const angle = (Math.PI / 2) - (2 * Math.PI * i / 5); // Start at top (90 deg), go clockwise
+        
+        // Axis line
+        const endPt = getPoint(1, 1, angle, radius);
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        const [x2, y2] = endPt.split(',');
+        line.setAttribute('x1', centerX);
+        line.setAttribute('y1', centerY);
+        line.setAttribute('x2', x2);
+        line.setAttribute('y2', y2);
+        line.setAttribute('stroke', 'rgba(168, 85, 247, 0.25)'); // Restore purple axis
+        line.setAttribute('stroke-width', '1');
+        axesGrp.appendChild(line);
+
+        // Label
+        const labelR = radius + 15;
+        const lx = centerX + labelR * Math.cos(angle);
+        const ly = centerY + labelR * Math.sin(angle);
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.setAttribute('x', lx);
+        text.setAttribute('y', ly);
+        text.textContent = labels[i];
+        
+        // Adjust alignment for better look
+        if (Math.abs(Math.cos(angle)) < 0.1) text.setAttribute('text-anchor', 'middle');
+        else if (Math.cos(angle) > 0) text.setAttribute('text-anchor', 'start');
+        else text.setAttribute('text-anchor', 'end');
+        
+        labelsGrp.appendChild(text);
+
+        // Calculate actual polygon points
+        polyPoints.push(getPoint(values[i], maxVal, angle, radius));
+    }
+
+    // 3. Draw Main Polygon
+    document.getElementById('radar-polygon').setAttribute('points', polyPoints.join(' '));
+}
+
 // ========== STATS ==========
 function updateStats() {
     const container = document.getElementById('stats-bars');
@@ -953,7 +1519,9 @@ function updateStats() {
     const maxStat = Math.max(10, ...Object.values(stats));
 
     Object.entries(STAT_NAMES).forEach(([key, label]) => {
-        const val = stats[key] || 0;
+        let val = stats[key] || 0;
+        if (key === 'dsc') val = Math.floor(data.totalPoints / 100);
+        
         const pct = (val / maxStat) * 100;
         const div = document.createElement('div');
         div.className = 'stat-bar-item';
@@ -967,6 +1535,9 @@ function updateStats() {
     document.getElementById('stats-total-points').textContent = data.totalPoints;
     document.getElementById('stats-best-streak').textContent = data.bestStreak;
     document.getElementById('stats-total-days').textContent = calcDaysInSystem();
+    
+    updateMatrix();
+    updateRadarChart();
 }
 
 // ========== CALENDAR ==========
@@ -1039,6 +1610,8 @@ function showPointsPopup(text) {
 const DEFAULT_HABITS = [
     { id: 'bed', name: '🛏️ Заправить кровать' },
     { id: 'hygiene', name: '🧼 Гигиена (душ, зубы, лицо)' },
+    { id: 'watermorning', name: '💧 Стакан воды сразу после сна' },
+    { id: 'nocoffee', name: '☕ Отложить кофе на 90 мин' },
     { id: 'read', name: '📖 20 мин чтения' },
     { id: 'readaloud', name: '🗣️ 10 мин чтения вслух' },
     { id: 'noscreen', name: '📵 Без экрана за 30 мин до сна' },
@@ -1156,6 +1729,33 @@ const UNLOCKABLE_CODEX = {
             'Случайное вознаграждение (как рулетка или сундук) цепляет мозг сильнее, чем предсказуемое.',
             'Протокол восстановления (Dr. Huberman): Холодный душ повышает базовый дофамин на 250% на 3 часа без последующего спада.'
         ]
+    },
+    dsc30: {
+        icon: '🏛️', title: 'Философия Стоицизма [DSC 30]',
+        rules: [
+            'Дихотомия контроля: Разделяй то, на что можешь повлиять (твои усилия, твоя реакция), и то, на что не можешь (погода, чужое мнение, кризисы). Фокус только на первом.',
+            'Amor Fati (Любовь к судьбе): Полюби любое препятствие. То, что стоит на пути, становится путем (Марк Аврелий).',
+            'Memento Mori (Помни о смерти): Осознавая конечность жизни, ты перестаешь тратить ее на страхи, прокрастинацию и пустые конфликты.',
+            'Смысл дисциплины — свобода: Раб своих эмоций и желаний не имеет свободы. Строгий график и правила делают тебя единственным хозяином самого себя.'
+        ]
+    },
+    str30: {
+        icon: '🥩', title: 'Питание и Гормоны [STR 30]',
+        rules: [
+            'Тестостерон (Dr. Peter Attia): База мужского гормона — это тяжелый силовой тренинг (базовые движения), сон 8 часов и достаточное количество полезных жиров в диете.',
+            'Углеводное окно миф: Важно общее потребление белка за 24 часа. Цельсь в 1.6 - 2.0 грамма белка на каждый килограмм целевого веса.',
+            'Сахар = Воспаление: Резкие выбросы инсулина вызывают микровоспаления сосудов и разрушают митохондрии. Перейди на сложные углеводы.',
+            'Цинк, Магний и Витамин D3: Базовая тройка мужского здоровья. Их почти невозможно добрать только из современной еды.'
+        ]
+    },
+    end30: {
+        icon: '🌙', title: 'Биохакинг Сна [END 30]',
+        rules: [
+            'Циркадный якорь (Dr. Huberman): Свет в глаза в первые 30 минут после пробуждения запускает часы кортизола (бодрость) и таймер мелатонина (сон через 12-14 часов).',
+            'Температура: Для глубокого (медленного волнами) сна тело должно остыть на 1-2°C. Спальня: 18-19°C. Прими горячий душ перед сном — сосуды расширятся, и тело быстрее остынет на воздухе.',
+            'Кофеиновый crash: Если пить кофе сразу после пробуждения, аденозин (гормон усталости) блокируется, но не исчезает. Отложи кофе на 90-120 минут, чтобы избежать дневной сонливости.',
+            'Магний бисглицинат или теанин за 30 минут до сна выключают "мыслемешалку" в голове и ускоряют фазу перехода ко сну.'
+        ]
     }
 };
 
@@ -1264,6 +1864,9 @@ function renderCodexReference() {
     // Inject unlocks
     if (data.unlockedContent && data.unlockedContent.includes('int30')) allRef.push(UNLOCKABLE_CODEX.int30);
     if (data.unlockedContent && data.unlockedContent.includes('wis30')) allRef.push(UNLOCKABLE_CODEX.wis30);
+    if (data.unlockedContent && data.unlockedContent.includes('dsc30')) allRef.push(UNLOCKABLE_CODEX.dsc30);
+    if (data.unlockedContent && data.unlockedContent.includes('str30')) allRef.push(UNLOCKABLE_CODEX.str30);
+    if (data.unlockedContent && data.unlockedContent.includes('end30')) allRef.push(UNLOCKABLE_CODEX.end30);
 
     allRef.forEach(cat => {
         const isUnlock = cat.title.includes('[');
@@ -1284,33 +1887,65 @@ function renderCodexReference() {
 
 // ========== TRAINING ==========
 let currentTrainDay = 'push';
+let currentProgram = 'ppl';
 
 function renderTraining(day) {
+    if (!day) {
+        // Default to first day of current program if no day specified
+        day = PROGRAMS_CONFIG[currentProgram].days[0];
+    }
     currentTrainDay = day;
+    
     const container = document.getElementById('train-content');
-    const tabsContainer = document.querySelector('.train-tabs');
+    const tabsContainer = document.getElementById('train-tabs');
+    const programSelector = document.getElementById('train-program-selector');
+    const programNote = document.getElementById('train-program-note');
 
-    // Dynamically inject unlocked tabs if they aren't there yet
-    if (data.unlockedContent && data.unlockedContent.includes('str30') && !document.querySelector('.train-tab[data-day="titan"]')) {
-        tabsContainer.innerHTML += `<button class="train-tab" data-day="titan" style="color:var(--red); border-color:var(--red);">TITAN</button>`;
-        // Re-bind listeners for new tabs
-        document.querySelectorAll('.train-tab').forEach(tab => {
-            tab.onclick = () => renderTraining(tab.dataset.day);
-        });
-    }
-    if (data.unlockedContent && data.unlockedContent.includes('end30') && !document.querySelector('.train-tab[data-day="vo2max"]')) {
-        tabsContainer.innerHTML += `<button class="train-tab" data-day="vo2max" style="color:var(--yellow); border-color:var(--yellow);">VO2 MAX</button>`;
-        // Re-bind listeners for new tabs
-        document.querySelectorAll('.train-tab').forEach(tab => {
-            tab.onclick = () => renderTraining(tab.dataset.day);
-        });
-    }
+    // 1. Render Program Selector
+    let selectorHtml = '';
+    Object.entries(PROGRAMS_CONFIG).forEach(([id, config]) => {
+        const isLocked = config.unlock && (!data.unlockedContent || !data.unlockedContent.includes(config.unlock));
+        
+        if (isLocked) {
+            selectorHtml += `<button class="program-chip locked" data-locked="true" data-program="${id}">🔒 ${config.name}</button>`;
+        } else {
+            selectorHtml += `<button class="program-chip ${currentProgram === id ? 'active' : ''}" data-program="${id}">${config.name}</button>`;
+        }
+    });
+    programSelector.innerHTML = selectorHtml;
+    programNote.textContent = PROGRAMS_CONFIG[currentProgram].note;
 
-    document.querySelectorAll('.train-tab').forEach(t => {
-        t.classList.toggle('active', t.dataset.day === day);
+    // Re-bind program clicks
+    document.querySelectorAll('.program-chip').forEach(chip => {
+        chip.onclick = () => {
+            if (chip.dataset.locked === "true") {
+                const programId = chip.dataset.program;
+                const req = PROGRAMS_CONFIG[programId].unlock;
+                let statName = req.replace(/\d+/g, '').toUpperCase();
+                showModal('🔒 ПРОГРАММА ЗАБЛОКИРОВАНА', `Для открытия этой программы требуется прокачать показатель ${statName} до 30. Продолжай развиваться!`);
+                return;
+            }
+            currentProgram = chip.dataset.program;
+            renderTraining(); // resets to first day of new program
+        };
     });
 
-    // INFO tab
+    // 2. Render Tabs for current program
+    let tabsHtml = '';
+    const visibleDays = [...PROGRAMS_CONFIG[currentProgram].days, 'info'];
+    
+    visibleDays.forEach(d => {
+        const label = d === 'info' ? '📖' : d.toUpperCase();
+        tabsHtml += `<button class="train-tab ${currentTrainDay === d ? 'active' : ''}" data-day="${d}">${label}</button>`;
+    });
+    tabsContainer.innerHTML = tabsHtml;
+
+    // Re-bind tab clicks
+    document.querySelectorAll('.train-tab').forEach(tab => {
+        tab.onclick = () => renderTraining(tab.dataset.day);
+    });
+
+    // 3. Render Content (same as before)
     if (day === 'info') {
         document.getElementById('train-day-label').textContent = 'Справка';
         let html = '';
@@ -1411,6 +2046,33 @@ setTheme(currentTheme);
 
 themeToggle.addEventListener('click', () => {
     setTheme(currentTheme === 'dark' ? 'light' : 'dark');
+});
+
+// ========== HARD WORK MODE TOGGLE ==========
+const hardModeToggle = document.getElementById('hard-mode-toggle');
+function updateHardModeUI() {
+    hardModeToggle.style.background = data.hardMode ? 'var(--purple)' : 'var(--bg-card)';
+    hardModeToggle.style.borderColor = data.hardMode ? 'var(--purple)' : 'var(--border-subtle)';
+    hardModeToggle.style.color = data.hardMode ? '#fff' : 'var(--text-secondary)';
+    
+    // Also save it to today's data so the calendar knows this was a hard mode day
+    const todayData = getDayData(getToday());
+    todayData.hardMode = data.hardMode;
+    saveData();
+}
+
+hardModeToggle.addEventListener('click', () => {
+    data.hardMode = !data.hardMode;
+    updateHardModeUI();
+    renderQuests();
+    updateQuestStates();
+    
+    if (data.hardMode) {
+        showPointsPopup('РЕЖИМ ВЫЖИВАНИЯ 💼', 'var(--yellow)');
+        setTimeout(() => showModal('РЕЖИМ ВЫЖИВАНИЯ АКТИВИРОВАН', 'Ты перевел Систему в сберегательный режим.\n\nОбязательные квесты сокращены до 2-х базовых (Тело и Мозг). Их Опыт удвоен (x2).\n\nОстальные перенесены в Бонусные.'), 300);
+    } else {
+        showPointsPopup('СТАНДАРТНЫЙ РЕЖИМ ⚔️', 'var(--cyan)');
+    }
 });
 
 // ========== EXPORT & RESET ==========
@@ -1558,6 +2220,7 @@ function init() {
     renderKeys();
     updateStats();
     updateCalendar();
+    updateHardModeUI();
 
     // Check monthly checkpoint
     const daysIn = calcDaysInSystem();

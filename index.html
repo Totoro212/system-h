@@ -20,6 +20,7 @@
                 <h1 class="logo">ARISE ⚔️</h1>
                 <div style="display:flex;align-items:center;gap:8px">
                     <div class="day-counter" id="day-counter">ДЕНЬ 1</div>
+                    <button class="theme-toggle" id="hard-mode-toggle" title="Режим выживания (Hard Work)">💼</button>
                     <button class="theme-toggle" id="theme-toggle">🌙</button>
                 </div>
             </div>
@@ -81,6 +82,32 @@
                 <div class="habit-check" id="weekly-rule-check" style="width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--purple); flex-shrink: 0; transition: all 0.2s;"></div>
             </div>
 
+            <!-- SKIN IN THE GAME: КОНТРАКТ -->
+            <div class="contract-card" id="contract-card">
+                <!-- If no active bet -->
+                <div id="contract-setup" style="display: none;">
+                    <div class="contract-header">
+                        <span>🎲 СТАВКА НА ДИСЦИПЛИНУ</span>
+                    </div>
+                    <div class="contract-desc">Поставь свои очки. Удержи стрик 7 дней — получишь х3 от ставки. Сорвешься — потеряешь всё.</div>
+                    <div class="contract-input-row">
+                        <input type="number" id="contract-bet-amount" class="edit-input" placeholder="Сумма" min="10" max="1000">
+                        <button class="btn-action btn-bet" id="btn-make-bet">Заключить контракт</button>
+                    </div>
+                </div>
+
+                <!-- If bet is active -->
+                <div id="contract-active" style="display: none;">
+                    <div class="contract-header">
+                        <span>🩸 АКТИВНЫЙ КОНТРАКТ</span>
+                        <span id="contract-days-left" class="contract-badge">0/7 ДНЕЙ</span>
+                    </div>
+                    <div class="contract-desc" id="contract-status-text">На кону: 100 очков. Потенциальный выигрыш: 300. Не прерывай стрик!</div>
+                    <div class="stat-bar-track" style="margin-top: 12px; background: rgba(0,0,0,0.5);">
+                        <div class="stat-bar-fill dsc" id="contract-progress-bar" style="width: 0%;"></div>
+                    </div>
+                </div>
+            </div>
 
         </section>
 
@@ -135,11 +162,17 @@
                 <h1>💪 ТРЕНИРОВКА</h1>
                 <div class="quest-date" id="train-day-label">PUSH</div>
             </div>
-            <div class="train-tabs">
-                <button class="train-tab active" data-day="push">PUSH</button>
-                <button class="train-tab" data-day="pull">PULL</button>
-                <button class="train-tab" data-day="legs">LEGS</button>
-                <button class="train-tab" data-day="info">📖</button>
+            <div class="train-program-selector" id="train-program-selector">
+                <button class="program-chip active" data-program="ppl">BASE (PPL)</button>
+                <button class="program-chip" data-program="ul">SPLIT (U/L)</button>
+                <button class="program-chip" data-program="extra">SUPPORT</button>
+                <button class="program-chip" data-program="pro">ELITE</button>
+            </div>
+            <div id="train-program-note" class="program-note">3-дневный базовый сплит (Push/Pull/Legs). Идеально для построения фундамента.</div>
+            <div class="train-tabs-wrapper">
+                <div class="train-tabs" id="train-tabs">
+                    <!-- Tabs will be injected via JS -->
+                </div>
             </div>
             <div id="train-content"></div>
         </section>
@@ -149,7 +182,24 @@
             <div class="header">
                 <h1>📊 СТАТЫ</h1>
             </div>
-            <div class="stats-bars" id="stats-bars"></div>
+            <h2 class="section-title" style="margin: 0 0 12px; text-align: center;">АБСОЛЮТНЫЙ БАЛАНС</h2>
+            <div class="radar-container">
+                <svg id="radar-chart" width="240" height="240" viewBox="0 0 240 240">
+                    <polygon id="radar-bg-3" points="" fill="rgba(255,255,255,0.02)" stroke="var(--border-subtle)" stroke-width="1"/>
+                    <polygon id="radar-bg-2" points="" fill="rgba(255,255,255,0.02)" stroke="var(--border-subtle)" stroke-width="1"/>
+                    <polygon id="radar-bg-1" points="" fill="rgba(255,255,255,0.02)" stroke="var(--border-subtle)" stroke-width="1"/>
+                    
+                    <!-- Axis lines will be generated here -->
+                    <g id="radar-axes"></g>
+
+                    <polygon id="radar-polygon" points="" fill="rgba(168, 85, 247, 0.4)" stroke="var(--purple)" stroke-width="2"/>
+                    
+                    <!-- Labels will be generated here -->
+                    <g id="radar-labels" font-family="var(--font-display)" font-size="10" fill="var(--text-secondary)" font-weight="600" text-anchor="middle" dominant-baseline="middle"></g>
+                </svg>
+            </div>
+
+            <div class="stats-bars" id="stats-bars" style="margin-top: 24px;"></div>
             <div class="total-stats-card">
                 <div class="total-stat">
                     <span class="total-label">Всего очков</span>
@@ -163,6 +213,17 @@
                     <span class="total-label">Дней в системе</span>
                     <span class="total-value" id="stats-total-days">0</span>
                 </div>
+            </div>
+
+            <h2 class="section-title" style="margin: 20px 0 12px">🟩 МАТРИЦА ЖИЗНИ</h2>
+            <div class="matrix-scroll-wrapper">
+                <div class="matrix-container" id="matrix-container"></div>
+            </div>
+            <div class="matrix-legend">
+                <span class="legend-item"><div class="matrix-box empty"></div> Пусто</span>
+                <span class="legend-item"><div class="matrix-box done"></div> База</span>
+                <span class="legend-item"><div class="matrix-box hard"></div> 💼 Режим</span>
+                <span class="legend-item"><div class="matrix-box rest"></div> Отдых</span>
             </div>
 
             <h2 class="section-title" style="margin: 20px 0 12px">🗝️ КЛЮЧИ</h2>
