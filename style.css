@@ -819,10 +819,20 @@ body::before {
 /* ========== TRAINING PAGE ========== */
 .train-tabs {
     display: flex;
-    gap: 6px;
+    gap: 8px;
     margin-bottom: 18px;
+    background: var(--bg-card);
+    padding: 6px;
+    border-radius: var(--radius-sm);
+    border: 1px solid var(--border-subtle);
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none; /* Hide scrollbar Firefox */
 }
-
+.train-tabs::-webkit-scrollbar {
+    display: none; /* Hide scrollbar Chrome/Safari */
+}
 .train-tab {
     flex: 1;
     padding: 10px 0;
