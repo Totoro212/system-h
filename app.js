@@ -279,6 +279,66 @@ const TRAINING = {
             }
         ],
         cooldown: ['Растяжка квадрицепса — стоя, подтяни пятку к ягодице — 30 сек', 'Растяжка задней поверхности бедра — наклон вперёд с прямыми ногами — 30 сек', 'Растяжка сгибателей бедра — выпад с коленом на полу, подай таз вперёд — 30 сек', 'Дыхание: вдох 4 сек → выдох 6 сек × 5 раз']
+    },
+    titan: {
+        title: 'TITAN — Метаболический Стресс',
+        time: '~30 мин',
+        note: '⚠️ РЕЖИМ ПЕРЕРАБОТКИ [STR 30]. Мозг сдастся раньше мышц. Не для новичков. Твоя задача — дойти до абсолютного отказа.',
+        warmup: {
+            items: ['Jumping jacks — 60 сек', 'Медленные скручивания — 20 раз', 'Отжимания на коленях — 15 раз'],
+            mobility: ['Вращения плечами', 'Вращения тазом и коленями'],
+            specific: 'Подход из 10 легких повторений первого упражнения'
+        },
+        exercises: [
+            {
+                name: 'Дроп-сет: Отжимания / Жим', sets: '1 гигантский сет', rest: '—',
+                muscles: 'Грудные, дельты, трицепсы',
+                weight: 'Старт со сложного варианта, шаг вниз по сложности без отдыха',
+                technique: ['1. Отжимания (или жим) до полного мышечного отказа', '2. БЕЗ ОТДЫХА: Отжимания с колен (или жим с легким весом) до отказа', '3. БЕЗ ОТДЫХА: Удержание планки на прямых руках до падения'],
+                alt: 'Если используешь гантели: возьми тяжелые (отказ на 8-10) -> сразу бери легкие (отказ на 8-10) -> сразу без веса (отжимания) до отказа.'
+            },
+            {
+                name: 'Кластер-сет: Подтягивания / Тяга', sets: '1 кластер', rest: '2 мин перед стартом',
+                muscles: 'Широчайшие, бицепс, хват',
+                weight: 'Рабочий вес (твой максимум на 5-6 повторений)',
+                technique: ['Сделай 4 повторения', 'Отдых ровно 15 секунд', 'Сделай еще 4 повторения', 'Отдых 15 секунд', 'Сделай еще 4 повторения... Повторяй пока не сможешь сделать даже 1 раз.'],
+                alt: 'Суть кластера — выполнить больше чистых повторений с тяжелым весом за счет микро-пауз.'
+            },
+            {
+                name: 'Death by Squats (Кубок Смерти)', sets: 'До отказа', rest: '—',
+                muscles: 'Ноги, ягодицы, воля',
+                weight: 'Один средний вес (гоблет 10-15 кг)',
+                technique: ['Включи таймер.', 'Минута 1: Делаешь 1 приседание. Остаток минуты отдыхаешь.', 'Минута 2: Делаешь 2 приседания. Отдыхаешь.', 'Минута 15: Делаешь 15 приседаний... и так далее.', 'Подход заканчивается, когда ты не успеваешь выполнить нужное количество приседаний за минуту.'],
+                alt: 'Невероятная нагрузка на психику и лактатную выносливость ног.'
+            }
+        ],
+        cooldown: ['Лежать на полу и дышать — 5 минут', 'Растяжка всего тела (произвольная) — 5 минут']
+    },
+    vo2max: {
+        title: 'VO2 MAX — 4x4 Норвежские Интервалы',
+        time: '~30-40 мин',
+        note: '⚠️ РЕЖИМ ПЕРЕРАБОТКИ [END 30]. Золотой стандарт выносливости и долголетия. Поднимает Ударный Объем Сердца.',
+        warmup: {
+            items: ['Легкий бег или кручение педалей — 10 минут (Пульс Зона 2: можешь говорить, но с паузами)'],
+            mobility: ['Динамическая растяжка ног'],
+            specific: 'Короткие ускорения по 15 секунд (3-4 раза)'
+        },
+        exercises: [
+            {
+                name: 'VO2 Max Рабочий Интервал', sets: '4 интервала', rest: '3 мин между',
+                muscles: 'Сердечная мышца, митохондрии',
+                weight: 'Бег, байк, гребля, берпи, или бег в гору',
+                technique: ['Работаешь 4 минуты на мощности 85-95% от твоего максимума.', 'Дыхание тяжелое, ты НЕ можешь сказать больше 1-2 слов подряд.', 'Последняя минута должна быть субъективно очень тяжелой (8-9/10 по шкале усилий).'],
+                alt: 'Интервал не должен быть спринтом (иначе ты сдохнешь через 30 сек). Это максимальный темп, который ты можешь выдержать ровно 4 минуты.'
+            },
+            {
+                name: 'Активное Восстановление', sets: 'Между рабочими', rest: '—',
+                muscles: 'Очистка от лактата',
+                weight: 'То же оборудование',
+                technique: ['Отдых длится ровно 3 минуты.', 'НЕ САДИСЬ и не останавливайся полностью! Двигайся очень медленно (прогулочный шаг, медленное кручение педалей).', 'Пульс должен упасть до зоны 2 (легкое дыхание).']
+            }
+        ],
+        cooldown: ['Спокойная заминка (шаг или байк) — 5-10 минут (пока дыхание не станет полностью незаметным)']
     }
 };
 
@@ -340,6 +400,7 @@ function loadData() {
         if (d.totalPoints === undefined) d.totalPoints = 0;
         if (d.bestStreak === undefined) d.bestStreak = 0;
         if (!d.customTraining) d.customTraining = {};
+        if (!d.unlockedContent) d.unlockedContent = [];
         // Remove old fields
         delete d.milestones;
         delete d.keys;
@@ -356,6 +417,7 @@ function loadData() {
         days: {},
         penalty: false,
         customTraining: {},
+        unlockedContent: [],
         lastBonusRotation: ''
     };
 }
@@ -655,6 +717,27 @@ function updateQuestStates() {
     });
 }
 
+// ========== STAT MILESTONES (REWORK SYSTEM) ==========
+function checkStatMilestones() {
+    if (!data.unlockedContent) data.unlockedContent = [];
+    const thresholds = [
+        { stat: 'str', val: 30, code: 'str30', title: 'ФИЗИЧЕСКАЯ АДАПТАЦИЯ', text: 'Базовые тренировки больше не рвут мышечные волокна. Твое тело адаптировалось.\n\nТебе нужен метаболический стресс. Программа переработана.\n\n🔓 ДОСТУПЕН ПРОТОКОЛ "TITAN" (Вкладка Тренировок)' },
+        { stat: 'int', val: 30, code: 'int30', title: 'КОГНИТИВНАЯ АДАПТАЦИЯ', text: 'Твой мозг легко справляется с семантической рутиной. Пришло время поменять архитектуру мышления.\n\nБаза переработана.\n\n🔓 ДОСТУПНА ГЛАВА "АРХИТЕКТУРА СИСТЕМ" (Кодекс)' },
+        { stat: 'wis', val: 30, code: 'wis30', title: 'БИОХИМИЧЕСКАЯ АДАПТАЦИЯ', text: 'Ты научился базовой дисциплине. Теперь нужно подчинить себе нейромедиаторы.\n\nБаза переработана.\n\n🔓 ДОСТУПНА ГЛАВА "ФИЗИОЛОГИЯ ДОФАМИНА" (Кодекс)' },
+        { stat: 'end', val: 30, code: 'end30', title: 'КАРДИО-АДАПТАЦИЯ', text: 'Твое сердце бьется ровно на базовых нагрузках. Пришло время расширить бензобак.\n\nПрограмма переработана.\n\n🔓 ДОСТУПЕН ПРОТОКОЛ "VO2 MAX 4x4" (Вкладка Тренировок)' }
+    ];
+
+    thresholds.forEach(t => {
+        if ((data.stats[t.stat] || 0) >= t.val && !data.unlockedContent.includes(t.code)) {
+            data.unlockedContent.push(t.code);
+            saveData();
+            setTimeout(() => {
+                showModal(`⚠️ ${t.title}`, t.text);
+            }, 1000); // slight delay so it happens after normal popups
+        }
+    });
+}
+
 function toggleQuest(questId, isBonus) {
     const today = getToday();
     const todayData = getDayData(today);
@@ -707,6 +790,7 @@ function toggleQuest(questId, isBonus) {
     todayData.done = todayData.main.length >= Math.ceil(data.mainQuests.length / 2);
     saveData();
     updateDashboard();
+    checkStatMilestones();
 }
 
 function deleteQuest(questId, isBonus) {
@@ -1054,6 +1138,27 @@ const CODEX_REFERENCE = [
     }
 ];
 
+const UNLOCKABLE_CODEX = {
+    int30: {
+        icon: '📐', title: 'Архитектура Систем [INT 30]',
+        rules: [
+            'Принцип Инверсии (Charlie Munger): Хочешь решить проблему? Сначала придумай, как гарантированно её создать, и избегай этих шагов.',
+            'Закон Галла: Сложная система, которая работает, неизменно произошла от простой системы, которая работала. Нельзя спроектировать сложную систему с нуля.',
+            'Бритва Оккама: Из множества решений самое простое (с наименьшим числом допущений) — верное.',
+            'Принцип Парето 80/20: 20% усилий дают 80% результата. Найди этот рычаг.'
+        ]
+    },
+    wis30: {
+        icon: '🧪', title: 'Физиология Дофамина [WIS 30]',
+        rules: [
+            'Базовый уровень дофамина важнее пиков. Дешевый дофамин (рилсы, сахар) роняет базовый уровень. Тебе становится скучно жить.',
+            'Тяжелая работа (код, тренировка) вызывает боль ДО и здоровый пик дофамина ПОСЛЕ. Это устойчивая мотивация.',
+            'Случайное вознаграждение (как рулетка или сундук) цепляет мозг сильнее, чем предсказуемое.',
+            'Протокол восстановления (Dr. Huberman): Холодный душ повышает базовый дофамин на 250% на 3 часа без последующего спада.'
+        ]
+    }
+};
+
 // Habits storage (separate from main data)
 function loadHabits() {
     const saved = localStorage.getItem('ariseHabits');
@@ -1154,12 +1259,19 @@ document.getElementById('btn-add-habit').addEventListener('click', () => {
 function renderCodexReference() {
     const container = document.getElementById('codex-reference');
     let html = '';
-    CODEX_REFERENCE.forEach(cat => {
+    const allRef = [...CODEX_REFERENCE];
+    
+    // Inject unlocks
+    if (data.unlockedContent && data.unlockedContent.includes('int30')) allRef.push(UNLOCKABLE_CODEX.int30);
+    if (data.unlockedContent && data.unlockedContent.includes('wis30')) allRef.push(UNLOCKABLE_CODEX.wis30);
+
+    allRef.forEach(cat => {
+        const isUnlock = cat.title.includes('[');
         html += `
-        <div class="codex-card" onclick="this.classList.toggle('expanded')">
+        <div class="codex-card ${isUnlock ? 'unlock-card' : ''}" onclick="this.classList.toggle('expanded')">
             <div class="codex-card-header">
                 <span class="codex-card-icon">${cat.icon}</span>
-                <span class="codex-card-title">${cat.title}</span>
+                <span class="codex-card-title ${isUnlock ? 'unlock-title' : ''}">${cat.title}</span>
                 <span class="codex-card-expand">▼</span>
             </div>
             <div class="codex-card-body">
@@ -1176,6 +1288,23 @@ let currentTrainDay = 'push';
 function renderTraining(day) {
     currentTrainDay = day;
     const container = document.getElementById('train-content');
+    const tabsContainer = document.querySelector('.train-tabs');
+
+    // Dynamically inject unlocked tabs if they aren't there yet
+    if (data.unlockedContent && data.unlockedContent.includes('str30') && !document.querySelector('.train-tab[data-day="titan"]')) {
+        tabsContainer.innerHTML += `<button class="train-tab" data-day="titan" style="color:var(--red); border-color:var(--red);">TITAN</button>`;
+        // Re-bind listeners for new tabs
+        document.querySelectorAll('.train-tab').forEach(tab => {
+            tab.onclick = () => renderTraining(tab.dataset.day);
+        });
+    }
+    if (data.unlockedContent && data.unlockedContent.includes('end30') && !document.querySelector('.train-tab[data-day="vo2max"]')) {
+        tabsContainer.innerHTML += `<button class="train-tab" data-day="vo2max" style="color:var(--yellow); border-color:var(--yellow);">VO2 MAX</button>`;
+        // Re-bind listeners for new tabs
+        document.querySelectorAll('.train-tab').forEach(tab => {
+            tab.onclick = () => renderTraining(tab.dataset.day);
+        });
+    }
 
     document.querySelectorAll('.train-tab').forEach(t => {
         t.classList.toggle('active', t.dataset.day === day);
