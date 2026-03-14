@@ -1327,13 +1327,6 @@ document.getElementById('import-file').addEventListener('change', (e) => {
     reader.readAsText(file);
 });
 
-document.getElementById('btn-reset').addEventListener('click', () => {
-    if (!confirm('⚠️ Ты уверен? ВСЕ данные будут удалены: очки, статы, streak, история.')) return;
-    if (!confirm('☠️ ТОЧНО? Это действие НЕЛЬЗЯ отменить. Сначала сохрани данные если нужно.')) return;
-    localStorage.removeItem('hunterSystem');
-    location.reload();
-});
-
 // ========== PWA ==========
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
