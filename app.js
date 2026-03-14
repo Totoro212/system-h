@@ -1,18 +1,24 @@
 // ========== QUESTS CONFIG ==========
 const DEFAULT_MAIN_QUESTS = [
-    { id: 'workout', name: '🏋️ Тренировка', desc: '60 мин — силовая или кардио', stat: 'str' },
-    { id: 'code', name: '💻 Код', desc: '3 часа практики программирования', stat: 'int' },
-    { id: 'study', name: '🎓 Универ', desc: '2 часа — задания, диплом, предметы', stat: 'int' },
-    { id: 'read', name: '📖 Чтение', desc: '30 минут книги', stat: 'wis' },
-    { id: 'report', name: '📝 Отчёт дня', desc: 'Что сделал, что понял, план на завтра', stat: 'dsc' }
+    { id: 'activity', name: '🏃 Физическая активность', desc: 'Тренировка, прогулка или растяжка', stat: 'str' },
+    { id: 'code', name: '💻 Код', desc: '1–3 часа практики программирования', stat: 'int' },
+    { id: 'selfdev', name: '🧠 Саморазвитие', desc: 'Учёба, курсы, новый навык', stat: 'wis' },
+    { id: 'read', name: '📖 Чтение', desc: '30 минут книги', stat: 'wis' }
 ];
 
-const DEFAULT_BONUS_QUESTS = [
+const ALL_BONUS_QUESTS = [
     { id: 'meditate', name: '🧘 Медитация', desc: '10 мин тишины', stat: 'wis' },
     { id: 'english', name: '🇬🇧 Английский', desc: '15 мин практики', stat: 'int' },
-    { id: 'cook', name: '🍳 Готовить самому', desc: 'Приготовить нормальную еду', stat: 'end' },
-    { id: 'walk', name: '🚶 Прогулка', desc: '30 мин на свежем воздухе', stat: 'end' },
-    { id: 'clean', name: '🧹 Порядок', desc: 'Убрать / навести порядок', stat: 'dsc' }
+    { id: 'cook', name: '🍳 Готовить самому', desc: 'Нормальная еда', stat: 'end' },
+    { id: 'uni', name: '🎓 Универ', desc: 'Задания, диплом, пары', stat: 'int' },
+    { id: 'reflect', name: '📝 Рефлексия', desc: 'Что сделал и понял', stat: 'dsc' },
+    { id: 'stretch', name: '🤸 Растяжка', desc: '15 минут йоги', stat: 'str' },
+    { id: 'clean', name: '🧹 Уборка', desc: 'Навести порядок вокруг', stat: 'dsc' },
+    { id: 'water', name: '💧 Водный баланс', desc: 'Выпить 2л воды за день', stat: 'end' },
+    { id: 'journal', name: '📓 Дневник', desc: 'Записать мысли и планы', stat: 'wis' },
+    { id: 'walk', name: '🚶 Прогулка', desc: '30 минут на свежем воздухе', stat: 'end' },
+    { id: 'finance', name: '💰 Финансы', desc: 'Записать расходы за день', stat: 'dsc' },
+    { id: 'family', name: '📞 Близкие', desc: 'Позвонить/написать родным', stat: 'wis' }
 ];
 
 // ========== AUTO-UNLOCK KEYS ==========
@@ -91,15 +97,15 @@ const RANKS = [
     { name: 'S-РАНГ', title: 'Монарх', min: 2000, max: Infinity }
 ];
 
-const WEEKLY_RULES = [
-    'Приходи вовремя. Всегда.',
-    'Хвали одного человека в день вслух.',
-    'Не давай советов, если не просят.',
-    'Когда хочешь залипнуть в телефон — сделай 20 отжиманий.',
-    'Говори "нет" без оправданий.',
-    'Признавай ошибки сразу.',
-    'Слушай, не перебивая.',
-    'Сравнивай себя только с собой вчерашним.'
+const WEEKLY_CHALLENGES = [
+    'Неделя без сахара',
+    'Каждый день готовить самому',
+    '30 мин без телефона после пробуждения',
+    'Читать 40 страниц в день (вместо 20)',
+    'Никакого фастфуда и снеков всю неделю',
+    'Ложиться спать до 23:00',
+    'Отказаться от кофеина после 14:00',
+    '15 минут медитации каждый день'
 ];
 
 // ========== TRAINING PLAN ==========
@@ -326,13 +332,14 @@ function loadData() {
     if (saved) {
         const d = JSON.parse(saved);
         if (!d.mainQuests) d.mainQuests = DEFAULT_MAIN_QUESTS;
-        if (!d.bonusQuests) d.bonusQuests = DEFAULT_BONUS_QUESTS;
+        if (!d.bonusQuests) d.bonusQuests = ALL_BONUS_QUESTS.slice(0, 5);
         if (!d.stats) d.stats = { str: 0, end: 0, int: 0, wis: 0, dsc: 0 };
         if (!d.days) d.days = {};
         if (!d.startDate) d.startDate = getToday();
         if (!d.unlockedKeys) d.unlockedKeys = [];
         if (d.totalPoints === undefined) d.totalPoints = 0;
         if (d.bestStreak === undefined) d.bestStreak = 0;
+        if (!d.customTraining) d.customTraining = {};
         // Remove old fields
         delete d.milestones;
         delete d.keys;
@@ -344,10 +351,12 @@ function loadData() {
         startDate: getToday(),
         stats: { str: 0, end: 0, int: 0, wis: 0, dsc: 0 },
         mainQuests: DEFAULT_MAIN_QUESTS,
-        bonusQuests: DEFAULT_BONUS_QUESTS,
+        bonusQuests: ALL_BONUS_QUESTS.slice(0, 5),
         unlockedKeys: [],
         days: {},
-        penalty: false
+        penalty: false,
+        customTraining: {},
+        lastBonusRotation: ''
     };
 }
 
@@ -385,15 +394,17 @@ function calcStreak() {
     const todayStr = getToday();
     const todayData = data.days[todayStr];
     const mainCount = data.mainQuests.length;
-    if (todayData && todayData.main && todayData.main.length === mainCount) {
+    
+    if (todayData && (todayData.isRestDay || (todayData.main && todayData.main.length === mainCount))) {
         streak = 1;
     }
+    
     let checkDate = new Date(today);
     checkDate.setDate(checkDate.getDate() - 1);
     while (true) {
         const ds = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
         const dd = data.days[ds];
-        if (dd && dd.main && dd.main.length >= mainCount) {
+        if (dd && (dd.isRestDay || (dd.main && dd.main.length >= mainCount))) {
             streak++;
             checkDate.setDate(checkDate.getDate() - 1);
         } else break;
@@ -416,6 +427,12 @@ function getWeekNumber() {
     return Math.floor((new Date() - start) / 604800000);
 }
 
+function getMultiplier(streak) {
+    if (streak >= 30) return 1.5;
+    if (streak >= 7) return 1.2;
+    return 1.0;
+}
+
 function genId() {
     return 'q' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
 }
@@ -425,7 +442,9 @@ function checkPenalty() {
     yesterday.setDate(yesterday.getDate() - 1);
     const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
     const yData = data.days[yStr];
-    if (yData && yData.done) return data.penalty || false;
+    
+    if (yData && (yData.done || yData.isRestDay)) return data.penalty || false;
+    
     if (yData && yData.main && yData.main.length < Math.ceil(data.mainQuests.length / 2)) {
         if (yData.main.length > 0 || yData.bonus.length > 0) return true;
     }
@@ -465,11 +484,30 @@ function updateDashboard() {
 
     const progress = rank.max === Infinity ? 100 : ((data.totalPoints - rank.min) / (rank.max - rank.min)) * 100;
     document.getElementById('rank-progress').style.width = `${Math.min(100, progress)}%`;
-    document.getElementById('progress-label').textContent = rank.max === Infinity ? `${data.totalPoints} ∞` : `${data.totalPoints} / ${rank.max}`;
-    document.getElementById('total-points').textContent = data.totalPoints;
+    document.getElementById('progress-label').textContent = rank.max === Infinity ? `${Math.floor(data.totalPoints)} ∞` : `${Math.floor(data.totalPoints)} / ${rank.max}`;
+    document.getElementById('total-points').textContent = Math.floor(data.totalPoints);
+
+    // Apply Visual Era
+    document.body.className = `era-${Math.min(rankIdx, 5)}`;
 
     const streak = calcStreak();
     document.getElementById('streak-count').textContent = streak;
+    
+    // Multiplier display
+    const mult = getMultiplier(streak);
+    const multSpan = document.getElementById('streak-mult');
+    if (multSpan) {
+        multSpan.style.display = 'inline-block';
+        multSpan.textContent = `x${mult}`;
+        if (mult > 1) {
+            multSpan.style.background = 'var(--amber)';
+            multSpan.style.color = '#fff';
+        } else {
+            multSpan.style.background = 'rgba(160, 120, 255, 0.1)';
+            multSpan.style.color = 'var(--text-dim)';
+        }
+    }
+    
     if (streak > data.bestStreak) { data.bestStreak = streak; saveData(); }
 
     const today = getToday();
@@ -483,7 +521,39 @@ function updateDashboard() {
     document.getElementById('penalty-banner').classList.toggle('hidden', !checkPenalty());
 
     const weekNum = getWeekNumber();
-    document.getElementById('weekly-rule').textContent = WEEKLY_RULES[weekNum % WEEKLY_RULES.length];
+    document.getElementById('weekly-rule').textContent = WEEKLY_CHALLENGES[weekNum % WEEKLY_CHALLENGES.length];
+
+    // Calculate weekly progress
+    const todayDate = new Date();
+    const dayOfWeek = todayDate.getDay() === 0 ? 6 : todayDate.getDay() - 1;
+    const weekStart = new Date(todayDate);
+    weekStart.setDate(todayDate.getDate() - dayOfWeek);
+    
+    let weeklyDaysDone = 0;
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(weekStart);
+        d.setDate(d.getDate() + i);
+        const ds = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        if (data.days[ds] && data.days[ds].weeklyDone) weeklyDaysDone++;
+    }
+    document.getElementById('weekly-progress').textContent = `${weeklyDaysDone}/7`;
+
+    const weeklyCheck = document.getElementById('weekly-rule-check');
+    if (todayData.weeklyDone) {
+        weeklyCheck.style.background = 'var(--purple)';
+        weeklyCheck.innerHTML = '✓';
+        weeklyCheck.style.color = 'white';
+        weeklyCheck.style.display = 'flex';
+        weeklyCheck.style.alignItems = 'center';
+        weeklyCheck.style.justifyContent = 'center';
+        weeklyCheck.style.fontSize = '12px';
+        weeklyCheck.style.fontWeight = 'bold';
+    } else {
+        weeklyCheck.style.background = 'transparent';
+        weeklyCheck.innerHTML = '';
+    }
+
+
 
     // Check auto-unlock keys
     checkAutoKeys();
@@ -559,7 +629,15 @@ function renderQuests() {
     const bc = document.getElementById('bonus-quests');
     mc.innerHTML = '';
     bc.innerHTML = '';
-    data.mainQuests.forEach(q => mc.appendChild(renderQuestItem(q, false)));
+    
+    const todayData = getDayData(getToday());
+    
+    if (todayData.isRestDay) {
+        mc.innerHTML = '<div style="text-align: center; color: var(--text-dim); padding: 20px; font-style: italic;">Сегодня день восстановления. Набирайся сил! 😴</div>';
+    } else {
+        data.mainQuests.forEach(q => mc.appendChild(renderQuestItem(q, false)));
+    }
+    
     data.bonusQuests.forEach(q => bc.appendChild(renderQuestItem(q, true)));
     mc.classList.toggle('editing', editModeMain);
     bc.classList.toggle('editing', editModeBonus);
@@ -585,12 +663,15 @@ function toggleQuest(questId, isBonus) {
     if (!quest) return;
 
     const item = document.querySelector(`.quest-item[data-quest="${questId}"]`);
+    
+    const currentMult = getMultiplier(calcStreak());
+    const pointsGained = 2 * currentMult;
 
     if (list.includes(questId)) {
         list.splice(list.indexOf(questId), 1);
         if (item) item.classList.remove('completed');
-        data.totalPoints = Math.max(0, data.totalPoints - 2);
-        todayData.points = Math.max(0, todayData.points - 2);
+        data.totalPoints = Math.max(0, data.totalPoints - pointsGained);
+        todayData.points = Math.max(0, todayData.points - pointsGained);
         if (quest.stat) data.stats[quest.stat] = Math.max(0, (data.stats[quest.stat] || 0) - 1);
     } else {
         list.push(questId);
@@ -598,17 +679,28 @@ function toggleQuest(questId, isBonus) {
             item.classList.add('completed', 'just-completed');
             setTimeout(() => item.classList.remove('just-completed'), 300);
         }
-        data.totalPoints += 2;
-        todayData.points += 2;
+        data.totalPoints += pointsGained;
+        todayData.points += pointsGained;
         if (quest.stat) data.stats[quest.stat] = (data.stats[quest.stat] || 0) + 1;
-        showPointsPopup('+2');
+        showPointsPopup(`+${pointsGained > 2 ? pointsGained.toFixed(1) : pointsGained}`);
 
         if (!isBonus && todayData.main.length === data.mainQuests.length) {
-            showModal('КВЕСТЫ ВЫПОЛНЕНЫ!', `Все ежедневные квесты на сегодня!\n+${data.mainQuests.length * 2} очков\n\nОтличная работа, Охотник.`);
+            if (!todayData.chestOpened) {
+                document.getElementById('chest-modal-overlay').classList.remove('hidden');
+                document.getElementById('chest-closed').style.display = 'inline-block';
+                document.getElementById('chest-opened').style.display = 'none';
+                document.getElementById('chest-close-btn').style.display = 'none';
+                document.getElementById('chest-hint').style.display = 'block';
+                document.getElementById('chest-modal').classList.add('chest-pop');
+                setTimeout(() => document.getElementById('chest-modal').classList.remove('chest-pop'), 200);
+            } else {
+                showModal('КВЕСТЫ ВЫПОЛНЕНЫ!', `Все ежедневные квесты на сегодня!\n+${data.mainQuests.length * 2} очков\n\nОтличная работа, Охотник.`);
+            }
+            
             const prev = getRankIndex(data.totalPoints - 2);
             const cur = getRankIndex(data.totalPoints);
             if (cur > prev) {
-                setTimeout(() => showModal('RANK UP!', `${RANKS[cur].name}\n"${RANKS[cur].title}"\n\nПродолжай!`), 1500);
+                setTimeout(() => showModal('RANK UP!', `${RANKS[cur].name}\n"${RANKS[cur].title}"\nЭра ${cur} достигнута!`), 2500);
             }
         }
     }
@@ -626,6 +718,58 @@ function deleteQuest(questId, isBonus) {
     updateQuestStates();
     updateDashboard();
 }
+
+// ========== REST DAY ==========
+document.getElementById('btn-rest-day').addEventListener('click', () => {
+    const todayData = getDayData(getToday());
+    
+    // Check if max 2 rest days per week exceeded
+    const todayDate = new Date();
+    const dayOfWeek = todayDate.getDay() === 0 ? 6 : todayDate.getDay() - 1;
+    const weekStart = new Date(todayDate);
+    weekStart.setDate(todayDate.getDate() - dayOfWeek);
+    let restDaysThisWeek = 0;
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(weekStart);
+        d.setDate(d.getDate() + i);
+        const ds = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+        if (data.days[ds] && data.days[ds].isRestDay) restDaysThisWeek++;
+    }
+
+    if (!todayData.isRestDay && restDaysThisWeek >= 2) {
+        alert('Ты уже брал 2 дня отдыха на этой неделе. Пора браться за работу! ⚔️');
+        return;
+    }
+
+    todayData.isRestDay = !todayData.isRestDay;
+    if (todayData.isRestDay) {
+        todayData.main = []; // Clear main quests for rest day
+    }
+    saveData();
+    renderQuests();
+    updateQuestStates();
+    updateDashboard();
+    updateCalendar(); // Update calendar to show rest day status
+});
+
+// ========== WEEKLY RULE TRACKER ==========
+document.getElementById('weekly-rule-card').addEventListener('click', () => {
+    const todayData = getDayData(getToday());
+    todayData.weeklyDone = !todayData.weeklyDone;
+    
+    const currentMult = getMultiplier(calcStreak());
+    const pointsGained = 2 * currentMult;
+    
+    if (todayData.weeklyDone) {
+        data.totalPoints += pointsGained;
+        showPointsPopup(`+${pointsGained > 2 ? pointsGained.toFixed(1) : pointsGained} (вызов недели)`);
+    } else {
+        data.totalPoints -= pointsGained;
+    }
+    
+    saveData();
+    updateDashboard();
+});
 
 // ========== EDIT TOGGLES ==========
 function updateEditButtons() {
@@ -770,7 +914,9 @@ function updateCalendar() {
         cell.textContent = d;
         if (ds === todayStr) cell.classList.add('today');
         const dd = data.days[ds];
-        if (dd && dd.main) {
+        if (dd && dd.isRestDay) {
+            cell.classList.add('purple'); // Purple dot for rest day
+        } else if (dd && dd.main) {
             if (dd.main.length >= mc) cell.classList.add('green');
             else if (dd.main.length > 0) cell.classList.add('yellow');
             else if (ds < todayStr && ds >= data.startDate) cell.classList.add('red');
@@ -1152,6 +1298,35 @@ document.getElementById('btn-export').addEventListener('click', () => {
     showModal('💾 ДАННЫЕ СОХРАНЕНЫ', 'Файл скачан.\nИспользуй его для восстановления прогресса если что-то случится.');
 });
 
+document.getElementById('btn-import').addEventListener('click', () => {
+    document.getElementById('import-file').click();
+});
+
+document.getElementById('import-file').addEventListener('change', (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+        try {
+            const importedData = JSON.parse(event.target.result);
+            if (importedData && importedData.stats && importedData.days) {
+                localStorage.setItem('hunterSystem', JSON.stringify(importedData));
+                showModal('📂 ДАННЫЕ ЗАГРУЖЕНЫ', 'Игра будет перезапущена для применения сохранения.', () => {
+                    location.reload();
+                });
+                // Fallback if modal is closed too fast
+                setTimeout(() => location.reload(), 2500);
+            } else {
+                alert('Ошибка: Неверный формат файла сохранения.');
+            }
+        } catch (err) {
+            alert('Ошибка при чтении файла!');
+        }
+    };
+    reader.readAsText(file);
+});
+
 document.getElementById('btn-reset').addEventListener('click', () => {
     if (!confirm('⚠️ Ты уверен? ВСЕ данные будут удалены: очки, статы, streak, история.')) return;
     if (!confirm('☠️ ТОЧНО? Это действие НЕЛЬЗЯ отменить. Сначала сохрани данные если нужно.')) return;
@@ -1163,6 +1338,47 @@ document.getElementById('btn-reset').addEventListener('click', () => {
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => {});
 }
+
+// ========== CHEST ==========
+document.getElementById('chest-closed').addEventListener('click', () => {
+    document.getElementById('chest-closed').style.display = 'none';
+    const opened = document.getElementById('chest-opened');
+    opened.style.display = 'flex';
+    document.getElementById('chest-hint').style.display = 'none';
+    
+    const rand = Math.random();
+    let rewardText = '';
+    
+    const currentMult = getMultiplier(calcStreak());
+    
+    if (rand < 0.5) {
+        const reward = 5 * currentMult;
+        data.totalPoints += reward;
+        rewardText = `+${reward > 5 ? reward.toFixed(1) : reward} Опыта ✨`;
+    } else if (rand < 0.8) {
+        const reward = 10 * currentMult;
+        data.totalPoints += reward;
+        rewardText = `+${reward > 10 ? reward.toFixed(1) : reward} Опыта ✨`;
+    } else {
+        const statsKeys = Object.keys(STAT_NAMES);
+        const randStat = statsKeys[Math.floor(Math.random() * statsKeys.length)];
+        data.stats[randStat] = (data.stats[randStat] || 0) + 1;
+        rewardText = `+1 ${STAT_NAMES[randStat].split('—')[0].trim()} 🔋`;
+    }
+    
+    const todayData = getDayData(getToday());
+    todayData.chestOpened = true;
+    
+    document.getElementById('chest-reward-text').innerText = rewardText;
+    document.getElementById('chest-close-btn').style.display = 'block';
+    
+    saveData();
+    updateDashboard();
+});
+
+document.getElementById('chest-close-btn').addEventListener('click', () => {
+    document.getElementById('chest-modal-overlay').classList.add('hidden');
+});
 
 // ========== INIT ==========
 // Clear old data format if needed
@@ -1191,12 +1407,47 @@ function init() {
         data.startDate = today;
         saveData();
     }
+    
+    // Rotate bonus quests daily
+    if (data.lastBonusRotation !== today) {
+        // Keep custom quests (IDs starting with 'q')
+        const customQuests = (data.bonusQuests || []).filter(q => q.id.startsWith('q'));
+        
+        // Pick 4 random quests using today's date as a seed
+        const seed = new Date(today).getTime();
+        const rand = (s) => {
+            let t = s += 0x6D2B79F5;
+            t = Math.imul(t ^ t >>> 15, t | 1);
+            t ^= t + Math.imul(t ^ t >>> 7, t | 61);
+            return ((t ^ t >>> 14) >>> 0) / 4294967296;
+        };
+        
+        const pool = [...ALL_BONUS_QUESTS];
+        pool.sort((a, b) => rand(seed + a.id.charCodeAt(0)) - rand(seed + b.id.charCodeAt(0)));
+        
+        data.bonusQuests = [...pool.slice(0, 4), ...customQuests];
+        data.lastBonusRotation = today;
+        saveData();
+    }
+
     updateDashboard();
     renderQuests();
     updateQuestStates();
     renderKeys();
     updateStats();
     updateCalendar();
+
+    // Check monthly checkpoint
+    const daysIn = calcDaysInSystem();
+    if (daysIn > 0 && daysIn % 30 === 0) {
+        const cpKey = `checkpoint_${daysIn}`;
+        if (!localStorage.getItem(cpKey)) {
+            localStorage.setItem(cpKey, '1');
+            setTimeout(() => {
+                showModal('📈 ЕЖЕМЕСЯЧНЫЙ ЧЕКПОИНТ', `Прошло ${daysIn} дней!\n\nЗапиши замеры: талия, грудь, бицепс, бедро.\nСделай ФОТО — это лучшая метрика прогресса!\n\nТвой общий счёт: ${data.totalPoints}\n\nТак держать, охотник! ⚔️`);
+            }, 1000);
+        }
+    }
 }
 
 init();

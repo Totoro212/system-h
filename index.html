@@ -43,7 +43,10 @@
                 </div>
                 <div class="stat-card">
                     <div class="stat-icon">⚡</div>
-                    <div class="stat-value" id="streak-count">0</div>
+                    <div class="stat-value" style="position: relative; display: inline-block;">
+                        <span id="streak-count">0</span>
+                        <span id="streak-mult" style="position: absolute; top: -5px; right: -25px; font-size: 0.7rem; background: var(--amber); color: #fff; padding: 2px 4px; border-radius: 6px; display: none;"></span>
+                    </div>
                     <div class="stat-label">Streak</div>
                 </div>
                 <div class="stat-card">
@@ -67,17 +70,28 @@
                 <button class="btn-penalty" id="btn-clear-penalty">Отработал</button>
             </div>
 
-            <div class="weekly-rule-card">
-                <div class="rule-header">🎯 ПРАВИЛО НЕДЕЛИ</div>
-                <div class="rule-text" id="weekly-rule">Приходи вовремя. Всегда.</div>
+            <div class="weekly-rule-card" id="weekly-rule-card" style="cursor: pointer; display: flex; align-items: center; justify-content: space-between;">
+                <div>
+                    <div class="rule-header" style="display: flex; gap: 8px; align-items: center;">
+                        <span>🎯 ВЫЗОВ НЕДЕЛИ</span>
+                        <span id="weekly-progress" style="background: rgba(168, 85, 247, 0.2); color: var(--purple); padding: 2px 6px; border-radius: 4px; font-size: 0.6rem;">0/7</span>
+                    </div>
+                    <div class="rule-text" id="weekly-rule">Загрузка...</div>
+                </div>
+                <div class="habit-check" id="weekly-rule-check" style="width: 20px; height: 20px; border-radius: 6px; border: 2px solid var(--purple); flex-shrink: 0; transition: all 0.2s;"></div>
             </div>
+
+
         </section>
 
         <!-- QUESTS -->
         <section id="page-quests" class="page">
-            <div class="header">
-                <h1>⚔️ КВЕСТЫ</h1>
-                <div class="quest-date" id="quest-date"></div>
+            <div class="header" style="align-items: flex-start; flex-direction: column; gap: 8px;">
+                <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
+                    <h1>⚔️ КВЕСТЫ</h1>
+                    <button class="btn-rest-day" id="btn-rest-day" style="background: rgba(168, 85, 247, 0.15); border: 1px solid var(--purple); color: var(--purple); padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;">😴 Отдых</button>
+                </div>
+                <div class="quest-date" id="quest-date" style="align-self: flex-start;"></div>
             </div>
 
             <div class="section-title-row">
@@ -174,10 +188,13 @@
                 <span class="legend-item"><span class="legend-dot green"></span> Все квесты</span>
                 <span class="legend-item"><span class="legend-dot yellow"></span> Частично</span>
                 <span class="legend-item"><span class="legend-dot red"></span> Пропуск</span>
+                <span class="legend-item"><span class="legend-dot purple"></span> Отдых</span>
             </div>
 
             <div class="data-actions" style="margin-top: 18px">
                 <button class="btn-action btn-export" id="btn-export">💾 Экспорт</button>
+                <input type="file" id="import-file" accept=".json" style="display: none;">
+                <button class="btn-action" id="btn-import" style="background: rgba(52, 211, 153, 0.1); border: 1px solid var(--green); color: var(--green);">📂 Импорт</button>
                 <button class="btn-action btn-reset" id="btn-reset">🗑️ Сброс</button>
             </div>
         </section>
@@ -245,6 +262,38 @@
             </div>
         </div>
     </div>
+
+    <!-- MYSTERY CHEST MODAL -->
+    <div id="chest-modal-overlay" class="modal-overlay hidden" style="z-index: 300;">
+        <div class="modal" id="chest-modal" style="background: linear-gradient(160deg, var(--bg-deep), var(--bg-card)); border: 2px solid var(--gold); box-shadow: 0 0 50px rgba(240, 185, 50, 0.3); transform: scale(0.9); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
+            <div class="modal-glow" style="background: radial-gradient(circle, rgba(240, 185, 50, 0.2) 0%, transparent 60%);"></div>
+            <div class="modal-title" style="background: linear-gradient(135deg, var(--gold), var(--amber)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: none; font-size: 1.8rem; margin-bottom: 20px;">🎁 СУНДУК ОХОТНИКА</div>
+            <div class="modal-content" style="font-size: 1.1rem; font-weight: 500;">
+                <div id="chest-closed" style="font-size: 4rem; cursor: pointer; animation: chestShake 2s infinite; display: inline-block;">📦</div>
+                <div id="chest-opened" class="hidden" style="display: none; flex-direction: column; gap: 10px; align-items: center;">
+                    <div style="font-size: 3.5rem; text-shadow: 0 0 20px var(--gold);">✨</div>
+                    <div id="chest-reward-text" style="color: var(--gold); font-size: 1.2rem; font-weight: bold; margin-top: 10px;"></div>
+                </div>
+                <p id="chest-hint" style="margin-top: 15px; font-size: 0.8rem; color: var(--text-dim);">Ежедневные квесты выполнены. Открой награду!</p>
+            </div>
+            <button class="modal-btn hidden" id="chest-close-btn" style="width: 100%; display: none; background: linear-gradient(135deg, var(--gold), var(--amber)); color: #111;">Забрать</button>
+        </div>
+    </div>
+
+    <style>
+        @keyframes chestShake {
+            0% { transform: scale(1) rotate(0deg); }
+            10% { transform: scale(1.1) rotate(-5deg); }
+            20% { transform: scale(1.1) rotate(5deg); }
+            30% { transform: scale(1.1) rotate(-5deg); }
+            40% { transform: scale(1.1) rotate(5deg); }
+            50% { transform: scale(1) rotate(0deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
+        .chest-pop {
+            transform: scale(1.05) !important;
+        }
+    </style>
 
     <script src="app.js"></script>
 </body>

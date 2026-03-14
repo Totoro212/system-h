@@ -89,6 +89,77 @@
     --check-fg: #fff;
 }
 
+/* ========== VISUAL ERAS (RANKS) ========== */
+body.era-1 {
+    --bg-deep: #020617; /* Slate */
+    --bg-primary: #0f172a;
+    --bg-card: rgba(15, 23, 42, 0.88);
+    --bg-card-elevated: rgba(30, 41, 59, 0.92);
+    --border-subtle: rgba(56, 189, 248, 0.1);
+    --border-glow: rgba(56, 189, 248, 0.2);
+    --purple: #0ea5e9; /* Sky Blue replaces purple */
+    --gold: #38bdf8; /* Lighter blue */
+    --amber: #0284c7; /* Darker blue */
+    --glow-purple: 0 0 20px rgba(14, 165, 233, 0.3);
+    --nav-border: rgba(14, 165, 233, 0.15);
+}
+
+body.era-2 {
+    --bg-deep: #022c22; /* Emerald/Forest */
+    --bg-primary: #064e3b;
+    --bg-card: rgba(6, 78, 59, 0.88);
+    --bg-card-elevated: rgba(4, 120, 87, 0.92);
+    --border-subtle: rgba(52, 211, 153, 0.1);
+    --border-glow: rgba(52, 211, 153, 0.2);
+    --purple: #10b981; /* Emerald */
+    --gold: #34d399; 
+    --amber: #059669;
+    --glow-purple: 0 0 20px rgba(16, 185, 129, 0.3);
+    --nav-border: rgba(16, 185, 129, 0.15);
+}
+
+body.era-3 {
+    --bg-deep: #450a0a; /* Blood Red */
+    --bg-primary: #7f1d1d;
+    --bg-card: rgba(127, 29, 29, 0.9);
+    --bg-card-elevated: rgba(153, 27, 27, 0.94);
+    --border-subtle: rgba(248, 113, 113, 0.1);
+    --border-glow: rgba(248, 113, 113, 0.2);
+    --purple: #ef4444; /* Crimson */
+    --gold: #f87171; 
+    --amber: #dc2626;
+    --glow-purple: 0 0 20px rgba(239, 68, 68, 0.3);
+    --nav-border: rgba(239, 68, 68, 0.15);
+}
+
+body.era-4 {
+    --bg-deep: #2e1065; /* Deep Violet / Cyberpunk */
+    --bg-primary: #4c1d95;
+    --bg-card: rgba(76, 29, 149, 0.88);
+    --bg-card-elevated: rgba(91, 33, 182, 0.92);
+    --border-subtle: rgba(236, 72, 153, 0.15);
+    --border-glow: rgba(236, 72, 153, 0.3);
+    --purple: #db2777; /* Neon Pink */
+    --gold: #f472b6; 
+    --amber: #be185d;
+    --glow-purple: 0 0 20px rgba(219, 39, 119, 0.3);
+    --nav-border: rgba(219, 39, 119, 0.2);
+}
+
+body.era-5 {
+    --bg-deep: #09090b; /* Monarch Gold & Black */
+    --bg-primary: #18181b;
+    --bg-card: rgba(24, 24, 27, 0.88);
+    --bg-card-elevated: rgba(39, 39, 42, 0.92);
+    --border-subtle: rgba(250, 204, 21, 0.15);
+    --border-glow: rgba(250, 204, 21, 0.3);
+    --purple: #eab308; /* Pure Gold */
+    --gold: #facc15; 
+    --amber: #ca8a04;
+    --glow-purple: 0 0 20px rgba(234, 179, 8, 0.3);
+    --nav-border: rgba(234, 179, 8, 0.2);
+}
+
 html, body {
     height: 100%;
     overflow: hidden;
@@ -1240,6 +1311,7 @@ body::before {
 .cal-day.green { background: rgba(52, 211, 153, 0.12); color: var(--green); }
 .cal-day.yellow { background: rgba(251, 191, 36, 0.1); color: var(--yellow); }
 .cal-day.red { background: rgba(248, 113, 113, 0.08); color: var(--red); }
+.cal-day.purple { background: rgba(168, 85, 247, 0.12); color: var(--purple); }
 
 .calendar-legend { display: flex; gap: 18px; justify-content: center; }
 .legend-item { display: flex; align-items: center; gap: 6px; font-size: 0.62rem; color: var(--text-dim); }
@@ -1247,6 +1319,7 @@ body::before {
 .legend-dot.green { background: var(--green); }
 .legend-dot.yellow { background: var(--yellow); }
 .legend-dot.red { background: var(--red); }
+.legend-dot.purple { background: var(--purple); }
 
 /* ========== BOTTOM NAV ========== */
 .bottom-nav {
