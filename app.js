@@ -1,31 +1,24 @@
 // ========== QUESTS CONFIG ==========
 const DEFAULT_MAIN_QUESTS = [
-    { id: 'activity', name: '🏃 Физическая активность', desc: 'Тренировка, прогулка или растяжка', stat: 'str' },
-    { id: 'code', name: '💻 Код', desc: '1–3 часа практики программирования', stat: 'int' },
-    { id: 'selfdev', name: '🧠 Саморазвитие', desc: 'Учёба, курсы, новый навык', stat: 'wis' },
-    { id: 'read', name: '📖 Чтение', desc: '30 минут книги', stat: 'wis' }
+    { id: 'activity', name: '🏃 Движение тела', desc: 'Силовая тренировка, кардио или глубокая растяжка', stat: 'str', hint: 'Любая физическая активность от 30 мин. \n- Силовая (отжимания, турники, зал)\n- Кардио (бег, быстрая ходьба)\n- Гибкость (йога, растяжка)' },
+    { id: 'code', name: '💻 Deep Work (Код)', desc: '1–2 часа сфокусированной работы без отвлечений', stat: 'int', hint: 'Глубокая сфокусированная работа (Deep Work).\n- Никаких соцсетей и телефона.\n- Режим полета на 60-120 мин.\n- Полное погружение в одну задачу.' },
+    { id: 'selfdev', name: '🧠 Расширение нейросети', desc: 'Учёба, алгоритмы, новый сложный навык', stat: 'wis', hint: 'Изучение чего-то нового, требующего усилий.\n- Чтение документации (не YouTube-развлечения)\n- Решение алгоритмов\n- Освоение нового инструмента' },
+    { id: 'read', name: '📖 Поглощение знаний', desc: '30 минут чтения книги (не соцсетей)', stat: 'wis', hint: 'Чтение физической или электронной книги.\n- Нон-фикшн, психология, история, архитектура.\n- Аудиокниги тоже считаются, если слушать внимательно.' }
 ];
 
 const ALL_BONUS_QUESTS = [
-    { id: 'meditate', name: '🧘 Медитация', desc: '10 мин тишины', stat: 'wis' },
-    { id: 'english', name: '🇬🇧 Английский', desc: '15 мин практики', stat: 'int' },
-    { id: 'cook', name: '🍳 Готовить самому', desc: 'Нормальная еда', stat: 'end' },
-    { id: 'uni', name: '🎓 Универ', desc: 'Задания, диплом, пары', stat: 'int' },
-    { id: 'reflect', name: '📝 Рефлексия', desc: 'Что сделал и понял', stat: 'dsc' },
-    { id: 'stretch', name: '🤸 Растяжка', desc: '15 минут йоги', stat: 'str' },
-    { id: 'clean', name: '🧹 Уборка', desc: 'Навести порядок вокруг', stat: 'dsc' },
-    { id: 'water', name: '💧 Водный баланс', desc: 'Выпить 2л воды за день', stat: 'end' },
-    { id: 'journal', name: '📓 Дневник', desc: 'Записать мысли и планы', stat: 'wis' },
-    { id: 'walk', name: '🚶 Прогулка', desc: '30 минут на свежем воздухе', stat: 'end' },
-    { id: 'finance', name: '💰 Финансы', desc: 'Записать расходы за день', stat: 'dsc' },
-    { id: 'family', name: '📞 Близкие', desc: 'Позвонить/написать родным', stat: 'wis' },
-    { id: 'sunlight', name: '☀️ Солнечный свет', desc: '10 мин на улице до 10:00 (Кортизол)', stat: 'wis' },
-    { id: 'nsdr', name: '🧘 NSDR / Нидра', desc: '15 мин глубокой релаксации мозга', stat: 'end' },
-    { id: 'cold', name: '🧊 Ледяной душ', desc: '1-3 мин холода (Дофамин +250%)', stat: 'dsc' },
-    { id: 'zone2', name: '🫀 Кардио Зона 2', desc: '45+ мин монотонной работы', stat: 'end' },
-    { id: 'nodopamine', name: '📵 Утро без экранов', desc: '1 час без телефона после сна', stat: 'dsc' },
-    { id: 'focus90', name: '🎯 Спринт Фокуса', desc: '90 мин Deep Work без перерыва', stat: 'int' },
-    { id: 'cooldown', name: '🌬️ Сон в холоде', desc: 'Проветрить спальню до 18-19°C', stat: 'wis' }
+    { id: 'meditate', name: '🧘 Фокус и тишина', desc: '10 мин медитации (прокачка префронтальной коры)', stat: 'wis', hint: 'Сядь ровно. Закрой глаза. Сосредоточься на дыхании. Если мысли улетают — мягко возвращай фокус. Это качает "мышцу" внимания.' },
+    { id: 'nutrition', name: '🥩 Чистое топливо', desc: 'Отсутствие пищевого мусора и сахара за день', stat: 'end', hint: 'Никакого фастфуда, чипсов, тортов, газировок, шоколадок за весь день. Только нормальная, цельная еда.' },
+    { id: 'reflect', name: '📝 Оцифровка мыслей', desc: 'Вечерняя рефлексия: итоги дня и план на завтра', stat: 'dsc', hint: 'Выпиши 3 вещи: \n1. Что сегодня вышло хорошо?\n2. Что можно было сделать лучше?\n3. План из 3 главных задач на завтра.' },
+    { id: 'sunlight', name: '☀️ Синхронизация биоритма', desc: '10-15 мин на улице утром (блокировка мелатонина)', stat: 'wis', hint: 'Важнейший биохак Эндрю Хубермана.\nВыйди на улицу в первые 30-60 минут после сна. Свет должен попасть в глаза (не через стекло). Это запустит таймер бодрости и вечернего сна.' },
+    { id: 'cold', name: '🧊 Ледяной шок', desc: '1-3 мин ледяного душа (+250% базового дофамина)', stat: 'dsc', hint: 'Постепенно: начни с контрастного, заканчивай ледяным.\nВосстанавливает уровни дофамина на несколько часов вперед. Снимает воспаление мышц.' },
+    { id: 'nodopamine', name: '📵 Утро без дофамина', desc: 'Первый час после сна без экранов телефона/ПК', stat: 'dsc', hint: 'Не трогай телефон после того как проснулся.\nПрокачивает контроль. Если проверишь соцсети утром — весь день мозг будет требовать легкий дофамин.' },
+    { id: 'focus90', name: '🎯 Спринт Сверхфокуса', desc: '90 мин непрерывной работы в авиарежиме', stat: 'int', hint: 'То же самое что Deep Work, но хардкорнее.\nРовно 90 минут. 0 прерываний. Если отвлекся на Telegram на 5 секунд — квест провален.' },
+    { id: 'posture', name: '🕴️ Осанка монарха', desc: 'Разминка позвоночника, контроль шеи, вис на турнике', stat: 'str', hint: 'Убрать сутулость.\n- 3 подхода виса на турнике по 30 сек.\n- Постоять спиной у стены 2 минуты.\n- Следить за плечами в течение дня.' },
+    { id: 'cooldown', name: '🌬️ Холодная капсула', desc: 'Сон в полностью темной и прохладной комнате', stat: 'wis', hint: 'Идеальные условия для мелатонина и глубокого восстановления.\nПроветри комнату до 18-19 градусов. Закрой все шторы (максимальная темнота).' },
+    { id: 'stretching', name: '🤸 Мобильность', desc: '15 минут глубокой растяжки / МФР', stat: 'str', hint: 'Раскатка валиком или статика.\nСнимает спазмы после тренировки и сидения, улучшает кровоток.' },
+    { id: 'language', name: '🌍 Лингвистика', desc: '15 минут изучения иностранного языка', stat: 'int', hint: 'Словарь, грамматика или аудирование. \nСвязывает новые нейронные пути в мозге.' },
+    { id: 'budget', name: '💰 Финансовый Контроль', desc: 'Записать все расходы за день, отложить 10%', stat: 'wis', hint: 'Трекинг финансов. Те, кто не считают деньги, всегда их теряют. Выработай привычку откладывать минимум 10% от любого прихода.' }
 ];
 
 // ========== AUTO-UNLOCK KEYS ==========
@@ -126,19 +119,18 @@ const RANKS = [
 ];
 
 const WEEKLY_CHALLENGES = [
-    'Неделя без сахара',
-    'Каждый день готовить самому',
-    '30 мин без телефона после пробуждения',
-    'Читать 40 страниц в день (вместо 20)',
-    'Никакого фастфуда и снеков всю неделю',
-    'Ложиться спать до 23:00',
-    'Отказаться от кофеина после 14:00',
-    '15 минут медитации каждый день',
-    'Цифровой детокс (воскресенье без интернета)',
-    'Контрастный душ каждый день (мин. 30 сек)',
-    'Неделя абсолютной правды (не врать)',
-    'Неделя без единого матерного слова',
-    'Каждый день 10 000 шагов',
+    'Неделя полного отказа от добавленного сахара',
+    'Каждый день чистая еда (никакого джанкфуда)',
+    'Никакого телефона первые 60 минут после пробуждения',
+    'Читать/учиться 60 минут в день (Deep Learning)',
+    'Связка: Пробуждение -> Сразу выпить стакан воды -> Разминка',
+    'Ложиться спать строго до 23:00',
+    'Никаких сладких/энергетических напитков',
+    '15 минут медитации/NSDR каждый день',
+    'Цифровой детокс (один выходной полностью без соцсетей)',
+    'Ледяной душ каждый день (мин. 30 сек)',
+    'Неделя абсолютной фокусировки (без мультитаскинга)',
+    'Каждый день 10 000+ шагов на свежем воздухе',
     'Просыпаться в 6:00 всю неделю',
     'Интервальное голодание (16/8) 7 дней'
 ];
@@ -162,7 +154,7 @@ const PROGRAMS_CONFIG = {
     },
     pro: { 
         name: 'ELITE', 
-        note: 'Высокоинтенсивные протоколы для экстремальной выносливости и силы. Требуют высокого уровня восстановления.',
+        note: 'Высокоинтенсивные протоколы для экстремальной выносливости. ОПАСНО: Требуют идеального восстановления, использовать не чаще 1 раза в 10-14 дней (иначе перетрен ЦНС).',
         days: ['titan', 'vo2max'],
         unlock: 'str30'
     }
@@ -342,7 +334,7 @@ const TRAINING = {
     titan: {
         title: 'TITAN — Метаболический Стресс',
         time: '~30 мин',
-        note: '⚠️ РЕЖИМ ПЕРЕРАБОТКИ [STR 30]. Мозг сдастся раньше мышц. Не для новичков. Твоя задача — дойти до абсолютного отказа.',
+        note: '⚠️ РЕЖИМ ПЕРЕРАБОТКИ [STR 30]. Использовать МАКСИМУМ 1 раз в 14 дней. Приводит к сверх-отказу мышечных волокон. Если делать чаще — поймаешь перетрен и обвал тестостерона.',
         warmup: {
             items: ['Jumping jacks — 60 сек', 'Медленные скручивания — 20 раз', 'Отжимания на коленях — 15 раз'],
             mobility: ['Вращения плечами', 'Вращения тазом и коленями'],
@@ -590,7 +582,7 @@ const TRAINING_INFO = {
     recovery: {
         title: '🧠 Восстановление',
         sections: [
-            { heading: '😴 Сон — 7–9 часов', list: ['Ложись и вставай в одно время (±30 мин)', 'Без экранов за 30–60 мин до сна', 'Темнота + прохлада (18–20°C)', 'Не ешь тяжёлую пищу за 2 ч до сна', 'Кофеин — не позже 14:00'], content: 'Недосып (<6 ч) = −10–15% тестостерона за неделю' },
+            { heading: '😴 Сон — 7–9 часов', list: ['Ложись и вставай в одно время (±30 мин)', 'Без экранов за 30–60 мин до сна', 'Темнота + прохлада (18–20°C)', 'Не ешь тяжёлую пищу за 2 ч до сна', 'Исключить стимуляторы/энергетики во второй половине дня'], content: 'Недосып (<6 ч) = −10–15% тестостерона за неделю' },
             { heading: '🧘 Управление стрессом', content: 'Дыхание 4-7-8: вдох 4 сек → задержка 7 сек → выдох 8 сек → 3–4 цикла', list: ['Прогулка 15–20 мин после ужина', 'Холодный душ 30–60 сек (+200–300% норэпинефрин)', 'Ограничь новости и соцсети'] },
             { heading: '🔥 Тестостерон', list: ['⬆️ Силовые тренировки (база)', '⬆️ Сон 7–9 часов', '⬆️ Цинк, магний (орехи, семечки, шпинат)', '⬆️ Витамин D (солнце 15–20 мин)', '⬇️ Недосып (<6 ч)', '⬇️ Хронический стресс', '⬇️ Алкоголь (−6–10%)', '⬇️ Ожирение'] },
             { heading: '💊 Добавки (научный минимум)', list: ['Креатин 5 г/день — +5–10% силы ⭐⭐⭐⭐⭐', 'Витамин D3 1000–2000 МЕ/день (зимой) ⭐⭐⭐⭐', 'Магний 200–400 мг перед сном ⭐⭐⭐⭐', 'Омега-3 1000–2000 мг EPA+DHA/день ⭐⭐⭐⭐'] }
@@ -625,7 +617,18 @@ function loadData() {
     if (saved) {
         const d = JSON.parse(saved);
         if (!d.mainQuests) d.mainQuests = DEFAULT_MAIN_QUESTS;
-        if (!d.bonusQuests) d.bonusQuests = ALL_BONUS_QUESTS.slice(0, 5);
+        // Fix for legacy users: force truncate bonus quests to 3 if there are 5 saved
+        if (!d.bonusQuests) {
+            d.bonusQuests = ALL_BONUS_QUESTS.slice(0, 3);
+        } else if (d.bonusQuests.length > 3) {
+            d.bonusQuests = d.bonusQuests.slice(0, 3);
+        }
+        
+        // Force flush for old users on the new system
+        if (!d.migratedBonusPool) {
+            d.bonusQuests = [];
+            d.migratedBonusPool = true;
+        }
         if (!d.stats) d.stats = { str: 0, end: 0, int: 0, wis: 0, dsc: 0 };
         if (!d.days) d.days = {};
         if (!d.startDate) d.startDate = getToday();
@@ -634,6 +637,7 @@ function loadData() {
         if (d.bestStreak === undefined) d.bestStreak = 0;
         if (!d.customTraining) d.customTraining = {};
         if (!d.unlockedContent) d.unlockedContent = [];
+        if (!d.lastActiveDay) d.lastActiveDay = getToday();
         // Remove old fields
         delete d.milestones;
         delete d.keys;
@@ -645,7 +649,7 @@ function loadData() {
         startDate: getToday(),
         stats: { str: 0, end: 0, int: 0, wis: 0, dsc: 0 },
         mainQuests: DEFAULT_MAIN_QUESTS,
-        bonusQuests: ALL_BONUS_QUESTS.slice(0, 5),
+        bonusQuests: ALL_BONUS_QUESTS.slice(0, 3), // Уменьшили с 5 до 3
         unlockedKeys: [],
         days: {},
         penalty: false,
@@ -653,7 +657,11 @@ function loadData() {
         unlockedContent: [],
         lastBonusRotation: '',
         hardMode: false,
-        activeBet: null // { amount: number, targetDays: number, startDate: string, daysPassed: number }
+        weeklyCount: 0, // ADDED: Global weekly progress counter (0-7)
+        weeklyResetDate: '', // ADDED: Track Monday string to zero the counter
+        activeBet: null, // { amount: number, targetDays: number, startDate: string, daysPassed: number }
+        lastActiveDay: getToday(),
+        migratedBonusPool: true
     };
 }
 
@@ -665,6 +673,13 @@ let data = loadData();
 
 // ========== UTILITIES ==========
 function getDayData(date) {
+    if (date === getToday() && data.lastActiveDay !== date) {
+        data.lastActiveDay = date;
+        // Auto-select 2 random bonus quests for the day
+        const shuffled = [...ALL_BONUS_QUESTS].sort(() => 0.5 - Math.random());
+        data.bonusQuests = shuffled.slice(0, 2).map(q => ({...q})); 
+        saveData();
+    }
     if (!data.days[date]) {
         data.days[date] = { main: [], bonus: [], points: 0, done: false };
     }
@@ -698,11 +713,22 @@ function calcStreak() {
     
     let checkDate = new Date(today);
     checkDate.setDate(checkDate.getDate() - 1);
+    let freezesUsed = 0;
+    const MAX_FREEZES = 1; // Защитная заморозка на 1 пропущенный день
+    
     while (true) {
         const ds = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
         const dData = data.days[ds];
 
-        if (!dData) break; // If no data for the day, break the streak
+        if (!dData) {
+            if (freezesUsed < MAX_FREEZES) {
+                freezesUsed++;
+                checkDate.setDate(checkDate.getDate() - 1);
+                continue;
+            } else {
+                break;
+            }
+        }
 
         if (dData.isRestDay) {
             streak++;
@@ -710,12 +736,18 @@ function calcStreak() {
             continue;
         }
 
-        // Streak requires all main quests OR if it's hard mode, just 2 specific main quests
         const requiredMainLength = dData.hardMode ? 2 : data.mainQuests.length;
         if (dData.main && dData.main.length >= requiredMainLength) {
             streak++;
             checkDate.setDate(checkDate.getDate() - 1);
-        } else break;
+        } else {
+            if (freezesUsed < MAX_FREEZES) {
+                freezesUsed++;
+                checkDate.setDate(checkDate.getDate() - 1);
+            } else {
+                break;
+            }
+        }
     }
     return streak;
 }
@@ -761,16 +793,31 @@ function checkPenalty() {
 }
 
 // ========== NAVIGATION ==========
+function switchPage(page) {
+    // 1. Update navigation buttons
+    document.querySelectorAll('.nav-btn').forEach(b => {
+        if (b.dataset.page === page) b.classList.add('active');
+        else b.classList.remove('active');
+    });
+
+    // 2. Hide all pages, show the target one
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    
+    const targetPage = document.getElementById(`page-${page}`);
+    if (targetPage) targetPage.classList.add('active');
+
+    // 3. Reset edit states if navigating away
+    editModeMain = false; 
+    editModeBonus = false;
+    updateEditButtons();
+    
+    // 4. Refresh data on the new page
+    refreshPage(page);
+}
+
 document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
-        const page = btn.dataset.page;
-        document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-        document.getElementById(`page-${page}`).classList.add('active');
-        editModeMain = false; editModeBonus = false;
-        updateEditButtons();
-        refreshPage(page);
+        switchPage(btn.dataset.page);
     });
 });
 
@@ -833,32 +880,56 @@ function updateDashboard() {
 
     // Calculate weekly progress
     const todayDate = new Date();
-    const dayOfWeek = todayDate.getDay() === 0 ? 6 : todayDate.getDay() - 1;
-    const weekStart = new Date(todayDate);
-    weekStart.setDate(todayDate.getDate() - dayOfWeek);
+    const dayOfWeek = todayDate.getDay() === 0 ? 6 : todayDate.getDay() - 1; // 0 = Mon, 6 = Sun
+    const startOfWeekObj = new Date(todayDate);
+    startOfWeekObj.setDate(todayDate.getDate() - dayOfWeek);
+    const mondayStr = `${startOfWeekObj.getFullYear()}-${String(startOfWeekObj.getMonth() + 1).padStart(2, '0')}-${String(startOfWeekObj.getDate()).padStart(2, '0')}`;
     
-    let weeklyDaysDone = 0;
-    for (let i = 0; i < 7; i++) {
-        const d = new Date(weekStart);
-        d.setDate(d.getDate() + i);
-        const ds = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-        if (data.days[ds] && data.days[ds].weeklyDone) weeklyDaysDone++;
+    // Reset global counter if a new week started
+    if (!data.weeklyResetDate || data.weeklyResetDate !== mondayStr) {
+        data.weeklyCount = 0;
+        data.weeklyResetDate = mondayStr;
+        saveData();
     }
-    document.getElementById('weekly-progress').textContent = `${weeklyDaysDone}/7`;
-
-    const weeklyCheck = document.getElementById('weekly-rule-check');
-    if (todayData.weeklyDone) {
-        weeklyCheck.style.background = 'var(--purple)';
-        weeklyCheck.innerHTML = '✓';
-        weeklyCheck.style.color = 'white';
-        weeklyCheck.style.display = 'flex';
-        weeklyCheck.style.alignItems = 'center';
-        weeklyCheck.style.justifyContent = 'center';
-        weeklyCheck.style.fontSize = '12px';
-        weeklyCheck.style.fontWeight = 'bold';
-    } else {
-        weeklyCheck.style.background = 'transparent';
-        weeklyCheck.innerHTML = '';
+    
+    // Update weekly progress text and generate 7 slots
+    document.getElementById('weekly-progress').textContent = `${data.weeklyCount}/7`;
+    
+    // Generate Interactive Energy Slots
+    const slotsContainer = document.getElementById('weekly-slots');
+    if (slotsContainer) {
+        slotsContainer.innerHTML = '';
+        
+        for (let i = 0; i < 7; i++) {
+            const slot = document.createElement('div');
+            // If i is less than the current count, the slot is filled
+            const isActive = i < data.weeklyCount;
+            slot.className = `weekly-slot ${isActive ? 'active' : ''}`;
+            
+            slot.addEventListener('click', (e) => {
+                e.stopPropagation();
+                if (isActive) {
+                    // Clicking an active slot removes 1 progress (Undo)
+                    data.weeklyCount--;
+                    const currentMult = getMultiplier(calcStreak());
+                    data.totalPoints = Math.max(0, data.totalPoints - (2 * currentMult));
+                    showPointsPopup(`Отменено (-1)`);
+                } else {
+                    // Clicking an empty slot adds 1 progress
+                    if (data.weeklyCount < 7) {
+                        data.weeklyCount++;
+                        const currentMult = getMultiplier(calcStreak());
+                        const pointsGained = 2 * currentMult;
+                        data.totalPoints += pointsGained;
+                        showPointsPopup(`+${pointsGained > 2 ? pointsGained.toFixed(1) : pointsGained}`);
+                    }
+                }
+                saveData();
+                updateDashboard();
+            });
+            
+            slotsContainer.appendChild(slot);
+        }
     }
 
 
@@ -975,15 +1046,22 @@ document.getElementById('btn-make-bet').addEventListener('click', () => {
 });
 
 document.getElementById('btn-clear-penalty').addEventListener('click', () => {
-    data.penalty = false;
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
-    if (!data.days[yStr]) data.days[yStr] = { main: [], bonus: [], points: 0, done: true };
-    else data.days[yStr].done = true;
-    saveData();
-    showModal('ШТРАФ ОТРАБОТАН', '100 отжиманий ✅\n100 приседаний ✅\n2 км ✅\n\nТы сильнее, чем вчера.');
-    updateDashboard();
+    const answer = prompt('Выбери протокол отработки:\nВведите "50" (50 Берпи)\nВведите "3" (3 мин ледяного душа)');
+    if (answer === '50' || answer === '3') {
+        data.penalty = false;
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
+        if (!data.days[yStr]) data.days[yStr] = { main: [], bonus: [], points: 0, done: true };
+        else data.days[yStr].done = true;
+        saveData();
+        
+        const protocolText = answer === '50' ? '50 БЕРПИ ВЫПОЛНЕНО ✅\nПульс в космосе, легкие горят.' : '3 МИН ЛЕДЯНОГО ДУША ✅\nДофамин восстановлен.';
+        showModal('ДОФАМИНОВЫЙ ДОЛГ ПОГАШЕН', `${protocolText}\n\nТы сильнее своего оправдания.`);
+        updateDashboard();
+    } else if (answer !== null) {
+        alert('Введен неверный протокол. Штраф остается активным.');
+    }
 });
 
 // ========== AUTO KEYS CHECK ==========
@@ -1024,11 +1102,17 @@ function renderQuestItem(quest, isBonus, isHardModeMain) {
         bonusHint = `<div style="font-size: 0.65rem; color: var(--green); margin-top:2px;">${phaseText}</div>`;
     }
 
+    let infoBtnHtml = quest.hint ? `<span class="quest-hint-btn" title="Подробнее">ℹ️</span>` : '';
+
     div.innerHTML = `
         <div class="quest-check"></div>
-        <div class="quest-info">
-            <div class="quest-name">${quest.name}</div>
-            <div class="quest-desc">${quest.desc}${bonusHint}</div>
+        <div class="quest-info" style="display:flex; align-items:flex-start; gap:8px;">
+            <div style="flex-grow:1;">
+                <div class="quest-name" style="display:flex; align-items:center; gap:6px;">
+                    ${quest.name} ${infoBtnHtml}
+                </div>
+                <div class="quest-desc">${quest.desc}${bonusHint}</div>
+            </div>
         </div>
         <div class="quest-stat">${quest.stat.toUpperCase()}</div>
         <div class="quest-edit-btns">
@@ -1036,6 +1120,16 @@ function renderQuestItem(quest, isBonus, isHardModeMain) {
             <button class="btn-quest-delete">🗑️</button>
         </div>
     `;
+    
+    // Bind Info Button Click
+    const infoBtn = div.querySelector('.quest-hint-btn');
+    if (infoBtn) {
+        infoBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); // prevent quest toggle
+            showModal(`ℹ️ ${quest.name}`, quest.hint);
+        });
+    }
+
     div.addEventListener('click', (e) => {
         if (e.target.closest('.quest-edit-btns')) return;
         if (editModeMain || editModeBonus) return;
@@ -1261,23 +1355,20 @@ document.getElementById('btn-rest-day').addEventListener('click', () => {
     updateCalendar(); // Update calendar to show rest day status
 });
 
-// ========== WEEKLY RULE TRACKER ==========
-document.getElementById('weekly-rule-card').addEventListener('click', () => {
-    const todayData = getDayData(getToday());
-    todayData.weeklyDone = !todayData.weeklyDone;
-    
-    const currentMult = getMultiplier(calcStreak());
-    const pointsGained = 2 * currentMult;
-    
-    if (todayData.weeklyDone) {
-        data.totalPoints += pointsGained;
-        showPointsPopup(`+${pointsGained > 2 ? pointsGained.toFixed(1) : pointsGained} (вызов недели)`);
-    } else {
-        data.totalPoints -= pointsGained;
-    }
-    
-    saveData();
-    updateDashboard();
+// ========== TRAINING NAVIGATION ==========
+document.getElementById('btn-open-training').addEventListener('click', () => {
+    switchPage('training');
+});
+document.getElementById('btn-close-training').addEventListener('click', () => {
+    switchPage('quests');
+});
+
+// ========== FOCUS NAVIGATION ==========
+document.getElementById('btn-open-focus').addEventListener('click', () => {
+    switchPage('focus');
+});
+document.getElementById('btn-close-focus').addEventListener('click', () => {
+    switchPage('quests');
 });
 
 // ========== EDIT TOGGLES ==========
@@ -1285,7 +1376,6 @@ function updateEditButtons() {
     document.getElementById('btn-edit-main').classList.toggle('active', editModeMain);
     document.getElementById('btn-edit-bonus').classList.toggle('active', editModeBonus);
     document.getElementById('btn-add-main').classList.toggle('hidden', !editModeMain);
-    document.getElementById('btn-add-bonus').classList.toggle('hidden', !editModeBonus);
     document.getElementById('main-quests').classList.toggle('editing', editModeMain);
     document.getElementById('bonus-quests').classList.toggle('editing', editModeBonus);
 }
@@ -1297,7 +1387,68 @@ document.getElementById('btn-edit-bonus').addEventListener('click', () => {
     editModeBonus = !editModeBonus; editModeMain = false; updateEditButtons();
 });
 document.getElementById('btn-add-main').addEventListener('click', () => openEditModal('main', null));
-document.getElementById('btn-add-bonus').addEventListener('click', () => openEditModal('bonus', null));
+
+// ========== BONUS POOL ==========
+document.getElementById('btn-open-pool').addEventListener('click', () => {
+    renderPoolList();
+    document.getElementById('pool-modal-overlay').classList.remove('hidden');
+});
+document.getElementById('pool-btn-close').addEventListener('click', () => {
+    document.getElementById('pool-modal-overlay').classList.add('hidden');
+});
+document.getElementById('pool-btn-custom').addEventListener('click', () => {
+    document.getElementById('pool-modal-overlay').classList.add('hidden');
+    openEditModal('bonus', null);
+});
+
+function renderPoolList() {
+    const list = document.getElementById('pool-list');
+    list.innerHTML = '';
+    
+    ALL_BONUS_QUESTS.forEach(q => {
+        const isSelected = data.bonusQuests.some(activeQ => activeQ.id === q.id);
+        const div = document.createElement('div');
+        div.style.padding = '10px 12px';
+        div.style.background = isSelected ? 'rgba(240, 185, 50, 0.1)' : 'rgba(255, 255, 255, 0.03)';
+        div.style.border = isSelected ? '1px solid var(--gold)' : '1px solid rgba(255, 255, 255, 0.06)';
+        div.style.borderRadius = 'var(--radius-sm)';
+        div.style.cursor = 'pointer';
+        div.style.transition = 'all 0.2s';
+        
+        div.innerHTML = `
+            <div style="font-family: var(--font-display); font-weight: 600; font-size: 0.95rem; color: ${isSelected ? 'var(--gold)' : 'var(--text-primary)'}; display:flex; justify-content:space-between;">
+                <span>${q.name}</span>
+                <span>${isSelected ? '✅' : '+'}</span>
+            </div>
+            <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">${q.desc}</div>
+        `;
+        
+        div.addEventListener('click', () => {
+            if (isSelected) {
+                // Deselect
+                data.bonusQuests = data.bonusQuests.filter(activeQ => activeQ.id !== q.id);
+            } else {
+                // Select
+                if (data.bonusQuests.length >= 2) {
+                    alert('Максимум 2 бонусных вызова на день! Сначала убери один из текущих.');
+                    return;
+                }
+                data.bonusQuests.push({...q});
+            }
+            
+            saveData();
+            renderQuests();
+            updateDashboard();
+            renderPoolList(); 
+            
+            if (!isSelected && data.bonusQuests.length >= 2) {
+                document.getElementById('pool-modal-overlay').classList.add('hidden');
+            }
+        });
+
+        list.appendChild(div);
+    });
+}
 
 // ========== EDIT MODAL ==========
 let editContext = { type: null, item: null };
@@ -1608,15 +1759,13 @@ function showPointsPopup(text) {
 
 // ========== CODEX ==========
 const DEFAULT_HABITS = [
-    { id: 'bed', name: '🛏️ Заправить кровать' },
-    { id: 'hygiene', name: '🧼 Гигиена (душ, зубы, лицо)' },
-    { id: 'watermorning', name: '💧 Стакан воды сразу после сна' },
-    { id: 'nocoffee', name: '☕ Отложить кофе на 90 мин' },
-    { id: 'read', name: '📖 20 мин чтения' },
-    { id: 'readaloud', name: '🗣️ 10 мин чтения вслух' },
-    { id: 'noscreen', name: '📵 Без экрана за 30 мин до сна' },
-    { id: 'meal', name: '🍳 Нормальный приём пищи' },
-    { id: 'tidy', name: '🧹 Порядок в комнате' }
+    { id: 'watermorning', name: '💧 Гидратация: Стакан воды с солью с утра' },
+    { id: 'nodopamine', name: '🧠 Дофаминовый Пик: Утро без экранов (30-60 мин)' },
+    { id: 'bed', name: '🛏️ Воздух: Проветрить постель (откинуть одеяло на 30 мин)' },
+    { id: 'microclean', name: '🧹 Правило 2 Минут: Сделать мелкие дела сразу' },
+    { id: 'hara', name: '🍽️ Долголетие: Еда до 80% сытости' },
+    { id: 'hygiene', name: '🧼 Уход: Гигиена (душ, зубы, лицо)' },
+    { id: 'sunset', name: '🌙 Цифровой Закат: 30 мин до сна без синего света' }
 ];
 
 const CODEX_REFERENCE = [
@@ -1753,7 +1902,6 @@ const UNLOCKABLE_CODEX = {
         rules: [
             'Циркадный якорь (Dr. Huberman): Свет в глаза в первые 30 минут после пробуждения запускает часы кортизола (бодрость) и таймер мелатонина (сон через 12-14 часов).',
             'Температура: Для глубокого (медленного волнами) сна тело должно остыть на 1-2°C. Спальня: 18-19°C. Прими горячий душ перед сном — сосуды расширятся, и тело быстрее остынет на воздухе.',
-            'Кофеиновый crash: Если пить кофе сразу после пробуждения, аденозин (гормон усталости) блокируется, но не исчезает. Отложи кофе на 90-120 минут, чтобы избежать дневной сонливости.',
             'Магний бисглицинат или теанин за 30 минут до сна выключают "мыслемешалку" в голове и ускоряют фазу перехода ко сну.'
         ]
     }
@@ -2117,6 +2265,98 @@ document.getElementById('import-file').addEventListener('change', (e) => {
     };
     reader.readAsText(file);
 });
+
+// ========== FOCUS TIMER ==========
+let focusTimerInterval = null;
+let focusTotalSeconds = 25 * 60;
+let focusTimeLeft = focusTotalSeconds;
+let focusIsRunning = false;
+
+function updateTimerDisplay() {
+    const mins = Math.floor(focusTimeLeft / 60);
+    const secs = focusTimeLeft % 60;
+    const dp = document.getElementById('timer-display');
+    if (dp) dp.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+}
+
+document.querySelectorAll('.timer-preset').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+        if (focusIsRunning) return; // don't change if running
+        document.querySelectorAll('.timer-preset').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        focusTotalSeconds = parseInt(e.target.dataset.time) * 60;
+        focusTimeLeft = focusTotalSeconds;
+        updateTimerDisplay();
+    });
+});
+
+const btnTimerStart = document.getElementById('btn-timer-start');
+const btnTimerStop = document.getElementById('btn-timer-stop');
+const timerStatus = document.getElementById('timer-status');
+
+if (btnTimerStart) {
+    btnTimerStart.addEventListener('click', () => {
+        if (focusIsRunning) {
+            // Pause
+            clearInterval(focusTimerInterval);
+            focusIsRunning = false;
+            btnTimerStart.textContent = 'ПРОДОЛЖИТЬ';
+            timerStatus.textContent = 'ПАУЗА';
+        } else {
+            // Start
+            focusIsRunning = true;
+            btnTimerStart.textContent = 'ПАУЗА';
+            timerStatus.textContent = 'В ПРОЦЕССЕ...';
+            
+            focusTimerInterval = setInterval(() => {
+                if (focusTimeLeft > 0) {
+                    focusTimeLeft--;
+                    updateTimerDisplay();
+                } else {
+                    // Done
+                    clearInterval(focusTimerInterval);
+                    focusIsRunning = false;
+                    btnTimerStart.textContent = 'СТАРТ';
+                    timerStatus.textContent = 'ЗАВЕРШЕНО';
+                    
+                    // Reward
+                    const minutes = focusTotalSeconds / 60;
+                    let points = 5;
+                    if (minutes >= 60) points = 15;
+                    if (minutes >= 90) points = 30;
+                    
+                    const mult = getMultiplier(calcStreak());
+                    const finalPoints = points * mult;
+                    
+                    data.totalPoints += finalPoints;
+                    data.stats.int = (data.stats.int || 0) + 1; // Focus boosts INT
+                    saveData();
+                    updateDashboard();
+                    
+                    showModal('🔥 СПРИНТ ЗАВЕРШЕН', `Ты успешно удержал фокус ${minutes} минут!\n\nПолучено: +${finalPoints} Опыта\n+1 Интеллект (INT)`);
+                    
+                    // Reset
+                    focusTimeLeft = focusTotalSeconds;
+                    updateTimerDisplay();
+                }
+            }, 1000);
+        }
+    });
+}
+
+if (btnTimerStop) {
+    btnTimerStop.addEventListener('click', () => {
+        clearInterval(focusTimerInterval);
+        focusIsRunning = false;
+        focusTimeLeft = focusTotalSeconds;
+        updateTimerDisplay();
+        if (btnTimerStart) btnTimerStart.textContent = 'СТАРТ';
+        if (timerStatus) timerStatus.textContent = 'ОЖИДАНИЕ';
+    });
+}
+
+// Initialize display
+updateTimerDisplay();
 
 // ========== PWA ==========
 if ('serviceWorker' in navigator) {
