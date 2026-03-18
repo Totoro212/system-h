@@ -1,9 +1,9 @@
 // ========== QUESTS CONFIG ==========
 const DEFAULT_MAIN_QUESTS = [
-    { id: 'activity', name: '🏃 Движение тела', desc: 'Силовая тренировка, кардио или глубокая растяжка', stat: 'str', hint: 'Любая физическая активность от 30 мин. \n- Силовая (отжимания, турники, зал)\n- Кардио (бег, быстрая ходьба)\n- Гибкость (йога, растяжка)' },
-    { id: 'code', name: '💻 Deep Work (Код)', desc: '1–2 часа сфокусированной работы без отвлечений', stat: 'int', hint: 'Глубокая сфокусированная работа (Deep Work).\n- Никаких соцсетей и телефона.\n- Режим полета на 60-120 мин.\n- Полное погружение в одну задачу.' },
-    { id: 'selfdev', name: '🧠 Расширение нейросети', desc: 'Учёба, алгоритмы, новый сложный навык', stat: 'wis', hint: 'Изучение чего-то нового, требующего усилий.\n- Чтение документации (не YouTube-развлечения)\n- Решение алгоритмов\n- Освоение нового инструмента' },
-    { id: 'read', name: '📖 Поглощение знаний', desc: '30 минут чтения книги (не соцсетей)', stat: 'wis', hint: 'Чтение физической или электронной книги.\n- Нон-фикшн, психология, история, архитектура.\n- Аудиокниги тоже считаются, если слушать внимательно.' }
+    { id: 'activity', name: '🏃 Движение тела', desc: '45 мин — силовая, кардио или растяжка', stat: 'str', hint: 'Ровно 45 минут физической активности.\n\nСегодня можно:\n- Силовая по плану (открой ТРЕНИРОВКИ)\n- Кардио: бег или быстрая ходьба\n- Растяжка / йога (программа FLEX)' },
+    { id: 'code', name: '💻 Deep Work (Код)', desc: '90 мин — одна задача без отвлечений', stat: 'int', hint: 'Ровно 90 минут. Телефон в авиарежим.\n\nЧто именно делать:\n1. Открой свой текущий проект (ARISE или другой)\n2. Выбери ОДНУ конкретную задачу (фича, баг, компонент)\n3. Никаких соцсетей и мессенджеров\n4. Работай пока не пройдёт 90 мин' },
+    { id: 'selfdev', name: '🧠 Расширение нейросети', desc: '45 мин — учёба или новый навык', stat: 'wis', hint: 'Ровно 45 минут изучения чего-то нового.\n\nВарианты на сегодня:\n- Пройти 1 урок на курсе (Реакт, алгоритмы и т.д.)\n- Решить 2 задачи на LeetCode / Codewars\n- Изучить новую технологию по документации\n- Посмотреть обучающее видео с конспектом' },
+    { id: 'read', name: '📖 Поглощение знаний', desc: '30 мин — чтение книги', stat: 'wis', hint: 'Ровно 30 минут чтения.\n\nЧитай ту книгу, которую сейчас ведёшь.\nНон-фикшн, психология, история.\nАудиокниги считаются.' }
 ];
 
 const ALL_BONUS_QUESTS = [
@@ -1169,13 +1169,10 @@ function renderQuestItem(quest, isBonus, isHardModeMain) {
 
     div.innerHTML = `
         <div class="quest-check"></div>
-        <div class="quest-info" style="display:flex; align-items:flex-start; gap:8px;">
-            <div style="flex-grow:1;">
-                <div class="quest-name" style="display:flex; align-items:center; gap:6px;">
-                    ${quest.name} ${infoBtnHtml}
-                </div>
-                <div class="quest-desc">${quest.desc}${bonusHint}</div>
-            </div>
+        <div class="quest-info">
+            <div class="quest-name">${quest.name}</div>
+            <div class="quest-desc">${quest.desc}${bonusHint}</div>
+            ${infoBtnHtml}
         </div>
         <div class="quest-stat">${quest.stat.toUpperCase()}</div>
         <div class="quest-edit-btns">
@@ -1981,6 +1978,17 @@ function saveHabits() {
 }
 
 let habits = loadHabits();
+
+// Migrate old habits to new ones
+(function migrateHabits() {
+    const oldIds = ['bed', 'microclean', 'hara', 'hygiene'];
+    const hasOldHabits = habits.list.some(h => oldIds.includes(h.id));
+    if (hasOldHabits) {
+        habits.list = DEFAULT_HABITS;
+        saveHabits();
+    }
+})();
+
 let habitEditMode = false;
 
 function getHabitsToday() {
