@@ -644,24 +644,70 @@ body::before {
 .btn-quest-edit { background: rgba(79, 143, 255, 0.08); color: var(--blue); }
 .btn-quest-delete { background: rgba(248, 113, 113, 0.08); color: var(--red); }
 
-/* Hint button */
+/* Hint button — styled as a premium mini-button */
 .quest-hint-btn {
-    font-size: 1rem;
+    font-family: var(--font-display);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    color: var(--purple);
+    background: rgba(168, 85, 247, 0.08);
+    border: 1px solid rgba(168, 85, 247, 0.2);
+    border-radius: 6px;
+    padding: 3px 8px;
     cursor: pointer;
-    opacity: 0.6;
-    transition: opacity 0.2s, transform 0.2s;
+    transition: all 0.25s ease;
     user-select: none;
     -webkit-tap-highlight-color: transparent;
-    padding: 10px;
-    margin: -10px -5px; /* Increase hit area without breaking layout */
-    display: inline-block;
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 .quest-hint-btn:hover {
-    opacity: 1;
-    transform: scale(1.1);
+    background: rgba(168, 85, 247, 0.15);
+    border-color: rgba(168, 85, 247, 0.4);
+    box-shadow: 0 0 12px rgba(168, 85, 247, 0.15);
+    color: var(--text-primary);
 }
 .quest-hint-btn:active {
-    transform: scale(0.95);
+    transform: scale(0.93);
+    background: rgba(168, 85, 247, 0.2);
+}
+
+/* ========== DAILY QUOTE ========== */
+.daily-quote-card {
+    background: linear-gradient(160deg, rgba(168, 85, 247, 0.06), rgba(240, 185, 50, 0.03));
+    border: 1px solid rgba(168, 85, 247, 0.12);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    position: relative;
+    overflow: hidden;
+}
+.daily-quote-card::before {
+    content: '"';
+    position: absolute;
+    top: -8px;
+    left: 10px;
+    font-size: 3.5rem;
+    font-family: Georgia, serif;
+    color: rgba(168, 85, 247, 0.1);
+    line-height: 1;
+    pointer-events: none;
+}
+.daily-quote-text {
+    font-size: 0.85rem;
+    color: var(--text-primary);
+    font-style: italic;
+    line-height: 1.5;
+    opacity: 0.9;
+    margin-bottom: 6px;
+    padding-left: 4px;
+}
+.daily-quote-author {
+    font-family: var(--font-display);
+    font-size: 0.7rem;
+    color: var(--text-dim);
+    text-align: right;
+    letter-spacing: 0.5px;
 }
 
 /* ========== ADD BUTTON ========== */

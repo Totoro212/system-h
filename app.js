@@ -135,6 +135,30 @@ const WEEKLY_CHALLENGES = [
     'Интервальное голодание (16/8) 7 дней'
 ];
 
+// ========== DAILY QUOTES ==========
+const DAILY_QUOTES = [
+    { text: 'Мы страдаем чаще в воображении, чем в реальности.', author: 'Сенека' },
+    { text: 'Лучшее время посадить дерево было 20 лет назад. Второе лучшее — сейчас.', author: 'Китайская пословица' },
+    { text: 'Дисциплина — это мост между целями и их достижением.', author: 'Джим Рон' },
+    { text: 'Ты не поднимаешься до уровня своих целей. Ты падаешь до уровня своих систем.', author: 'Джеймс Клир' },
+    { text: 'Препятствие на пути становится путём.', author: 'Марк Аврелий' },
+    { text: 'Делай трудное, пока оно лёгкое. Делай великое, пока оно мало.', author: 'Лао-цзы' },
+    { text: 'Не тот силён, кто не падает, а тот, кто падая встаёт.', author: 'Конфуций' },
+    { text: 'Каждое утро у тебя два выбора: продолжить спать и видеть сны, или проснуться и воплощать их.', author: 'Неизвестный' },
+    { text: 'Боль временна. Она может длиться минуту, час, день. Но рано или поздно пройдёт. А если ты сдашься — это навсегда.', author: 'Эрик Томас' },
+    { text: 'Лёгкий выбор — трудная жизнь. Трудный выбор — лёгкая жизнь.', author: 'Ежи Грегорек' },
+    { text: 'Мотивация приходит и уходит. Дисциплина остаётся.', author: 'Жоко Виллинк' },
+    { text: 'Будь суров к себе, и жизнь будет мягка к тебе.', author: 'Стоицизм' },
+    { text: 'Качество твоей жизни определяется качеством твоих привычек.', author: 'Джеймс Клир' },
+    { text: 'Ты — среднее арифметическое пяти людей, с которыми проводишь больше всего времени.', author: 'Джим Рон' },
+    { text: 'Не бойся медленного прогресса. Бойся его отсутствия.', author: 'Китайская пословица' },
+    { text: 'Сначала ты формируешь свои привычки, а потом привычки формируют тебя.', author: 'Джон Драйден' },
+    { text: 'Тело достигает того, во что верит разум.', author: 'Наполеон Хилл' },
+    { text: 'Единственный человек, с которым ты должен сравнивать себя — это ты вчерашний.', author: 'Джордан Питерсон' },
+    { text: 'Сильные люди не рождаются. Они создаются через борьбу.', author: 'Неизвестный' },
+    { text: 'Дойдя до конца, люди смеются над страхами, мучившими их вначале.', author: 'Паоло Коэльо' }
+];
+
 // ========== TRAINING PLAN ==========
 const PROGRAMS_CONFIG = {
     ppl: { 
@@ -823,10 +847,32 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 
 function refreshPage(page) {
     if (page === 'dashboard') updateDashboard();
-    if (page === 'quests') { renderQuests(); updateQuestStates(); }
+    if (page === 'quests') { renderQuests(); updateQuestStates(); renderDailyQuote(); }
     if (page === 'codex') { renderHabits(); renderCodexReference(); }
     if (page === 'training') renderTraining(currentTrainDay || 'push');
     if (page === 'stats') { updateStats(); renderKeys(); updateCalendar(); }
+}
+
+// ========== DAILY QUOTE RENDERING ==========
+function renderDailyQuote() {
+    const container = document.getElementById('daily-quote');
+    if (!container) return;
+    
+    // Use today's date as a seed for deterministic daily rotation
+    const today = getToday();
+    const seed = today.split('-').join('');
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++) {
+        hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+        hash |= 0;
+    }
+    const idx = Math.abs(hash) % DAILY_QUOTES.length;
+    const quote = DAILY_QUOTES[idx];
+    
+    container.innerHTML = `
+        <div class="daily-quote-text">${quote.text}</div>
+        <div class="daily-quote-author">— ${quote.author}</div>
+    `;
 }
 
 // ========== DASHBOARD ==========
@@ -847,6 +893,23 @@ function updateDashboard() {
 
     const streak = calcStreak();
     document.getElementById('streak-count').textContent = streak;
+    
+    // Streak Shield indicator (shows freeze protection status)
+    const streakContainer = document.getElementById('streak-count').parentElement;
+    let shieldEl = document.getElementById('streak-shield');
+    if (!shieldEl) {
+        shieldEl = document.createElement('span');
+        shieldEl.id = 'streak-shield';
+        shieldEl.style.cssText = 'position: absolute; top: -5px; left: -20px; font-size: 0.8rem; cursor: help;';
+        streakContainer.appendChild(shieldEl);
+    }
+    // Check if freeze is still available (simplified: shield shows if streak > 0)
+    if (streak > 0) {
+        shieldEl.textContent = '🛡️';
+        shieldEl.title = 'Защита стрика: 1 пропуск не обнулит стрик';
+    } else {
+        shieldEl.textContent = '';
+    }
     
     // Multiplier display
     const mult = getMultiplier(streak);
@@ -1102,7 +1165,7 @@ function renderQuestItem(quest, isBonus, isHardModeMain) {
         bonusHint = `<div style="font-size: 0.65rem; color: var(--green); margin-top:2px;">${phaseText}</div>`;
     }
 
-    let infoBtnHtml = quest.hint ? `<span class="quest-hint-btn" title="Подробнее">ℹ️</span>` : '';
+    let infoBtnHtml = quest.hint ? `<button class="quest-hint-btn" type="button">Подробнее ▸</button>` : '';
 
     div.innerHTML = `
         <div class="quest-check"></div>
@@ -1363,13 +1426,7 @@ document.getElementById('btn-close-training').addEventListener('click', () => {
     switchPage('quests');
 });
 
-// ========== FOCUS NAVIGATION ==========
-document.getElementById('btn-open-focus').addEventListener('click', () => {
-    switchPage('focus');
-});
-document.getElementById('btn-close-focus').addEventListener('click', () => {
-    switchPage('quests');
-});
+// ========== FOCUS NAVIGATION (REMOVED) ==========
 
 // ========== EDIT TOGGLES ==========
 function updateEditButtons() {
@@ -1759,13 +1816,13 @@ function showPointsPopup(text) {
 
 // ========== CODEX ==========
 const DEFAULT_HABITS = [
-    { id: 'watermorning', name: '💧 Гидратация: Стакан воды с солью с утра' },
-    { id: 'nodopamine', name: '🧠 Дофаминовый Пик: Утро без экранов (30-60 мин)' },
-    { id: 'bed', name: '🛏️ Воздух: Проветрить постель (откинуть одеяло на 30 мин)' },
-    { id: 'microclean', name: '🧹 Правило 2 Минут: Сделать мелкие дела сразу' },
-    { id: 'hara', name: '🍽️ Долголетие: Еда до 80% сытости' },
-    { id: 'hygiene', name: '🧼 Уход: Гигиена (душ, зубы, лицо)' },
-    { id: 'sunset', name: '🌙 Цифровой Закат: 30 мин до сна без синего света' }
+    { id: 'watermorning', name: '💧 Гидратация: Стакан воды сразу после пробуждения' },
+    { id: 'nodopamine', name: '🧠 Дофаминовый щит: Утро без телефона (мин. 15 мин)' },
+    { id: 'mindfuleating', name: '🍽️ Осознанное питание: Без перекусов на автопилоте' },
+    { id: 'movement', name: '🚶 Движение: 30+ мин активности (прогулка/разминка)' },
+    { id: 'reflect', name: '📝 Рефлексия: 3 итога дня + план на завтра' },
+    { id: 'sunset', name: '🌙 Цифровой закат: 30 мин до сна без экранов' },
+    { id: 'tidyup', name: '🧹 Порядок: 5 мин уборки / наведения порядка' }
 ];
 
 const CODEX_REFERENCE = [
@@ -1953,15 +2010,15 @@ function renderHabits() {
     });
     container.innerHTML = html;
 
-    // WIS bonus check
+    // Habit completion bonus: +3 points + 1 DSC
     if (done === total && total > 0) {
         const bonusKey = `habitBonus_${today}`;
         if (!localStorage.getItem(bonusKey)) {
-            data.stats.wis = (data.stats.wis || 0) + 1;
-            data.totalPoints += 1;
+            data.stats.dsc = (data.stats.dsc || 0) + 1;
+            data.totalPoints += 3;
             saveData();
             localStorage.setItem(bonusKey, '1');
-            showPointsPopup('+1 WIS (привычки)');
+            showPointsPopup('+3 🔥 +1 DSC (привычки)');
         }
     }
 
@@ -2266,97 +2323,7 @@ document.getElementById('import-file').addEventListener('change', (e) => {
     reader.readAsText(file);
 });
 
-// ========== FOCUS TIMER ==========
-let focusTimerInterval = null;
-let focusTotalSeconds = 25 * 60;
-let focusTimeLeft = focusTotalSeconds;
-let focusIsRunning = false;
-
-function updateTimerDisplay() {
-    const mins = Math.floor(focusTimeLeft / 60);
-    const secs = focusTimeLeft % 60;
-    const dp = document.getElementById('timer-display');
-    if (dp) dp.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
-}
-
-document.querySelectorAll('.timer-preset').forEach(btn => {
-    btn.addEventListener('click', (e) => {
-        if (focusIsRunning) return; // don't change if running
-        document.querySelectorAll('.timer-preset').forEach(b => b.classList.remove('active'));
-        e.target.classList.add('active');
-        focusTotalSeconds = parseInt(e.target.dataset.time) * 60;
-        focusTimeLeft = focusTotalSeconds;
-        updateTimerDisplay();
-    });
-});
-
-const btnTimerStart = document.getElementById('btn-timer-start');
-const btnTimerStop = document.getElementById('btn-timer-stop');
-const timerStatus = document.getElementById('timer-status');
-
-if (btnTimerStart) {
-    btnTimerStart.addEventListener('click', () => {
-        if (focusIsRunning) {
-            // Pause
-            clearInterval(focusTimerInterval);
-            focusIsRunning = false;
-            btnTimerStart.textContent = 'ПРОДОЛЖИТЬ';
-            timerStatus.textContent = 'ПАУЗА';
-        } else {
-            // Start
-            focusIsRunning = true;
-            btnTimerStart.textContent = 'ПАУЗА';
-            timerStatus.textContent = 'В ПРОЦЕССЕ...';
-            
-            focusTimerInterval = setInterval(() => {
-                if (focusTimeLeft > 0) {
-                    focusTimeLeft--;
-                    updateTimerDisplay();
-                } else {
-                    // Done
-                    clearInterval(focusTimerInterval);
-                    focusIsRunning = false;
-                    btnTimerStart.textContent = 'СТАРТ';
-                    timerStatus.textContent = 'ЗАВЕРШЕНО';
-                    
-                    // Reward
-                    const minutes = focusTotalSeconds / 60;
-                    let points = 5;
-                    if (minutes >= 60) points = 15;
-                    if (minutes >= 90) points = 30;
-                    
-                    const mult = getMultiplier(calcStreak());
-                    const finalPoints = points * mult;
-                    
-                    data.totalPoints += finalPoints;
-                    data.stats.int = (data.stats.int || 0) + 1; // Focus boosts INT
-                    saveData();
-                    updateDashboard();
-                    
-                    showModal('🔥 СПРИНТ ЗАВЕРШЕН', `Ты успешно удержал фокус ${minutes} минут!\n\nПолучено: +${finalPoints} Опыта\n+1 Интеллект (INT)`);
-                    
-                    // Reset
-                    focusTimeLeft = focusTotalSeconds;
-                    updateTimerDisplay();
-                }
-            }, 1000);
-        }
-    });
-}
-
-if (btnTimerStop) {
-    btnTimerStop.addEventListener('click', () => {
-        clearInterval(focusTimerInterval);
-        focusIsRunning = false;
-        focusTimeLeft = focusTotalSeconds;
-        updateTimerDisplay();
-        if (btnTimerStart) btnTimerStart.textContent = 'СТАРТ';
-        if (timerStatus) timerStatus.textContent = 'ОЖИДАНИЕ';
-    });
-}
-
-// Initialize display
-updateTimerDisplay();
+// ========== FOCUS TIMER (REMOVED) ==========
 
 // ========== PWA ==========
 if ('serviceWorker' in navigator) {

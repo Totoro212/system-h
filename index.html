@@ -105,14 +105,12 @@
                 </div>
             </div>
 
+            <div id="daily-quote" class="daily-quote-card" style="margin-bottom: 20px;"></div>
+
             <div style="display: flex; gap: 10px; margin-bottom: 24px;">
                 <button id="btn-open-training" style="flex: 1; background: linear-gradient(135deg, rgba(52, 211, 153, 0.1), rgba(16, 185, 129, 0.05)); border: 1px solid rgba(52, 211, 153, 0.3); color: var(--green); padding: 14px; border-radius: var(--radius-sm); font-family: var(--font-display); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
                     <span style="font-size: 1.5rem;">💪</span>
                     <span>ТРЕНИРОВКИ</span>
-                </button>
-                <button id="btn-open-focus" style="flex: 1; background: linear-gradient(135deg, rgba(240, 185, 50, 0.1), rgba(240, 185, 50, 0.05)); border: 1px solid rgba(240, 185, 50, 0.3); color: var(--gold); padding: 14px; border-radius: var(--radius-sm); font-family: var(--font-display); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
-                    <span style="font-size: 1.5rem;">🎯</span>
-                    <span>ФОКУС-РЕЖИМ</span>
                 </button>
             </div>
 
@@ -150,31 +148,7 @@
             <div id="codex-reference"></div>
         </section>
 
-        <!-- FOCUS -->
-        <section id="page-focus" class="page" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-deep); z-index: 100;">
-            <div class="header" style="align-items: center; margin-bottom: 12px;">
-                <button id="btn-close-focus" style="background: rgba(240, 185, 50, 0.1); border: 1px solid rgba(240, 185, 50, 0.3); color: var(--gold); width: 40px; height: 40px; border-radius: 12px; font-size: 1.2rem; display: flex; align-items: center; justify-content: center; cursor: pointer; flex-shrink: 0;">◀</button>
-                <div style="flex-grow: 1; text-align: right;">
-                    <h1 style="margin: 0; color: var(--gold); text-shadow: 0 0 10px rgba(240,185,50,0.3);">🎯 ФОКУС СПРИНТ</h1>
-                </div>
-            </div>
-            
-            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 75%; text-align: center;">
-                <div id="timer-status" style="font-size: 1rem; color: var(--text-dim); letter-spacing: 2px; margin-bottom: 10px;">ОЖИДАНИЕ</div>
-                <div class="timer-display" id="timer-display" style="font-family: var(--font-display); font-size: 5rem; font-weight: 700; color: var(--text-primary); letter-spacing: 2px; text-shadow: 0 0 25px rgba(240, 185, 50, 0.2); margin-bottom: 30px;">25:00</div>
-                
-                <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 40px;" id="timer-presets">
-                    <button class="timer-preset active" data-time="25">25м</button>
-                    <button class="timer-preset" data-time="60">60м</button>
-                    <button class="timer-preset" data-time="90">90м</button>
-                </div>
-
-                <div style="display: flex; gap: 16px; width: 100%; max-width: 320px;">
-                    <button id="btn-timer-start" style="flex: 2; background: linear-gradient(135deg, var(--gold), var(--amber)); border: none; color: #111; padding: 18px; border-radius: var(--radius-sm); font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: transform 0.2s; box-shadow: 0 0 20px rgba(240, 185, 50, 0.3);">СТАРТ</button>
-                    <button id="btn-timer-stop" style="flex: 1; background: rgba(220, 38, 38, 0.1); border: 1px solid var(--red); color: var(--red); padding: 18px; border-radius: var(--radius-sm); font-family: var(--font-display); font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: transform 0.2s;">СБРОС</button>
-                </div>
-            </div>
-        </section>
+        <!-- FOCUS (REMOVED) -->
 
         <!-- TRAINING -->
         <section id="page-training" class="page" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: var(--bg-deep); z-index: 100;">
