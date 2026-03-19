@@ -1,3 +1,177 @@
+// ========== STOIC DAILY MAXIMS ==========
+// Специально подобранные для практики — Сенека, Марк Аврелий, Эпиктет
+// Каждая максима содержит ИСТОЧНИК и ПРАКТИКУ ДНЯ
+const STOIC_MAXIMS = [
+    {
+        text: 'Omnia aliena sunt, tempus tantum nostrum est. — Всё чужое, только время наше.',
+        author: 'Сенека',
+        source: 'Нравственные письма к Луцилию, Письмо I',
+        practice: '📌 Практика дня: Прежде чем взяться за задачу, спроси себя: "Это лучшее использование моего времени прямо сейчас?"'
+    },
+    {
+        text: 'Recede in te ipse quantum potes. — Уходи в себя насколько можешь.',
+        author: 'Сенека',
+        source: 'Нравственные письма к Луцилию, Письмо VII',
+        practice: '📌 Практика дня: Найди 15 минут в тишине без телефона. Просто сиди и думай. Это не потеря времени — это прокачка ума.'
+    },
+    {
+        text: 'Non qui parum habet, sed qui plus cupit, pauper est. — Беден не тот, у кого мало, а тот, кто хочет большего.',
+        author: 'Сенека',
+        source: 'Нравственные письма к Луцилию, Письмо II',
+        practice: '📌 Практика дня: Запиши 3 вещи, которые у тебя уже есть и за которые ты благодарен. Не абстрактно — конкретно.'
+    },
+    {
+        text: 'Dum differtur vita transcurrit. — Пока откладываешь, жизнь проходит.',
+        author: 'Сенека',
+        source: 'О краткости жизни',
+        practice: '📌 Практика дня: Сделай сегодня ту задачу, которую откладывал более 3 дней. Не планируй — СДЕЛАЙ.'
+    },
+    {
+        text: 'Nusquam est qui ubique est. — Тот, кто везде, нигде не бывает.',
+        author: 'Сенека',
+        source: 'Нравственные письма к Луцилию, Письмо II',
+        practice: '📌 Практика дня: Выбери ОДНУ задачу и работай только над ней. Закрой все вкладки, кроме нужной.'
+    },
+    {
+        text: 'Inimica est multorum conversatio. — Общение со многими — враг [пути].',
+        author: 'Сенека',
+        source: 'Нравственные письма к Луцилию, Письмо VII',
+        practice: '📌 Практика дня: Оцени, с кем ты провёл больше всего времени на этой неделе. Они поднимают тебя или тянут вниз?'
+    },
+    {
+        text: 'Nemo potest personam diu ferre. — Никто не может долго носить маску.',
+        author: 'Сенека',
+        source: 'Нравственные письма к Луцилию, Письмо XXVII',
+        practice: '📌 Практика дня: Действуй сегодня так, как будто никто не смотрит. Делаешь ли ты то же самое?'
+    },
+    {
+        text: 'Tu autem quam ob rem tibi non credis? — Почему же ты не доверяешь себе?',
+        author: 'Сенека',
+        source: 'Нравственные письма к Луцилию, Письмо XI',
+        practice: '📌 Практика дня: Одно решение, которое ты откладываешь из-за сомнений — прими его сегодня на основе своих ценностей.'
+    },
+    {
+        text: 'Тебе кажется, что у тебя мало времени? Нет. Его просто много теряется впустую.',
+        author: 'Сенека',
+        source: 'О краткости жизни, Глава I',
+        practice: '📌 Практика дня: Запиши каждый час, на что потратил время. Вечером посмотри честно.'
+    },
+    {
+        text: 'Отличай то, что в твоей власти, от того, что не в твоей. В твоей власти — суждения, стремления, желания, уклонения.',
+        author: 'Эпиктет',
+        source: 'Энхиридион, §1',
+        practice: '📌 Практика дня: При каждом раздражении спроси: "Это в моей власти или нет?" Если нет — отпусти и действуй дальше.'
+    },
+    {
+        text: 'Не стремись к тому, чтобы происходящее происходило так, как ты хочешь. Желай, чтобы происходящее было таким, каково оно есть — и будешь спокоен.',
+        author: 'Эпиктет',
+        source: 'Энхиридион, §8',
+        practice: '📌 Практика дня: Найди одну вещь, которая тебя раздражает прямо сейчас. Прими её как данность и сосредоточься на своей реакции.'
+    },
+    {
+        text: 'Никогда не говори о чём-либо: "я это потерял", но говори: "я это отдал".',
+        author: 'Эпиктет',
+        source: 'Энхиридион, §11',
+        practice: '📌 Практика дня: Вспомни что-то, что ты "потерял" — время, деньги, отношения. Переформулируй это: что это научило тебя?'
+    },
+    {
+        text: 'Правишь ли ты, — а тебе завидуют. Живёшь ли в безвестности, — а тебя презирают. Что с того? Живи так, чтобы самому себе нравиться.',
+        author: 'Эпиктет',
+        source: 'Беседы',
+        practice: '📌 Практика дня: Сделай одно действие, которое нравится ТЕБЕ, а не выглядит хорошо для других.'
+    },
+    {
+        text: 'Препятствие на пути становится путём. То, что стоит против действия, продвигает действие. То, что блокирует путь, становится путём.',
+        author: 'Марк Аврелий',
+        source: 'Размышления, Книга V.20',
+        practice: '📌 Практика дня: Назови своё главное препятствие сейчас. Как ты можешь превратить его в инструмент роста?'
+    },
+    {
+        text: 'Потеря — это не что иное, как изменение, а изменение — радость природы.',
+        author: 'Марк Аврелий',
+        source: 'Размышления, Книга IV',
+        practice: '📌 Практика дня: Что изменилось в твоей жизни за последний год? Найди в этом то, что сделало тебя сильнее.'
+    },
+    {
+        text: 'Не тратить оставшееся время на мысли о других людях, если это не связано с общим благом.',
+        author: 'Марк Аврелий',
+        source: 'Размышления, Книга III.4',
+        practice: '📌 Практика дня: Поймай себя на мысли о чужих делах. Перенаправь эту энергию на свой проект.'
+    },
+    {
+        text: 'Никогда не делай ничего вопреки природе и разуму.',
+        author: 'Марк Аврелий',
+        source: 'Размышления, Книга I',
+        practice: '📌 Практика дня: Проверь одно своё решение этой недели: оно исходило из страха/лени или из разума и ценностей?'
+    },
+    {
+        text: 'Если не в силах изменить, — смотри на вещи иначе. Страдание происходит не от самой вещи, а от суждения о ней.',
+        author: 'Марк Аврелий',
+        source: 'Размышления, Книга IV.7',
+        practice: '📌 Практика дня: Возьми одну ситуацию, которая тебя беспокоит. Запиши 3 разных интерпретации этой ситуации.'
+    },
+    {
+        text: 'Бедность, которую никто не замечает, легче переносится. Если живёшь скромно — не кричи об этом.',
+        author: 'Сенека',
+        source: 'Нравственные письма к Луцилию, Письмо XVII',
+        practice: '📌 Практика дня: Откажись от одной мелкой траты сегодня — не ради экономии, а ради тренировки воли.'
+    },
+    {
+        text: 'Всему, что тебе дано, — не привязывайся так, как к вечному. Пользуйся как временным.',
+        author: 'Эпиктет',
+        source: 'Энхиридион, §11',
+        practice: '📌 Практика дня: Memento Mori. Представь, что у тебя осталось 3 месяца. Изменишь ли ты что-то прямо сейчас?'
+    },
+    {
+        text: 'Придерживайся природы. Стремись к добродетели. Деньги — только инструмент, не цель.',
+        author: 'Сенека',
+        source: 'Нравственные письма к Луцилию, Письмо VIII',
+        practice: '📌 Практика дня: Что ты создаёшь сегодня, что имеет реальную ценность для других? Создание ценности = заработок.'
+    },
+    {
+        text: 'Лучший способ найти душевный покой — свести желания к необходимому и перенести жизненный центр внутрь.',
+        author: 'Сенека',
+        source: 'Нравственные письма к Луцилию, Письмо IV',
+        practice: '📌 Практика дня: Что тебе действительно необходимо сегодня? Сфокусируйся только на этом.'
+    },
+    {
+        text: 'Сначала скажи себе, кем хочешь быть. Потом делай то, что нужно.',
+        author: 'Эпиктет',
+        source: 'Беседы, Книга III',
+        practice: '📌 Практика дня: Опиши в 1-2 предложениях, кем ты хочешь быть через 3 года. Соответствует ли твой сегодняшний план этому образу?'
+    },
+    {
+        text: 'Размышляй о тех, кто жаловался на нужду и потом либо умер, либо разбогател — и всё равно жаловался.',
+        author: 'Сенека',
+        source: 'Нравственные письма к Луцилию, Письмо XVII',
+        practice: '📌 Практика дня: Богатство начинается в голове. Что ты делаешь сегодня, что создаёт ценность завтра?'
+    },
+    {
+        text: 'Перестань думать, что пропустил что-то важное, постоянно глядя назад.',
+        author: 'Сенека',
+        source: 'Нравственные письма к Луцилию, Письмо LXXVII',
+        practice: '📌 Практика дня: Запиши одно решение из прошлого, о котором сожалеешь. Что ты можешь сделать СЕЙЧАС, чтобы двигаться вперёд?'
+    },
+    {
+        text: 'Никогда не торопи вещи, которые требуют времени. Никогда не задерживай те, что должны прийти сейчас.',
+        author: 'Марк Аврелий',
+        source: 'Размышления, Книга IX',
+        practice: '📌 Практика дня: Есть ли что-то, что ты форсируешь вместо того, чтобы делать систематически? Начни делать системно.'
+    },
+    {
+        text: 'Что мешает тебе действовать по природе? Только твои убеждения.',
+        author: 'Марк Аврелий',
+        source: 'Размышления, Книга VIII',
+        practice: '📌 Практика дня: Назови одно убеждение о себе, которое ограничивает тебя. Откуда оно взялось? Верно ли оно?'
+    },
+    {
+        text: 'Когда ты встаёшь утром, думай о том, каким драгоценным даром является право жить, дышать, радоваться.',
+        author: 'Марк Аврелий',
+        source: 'Размышления, Книга II',
+        practice: '📌 Практика дня: Первые 5 минут после пробуждения — без телефона. Встань, выпей воды, подумай об одной цели дня.'
+    }
+];
+
 // ========== QUESTS CONFIG ==========
 const DEFAULT_MAIN_QUESTS = [
     { id: 'activity', name: '🏃 Движение тела', desc: '45 мин — силовая, кардио или растяжка', stat: 'str', hint: 'Ровно 45 минут физической активности.\n\nСегодня можно:\n- Силовая по плану (открой ТРЕНИРОВКИ)\n- Кардио: бег или быстрая ходьба\n- Растяжка / йога (программа FLEX)' },
@@ -846,8 +1020,8 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 
 function refreshPage(page) {
     if (page === 'dashboard') updateDashboard();
-    if (page === 'quests') { renderQuests(); updateQuestStates(); renderDailyQuote(); }
-    if (page === 'codex') { renderHabits(); renderCodexReference(); }
+    if (page === 'quests') { renderQuests(); updateQuestStates(); renderDailyQuote(); renderStoicDaily(); if (typeof renderGoalsPage === 'function') renderGoalsPage(); }
+    if (page === 'codex') { renderHabits(); renderCodexReference(); renderStoicDaily(); _renderAnime(); }
     if (page === 'training') renderTraining(currentTrainDay || 'push');
     if (page === 'stats') { updateStats(); renderKeys(); updateCalendar(); }
 }
@@ -1699,6 +1873,7 @@ function updateRadarChart() {
         text.setAttribute('x', lx);
         text.setAttribute('y', ly);
         text.textContent = labels[i];
+        text.setAttribute('fill', 'var(--text-2)');
         
         // Adjust alignment for better look
         if (Math.abs(Math.cos(angle)) < 0.1) text.setAttribute('text-anchor', 'middle');
@@ -2265,7 +2440,7 @@ const hardModeToggle = document.getElementById('hard-mode-toggle');
 function updateHardModeUI() {
     hardModeToggle.style.background = data.hardMode ? 'var(--purple)' : 'var(--bg-card)';
     hardModeToggle.style.borderColor = data.hardMode ? 'var(--purple)' : 'var(--border-subtle)';
-    hardModeToggle.style.color = data.hardMode ? '#fff' : 'var(--text-secondary)';
+    hardModeToggle.style.color = data.hardMode ? '#fff' : 'var(--text-2)';
     
     // Also save it to today's data so the calendar knows this was a hard mode day
     const todayData = getDayData(getToday());
@@ -2398,6 +2573,331 @@ document.getElementById('chest-close-btn').addEventListener('click', () => {
 
 data = loadData();
 
+// ========== STOIC DAILY SYSTEM ==========
+function getStoicToday() {
+    const today = getToday();
+    // Deterministic rotation based on date
+    const seed = today.replace(/-/g, '');
+    let hash = 0;
+    for (let i = 0; i < seed.length; i++) {
+        hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+        hash |= 0;
+    }
+    const idx = Math.abs(hash) % STOIC_MAXIMS.length;
+    return { ...STOIC_MAXIMS[idx], idx };
+}
+
+function renderStoicDaily() {
+    const card = document.getElementById('stoic-daily-card');
+    if (!card) return;
+    const maxim = getStoicToday();
+    const today = getToday();
+    
+    // Load stoic data
+    const stoicData = JSON.parse(localStorage.getItem('stoicData') || '{}');
+    const todayDone = stoicData.completedDays && stoicData.completedDays.includes(today);
+    const streak = calcStoicStreak(stoicData);
+    
+    document.getElementById('stoic-daily-text').textContent = maxim.text;
+    document.getElementById('stoic-daily-author').textContent = `— ${maxim.author}`;
+    document.getElementById('stoic-daily-source').textContent = maxim.source;
+    document.getElementById('stoic-practice-hint').textContent = maxim.practice;
+    document.getElementById('stoic-streak-badge').textContent = `${streak} дней`;
+    
+    const doneBtn = document.getElementById('btn-stoic-done');
+    if (todayDone) {
+        doneBtn.style.background = 'rgba(52,211,153,0.3)';
+        doneBtn.style.borderColor = 'var(--green)';
+        doneBtn.textContent = '✓ Применено сегодня';
+        doneBtn.disabled = true;
+    } else {
+        doneBtn.disabled = false;
+        doneBtn.textContent = '✓ Применил сегодня';
+    }
+    
+    // Apply visual card state
+    if (todayDone) {
+        card.style.borderColor = 'rgba(52,211,153,0.4)';
+    }
+}
+
+function calcStoicStreak(stoicData) {
+    if (!stoicData.completedDays || stoicData.completedDays.length === 0) return 0;
+    const days = stoicData.completedDays.sort().reverse();
+    let streak = 0;
+    let checkDate = new Date();
+    const todayStr = getToday();
+    
+    if (days[0] === todayStr) {
+        streak = 1;
+        checkDate.setDate(checkDate.getDate() - 1);
+    } else {
+        // If not done today, check if yesterday was done (streak still alive)
+        const yesterday = new Date();
+        yesterday.setDate(yesterday.getDate() - 1);
+        const yStr = yesterday.toISOString().split('T')[0];
+        if (days[0] !== yStr) return 0;
+        checkDate.setDate(checkDate.getDate() - 1);
+        streak = 1;
+    }
+    
+    for (let i = (days[0] === todayStr ? 1 : 1); i < days.length; i++) {
+        const expected = `${checkDate.getFullYear()}-${String(checkDate.getMonth()+1).padStart(2,'0')}-${String(checkDate.getDate()).padStart(2,'0')}`;
+        if (days[i] === expected) {
+            streak++;
+            checkDate.setDate(checkDate.getDate() - 1);
+        } else {
+            break;
+        }
+    }
+    return streak;
+}
+
+document.getElementById('btn-stoic-done').addEventListener('click', () => {
+    const today = getToday();
+    const stoicData = JSON.parse(localStorage.getItem('stoicData') || '{ "completedDays": [], "examens": {} }');
+    if (!stoicData.completedDays) stoicData.completedDays = [];
+    if (!stoicData.completedDays.includes(today)) {
+        stoicData.completedDays.push(today);
+        localStorage.setItem('stoicData', JSON.stringify(stoicData));
+        // Reward: +2 WIS for applying stoic principle
+        data.stats.wis = (data.stats.wis || 0) + 2;
+        data.totalPoints += 2;
+        saveData();
+        showPointsPopup('+2 WIS ⚔️');
+    }
+    renderStoicDaily();
+});
+
+document.getElementById('btn-stoic-reflect').addEventListener('click', () => {
+    document.getElementById('examen-overlay').classList.remove('hidden');
+    // Pre-fill with today's maxim for context
+    const maxim = getStoicToday();
+    document.getElementById('examen-good').placeholder = `Сегодняшний принцип: "${maxim.text.split('.')[0]}"...`;
+});
+
+document.getElementById('examen-cancel').addEventListener('click', () => {
+    document.getElementById('examen-overlay').classList.add('hidden');
+});
+
+document.getElementById('examen-save').addEventListener('click', () => {
+    const good = document.getElementById('examen-good').value.trim();
+    const improve = document.getElementById('examen-improve').value.trim();
+    const plan = document.getElementById('examen-plan').value.trim();
+    
+    if (!good && !improve && !plan) {
+        document.getElementById('examen-overlay').classList.add('hidden');
+        return;
+    }
+    
+    const today = getToday();
+    const stoicData = JSON.parse(localStorage.getItem('stoicData') || '{ "completedDays": [], "examens": {} }');
+    if (!stoicData.examens) stoicData.examens = {};
+    stoicData.examens[today] = { good, improve, plan, maxim: getStoicToday().text };
+    if (!stoicData.completedDays) stoicData.completedDays = [];
+    if (!stoicData.completedDays.includes(today)) stoicData.completedDays.push(today);
+    
+    localStorage.setItem('stoicData', JSON.stringify(stoicData));
+    
+    // Reward: +5 WIS for evening examen
+    const examKey = `examBonus_${today}`;
+    if (!localStorage.getItem(examKey)) {
+        data.stats.wis = (data.stats.wis || 0) + 5;
+        data.totalPoints += 5;
+        saveData();
+        localStorage.setItem(examKey, '1');
+        showPointsPopup('+5 WIS 🌙');
+    }
+    
+    document.getElementById('examen-overlay').classList.add('hidden');
+    document.getElementById('examen-good').value = '';
+    document.getElementById('examen-improve').value = '';
+    document.getElementById('examen-plan').value = '';
+    
+    showModal('🌙 ЭКЗАМЕН ЗАВЕРШЁН', `Марк Аврелий делал это каждый день.\n\nКаждый вечерний экзамен — это нейронная тренировка стоического мышления.\n\n+5 WIS получено.`);
+    renderStoicDaily();
+});
+
+// ========== MORNING BRIEFING ==========
+function showMorningBriefing() {
+    const today = getToday();
+    const shownKey = `morningShown_${today}`;
+    if (localStorage.getItem(shownKey)) return;
+    
+    const hour = new Date().getHours();
+    // Show only between 4am and 14pm
+    if (hour < 4 || hour > 14) return;
+    
+    const maxim = getStoicToday();
+    
+    const greetings = {
+        morning: 'ДОБРОЕ УТРО, ОХОТНИК',
+        midday: 'ДЕНЬ В РАЗГАРЕ, ОХОТНИК'
+    };
+    const greeting = hour < 12 ? greetings.morning : greetings.midday;
+    
+    const dateStr = new Date().toLocaleDateString('ru-RU', { weekday: 'long', day: 'numeric', month: 'long' });
+    
+    document.getElementById('morning-greeting').textContent = greeting;
+    document.getElementById('morning-date').textContent = dateStr.toUpperCase();
+    document.getElementById('morning-stoic-text').textContent = maxim.text;
+    document.getElementById('morning-stoic-author').textContent = `— ${maxim.author}, ${maxim.source}`;
+    
+    // Today's main focus from quests
+    const mainFocus = data.mainQuests && data.mainQuests.length > 0 
+        ? `Сегодня: ${data.mainQuests.map(q => q.name).join(', ')}`
+        : 'Выполни все главные квесты';
+    document.getElementById('morning-focus').textContent = mainFocus;
+    
+    document.getElementById('morning-overlay').classList.remove('hidden');
+}
+
+document.getElementById('morning-dismiss').addEventListener('click', () => {
+    document.getElementById('morning-overlay').classList.add('hidden');
+    const today = getToday();
+    localStorage.setItem(`morningShown_${today}`, '1');
+});
+
+// ========== HABITS 2.0 WITH TRIGGERS ==========
+// Upgraded habit definitions with trigger + ritual
+const DEFAULT_HABITS_V2 = [
+    { 
+        id: 'watermorning', 
+        name: '💧 Гидратация: Стакан воды сразу после пробуждения',
+        trigger: 'После того как встал с кровати',
+        ritual: 'Иди на кухню, налей стакан воды, выпей стоя'
+    },
+    { 
+        id: 'nodopamine', 
+        name: '🧠 Дофаминовый щит: Утро без телефона (мин. 15 мин)',
+        trigger: 'После пробуждения, ДО проверки телефона',
+        ritual: 'Положи телефон экраном вниз. Встань, умойся, выпей воды — потом телефон'
+    },
+    { 
+        id: 'mindfuleating', 
+        name: '🍽️ Осознанное питание: Без перекусов на автопилоте',
+        trigger: 'Когда хочешь что-то перекусить',
+        ritual: 'Спроси: "Я голоден или скучаю/стрессую?" Если не голоден — выпей воды'
+    },
+    { 
+        id: 'movement', 
+        name: '🚶 Движение: 30+ мин активности (прогулка/разминка)',
+        trigger: 'После обеда или в начале вечера',
+        ritual: 'Надень кроссовки (это триггер) → выйди → не думай, просто иди'
+    },
+    { 
+        id: 'reflect', 
+        name: '📝 Рефлексия: 3 итога дня + план на завтра',
+        trigger: 'За 30-60 мин до сна',
+        ritual: 'Открой блокнот/заметки. 3 итога. 3 задачи завтра. 1 благодарность.'
+    },
+    { 
+        id: 'sunset', 
+        name: '🌙 Цифровой закат: 30 мин до сна без экранов',
+        trigger: 'За 30 мин до запланированного времени сна',
+        ritual: 'Поставь "Не беспокоить". Отложи телефон. Читай книгу или медитируй.'
+    },
+    { 
+        id: 'tidyup', 
+        name: '🧹 Порядок: 5 мин уборки / наведения порядка',
+        trigger: 'Перед тем как сесть за работу утром',
+        ritual: 'Убери стол, застели кровать. Чистое пространство = чистый ум.'
+    }
+];
+
+function initHabitsV2() {
+    // Migrate to V2 habits with triggers if not done
+    const storedHabits = JSON.parse(localStorage.getItem('ariseHabits') || '{}');
+    if (!storedHabits.v2migrated && storedHabits.list) {
+        // Merge existing custom habits with v2 defaults
+        const customHabits = storedHabits.list.filter(h => 
+            !DEFAULT_HABITS_V2.some(d => d.id === h.id)
+        );
+        storedHabits.list = [...DEFAULT_HABITS_V2, ...customHabits];
+        storedHabits.v2migrated = true;
+        localStorage.setItem('ariseHabits', JSON.stringify(storedHabits));
+        habits = storedHabits;
+    }
+}
+
+// Override renderHabits to show trigger info
+const _originalRenderHabits = renderHabits;
+
+// Patch habit item rendering to show trigger
+function renderHabitsV2() {
+    const container = document.getElementById('habit-list');
+    const today = getToday();
+    const completedToday = getHabitsToday();
+    const total = habits.list.length;
+    const done = completedToday.length;
+
+    document.getElementById('habit-counter').textContent = `${done}/${total}`;
+
+    let html = '';
+    habits.list.forEach(h => {
+        const isDone = completedToday.includes(h.id);
+        const hasTrigger = h.trigger || h.ritual;
+        html += `
+        <div class="habit-item${isDone ? ' completed' : ''}${habitEditMode ? ' editing' : ''}" data-id="${h.id}" style="cursor:pointer;">
+            <div class="habit-check${isDone ? ' checked' : ''}" onclick="event.stopPropagation(); toggleHabit('${h.id}')"></div>
+            <div style="flex:1;" onclick="${hasTrigger ? `showHabitDetail('${h.id}')` : `toggleHabit('${h.id}')`}">
+                <span class="habit-name${isDone ? ' done' : ''}">${h.name}</span>
+                ${hasTrigger && !isDone ? `<div style="font-size:0.68rem; color:var(--text-dim); margin-top:2px;">⚡ ${h.trigger || ''}</div>` : ''}
+                ${isDone ? `<div style="font-size:0.68rem; color:var(--green); margin-top:2px;">✓ Выполнено</div>` : ''}
+            </div>
+            ${habitEditMode ? `<button class="btn-habit-delete" onclick="deleteHabit('${h.id}')">✕</button>` : ''}
+        </div>`;
+    });
+    container.innerHTML = html;
+
+    // Check habit streak bonus
+    const habitsStreakKey = `habitStreak_${today}`;
+    if (done === total && total > 0 && !localStorage.getItem(habitsStreakKey)) {
+        const currentStreak = calcHabitStreak();
+        let bonus = 3;
+        let bonusMsg = '+3 🔥 +1 DSC (привычки)';
+        if (currentStreak >= 7) { bonus = 10; bonusMsg = '+10 🔥 +2 DSC (7 дней привычки!)'; data.stats.dsc = (data.stats.dsc || 0) + 1; }
+        if (currentStreak >= 30) { bonus = 25; bonusMsg = '+25 🔥 +3 DSC (30 дней привычки!)'; data.stats.dsc = (data.stats.dsc || 0) + 1; }
+        data.stats.dsc = (data.stats.dsc || 0) + 1;
+        data.totalPoints += bonus;
+        saveData();
+        localStorage.setItem(habitsStreakKey, '1');
+        showPointsPopup(bonusMsg);
+    }
+
+    document.getElementById('btn-add-habit').classList.toggle('hidden', !habitEditMode);
+}
+
+function calcHabitStreak() {
+    let streak = 0;
+    let checkDate = new Date();
+    for (let i = 0; i < 365; i++) {
+        const ds = `${checkDate.getFullYear()}-${String(checkDate.getMonth()+1).padStart(2,'0')}-${String(checkDate.getDate()).padStart(2,'0')}`;
+        const key = `habitStreak_${ds}`;
+        if (localStorage.getItem(key)) {
+            streak++;
+            checkDate.setDate(checkDate.getDate() - 1);
+        } else {
+            break;
+        }
+    }
+    return streak;
+}
+
+window.showHabitDetail = function(id) {
+    const habit = habits.list.find(h => h.id === id);
+    if (!habit) return;
+    const content = `${habit.trigger ? `⚡ КОГДА: ${habit.trigger}\n\n` : ''}${habit.ritual ? `🔄 КАК: ${habit.ritual}` : ''}`;
+    if (content.trim()) {
+        showModal(`${habit.name}`, content);
+    } else {
+        toggleHabit(id);
+    }
+};
+
+// Override renderHabits globally
+window.renderHabits = renderHabitsV2;
+
 function init() {
     const today = getToday();
     // Fix: if startDate is missing or in the future, reset it
@@ -2405,6 +2905,9 @@ function init() {
         data.startDate = today;
         saveData();
     }
+    
+    // Initialize upgraded habits
+    initHabitsV2();
     
     // Rotate bonus quests daily
     if (data.lastBonusRotation !== today) {
@@ -2431,10 +2934,15 @@ function init() {
     updateDashboard();
     renderQuests();
     updateQuestStates();
+    renderDailyQuote();
+    renderStoicDaily();
     renderKeys();
     updateStats();
     updateCalendar();
     updateHardModeUI();
+    
+    // Show morning briefing (only once per day, morning hours)
+    setTimeout(showMorningBriefing, 800);
 
     // Check monthly checkpoint
     const daysIn = calcDaysInSystem();
@@ -2450,3 +2958,364 @@ function init() {
 }
 
 init();
+
+// ============================================================
+// ARISE v2.1 — ЦЕЛИ | ОБЗОР НЕДЕЛИ | АНИМЕ
+// ============================================================
+
+// ===== ХРАНИЛИЩЕ =====
+const _loadGoals = () => { try { return JSON.parse(localStorage.getItem('ariseGoals') || 'null') || { goals:[], reviews:[] }; } catch(e){ return {goals:[],reviews:[]}; } };
+const _saveGoals = g => localStorage.setItem('ariseGoals', JSON.stringify(g));
+const _loadAnime = () => { try { return JSON.parse(localStorage.getItem('ariseAnime') || 'null') || { list:[] }; } catch(e){ return {list:[]}; } };
+const _saveAnime = a => localStorage.setItem('ariseAnime', JSON.stringify(a));
+
+let goalsData = _loadGoals();
+let animeData = _loadAnime();
+
+// ===== НАВИГАЦИЯ =====
+// Расширяем refreshPage для goals
+const __origRefresh = refreshPage;
+window.refreshPage = function(page) {
+    __origRefresh(page);
+    if (page === 'goals' || page === 'quests') renderGoalsPage();
+};
+
+// ===== УТИЛИТЫ =====
+const _today = () => typeof getToday === 'function' ? getToday() : new Date().toISOString().split('T')[0];
+
+function _daysLeft(ds) {
+    if (!ds) return null;
+    const t = new Date(); t.setHours(0,0,0,0);
+    const d = new Date(ds); d.setHours(0,0,0,0);
+    return Math.round((d - t) / 86400000);
+}
+function _fmtDate(ds) {
+    if (!ds) return '';
+    const d = new Date(ds);
+    const m = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+    return `${d.getDate()} ${m[d.getMonth()]}`;
+}
+function _weekKey() {
+    const n = new Date(), y = n.getFullYear();
+    const s = new Date(y, 0, 1);
+    const w = Math.ceil(((n - s) / 86400000 + s.getDay() + 1) / 7);
+    return `${y}-W${String(w).padStart(2,'0')}`;
+}
+
+// ===== МОДАЛКИ =====
+let _reviewScore = 7;
+
+function _createModal(id, html) {
+    if (document.getElementById(id)) return;
+    const el = document.createElement('div');
+    el.id = id; el.className = 'modal-overlay hidden';
+    el.innerHTML = html;
+    document.body.appendChild(el);
+    el.addEventListener('click', e => { if (e.target.id === id) el.classList.add('hidden'); });
+}
+
+_createModal('goal-modal', `
+<div class="modal edit-modal" style="max-width:350px;">
+    <div class="modal-glow"></div>
+    <div class="modal-title" id="goal-modal-ttl">Новая цель</div>
+    <div class="edit-form">
+        <label class="edit-label">Цель<input type="text" class="edit-input" id="goal-inp-name" placeholder="Устроиться разработчиком"></label>
+        <label class="edit-label">Дедлайн<input type="date" class="edit-input" id="goal-inp-date"></label>
+        <label class="edit-label">Почему важно<input type="text" class="edit-input" id="goal-inp-why" placeholder="Финансовая независимость"></label>
+        <label class="edit-label">Следующий шаг прямо сейчас<input type="text" class="edit-input" id="goal-inp-next" placeholder="Сегодня обновить резюме"></label>
+    </div>
+    <div class="edit-actions">
+        <button class="modal-btn btn-secondary" onclick="document.getElementById('goal-modal').classList.add('hidden')">Отмена</button>
+        <button class="modal-btn" onclick="_saveGoalModal()">Сохранить</button>
+    </div>
+</div>`);
+
+_createModal('anime-modal', `
+<div class="modal edit-modal" style="max-width:320px;">
+    <div class="modal-glow"></div>
+    <div class="modal-title">🎌 Аниме</div>
+    <div class="edit-form">
+        <label class="edit-label">Название<input type="text" class="edit-input" id="anime-inp-name" placeholder="Solo Leveling, Naruto..."></label>
+    </div>
+    <div class="edit-actions">
+        <button class="modal-btn btn-secondary" onclick="document.getElementById('anime-modal').classList.add('hidden')">Отмена</button>
+        <button class="modal-btn" onclick="_saveAnimeModal()">Добавить</button>
+    </div>
+</div>`);
+
+_createModal('review-modal', `
+<div class="modal edit-modal" style="max-width:370px;">
+    <div class="modal-glow"></div>
+    <div class="modal-title" style="font-size:1.2rem;margin-bottom:3px;">📋 Обзор недели</div>
+    <div style="font-size:.72rem;color:var(--text-3);margin-bottom:16px;" id="review-wk-label"></div>
+    <div class="edit-form">
+        <label class="edit-label" style="color:var(--green);">Что сработало лучше всего?
+            <textarea class="edit-input" id="review-wins" rows="2" style="resize:none;line-height:1.4;" placeholder="Что сделал, что получилось..."></textarea>
+        </label>
+        <label class="edit-label" style="color:var(--yellow);">Что тормозило?
+            <textarea class="edit-input" id="review-blocks" rows="2" style="resize:none;line-height:1.4;" placeholder="Прокрастинация, усталость..."></textarea>
+        </label>
+        <label class="edit-label" style="color:var(--purple);">Одно изменение на следующую неделю
+            <textarea class="edit-input" id="review-change" rows="2" style="resize:none;line-height:1.4;" placeholder="Конкретное изменение..."></textarea>
+        </label>
+        <label class="edit-label" style="color:var(--gold);">Неделя на сколько? (1–10)
+            <div id="review-score-row" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:2px;"></div>
+        </label>
+    </div>
+    <div class="edit-actions">
+        <button class="modal-btn btn-secondary" onclick="document.getElementById('review-modal').classList.add('hidden')">Пропустить</button>
+        <button class="modal-btn" onclick="_saveReviewModal()">Сохранить +10 WIS</button>
+    </div>
+</div>`);
+
+// Score buttons
+(function _buildScoreBtns() {
+    const row = document.getElementById('review-score-row');
+    if (!row) return;
+    for (let i = 1; i <= 10; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i; btn.dataset.s = i;
+        btn.style.cssText = `width:32px;height:32px;border-radius:7px;border:1px solid var(--border);background:${i===_reviewScore?'var(--purple)':'transparent'};color:${i===_reviewScore?'#fff':'var(--text-2)'};font-family:var(--font-d);font-weight:700;cursor:pointer;transition:all .15s;font-size:.88rem;`;
+        btn.onclick = () => {
+            _reviewScore = i;
+            row.querySelectorAll('button').forEach(b => {
+                const v = parseInt(b.dataset.s);
+                b.style.background = v === _reviewScore ? 'var(--purple)' : 'transparent';
+                b.style.color = v === _reviewScore ? '#fff' : 'var(--text-2)';
+            });
+        };
+        row.appendChild(btn);
+    }
+})();
+
+// ===== РЕНДЕРИНГ СТРАНИЦЫ =====
+function renderGoalsPage() {
+    _renderMainTarget();
+    _renderGoalsList();
+    _renderWeeklyCard();
+    _renderReviewHistory();
+    _bindGoalsBtns();
+}
+
+function _renderMainTarget() {
+    const c = document.getElementById('goals-main-target');
+    if (!c) return;
+    const g = goalsData.goals.find(x => x.isMain) || goalsData.goals[0];
+    if (!g) {
+        c.innerHTML = `<div style="background:var(--purple-dim);border:1px dashed rgba(168,85,247,.25);border-radius:var(--radius);padding:20px;text-align:center;"><div style="font-size:1.8rem;margin-bottom:8px;">🎯</div><div style="color:var(--text-3);font-size:.85rem;">Добавь главную цель — это твой маяк</div></div>`;
+        return;
+    }
+    const dl = _daysLeft(g.deadline);
+    const col = dl === null ? 'var(--purple)' : dl < 0 ? 'var(--red)' : dl < 14 ? 'var(--yellow)' : 'var(--green)';
+    const dlTxt = dl === null ? '' : dl > 0 ? `⏳ ${dl} дн.` : dl === 0 ? '🔥 СЕГОДНЯ' : '⚠️ Просрочено';
+    c.innerHTML = `
+    <div class="goals-main-banner">
+        <div style="font-size:.62rem;color:var(--purple);letter-spacing:3px;font-family:var(--font-d);margin-bottom:7px;">⚔️ ГЛАВНАЯ ЦЕЛЬ</div>
+        <div style="font-family:var(--font-d);font-size:1.15rem;font-weight:700;color:var(--text-1);margin-bottom:${g.why?'5px':'0'}">${g.name}</div>
+        ${g.why ? `<div style="font-size:.78rem;color:var(--text-2);font-style:italic;margin-bottom:9px;">"${g.why}"</div>` : '<div style="margin-bottom:9px;"></div>'}
+        <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+            ${g.deadline ? `<span style="font-size:.78rem;color:${col};font-family:var(--font-d);font-weight:700;">${dlTxt} <span style="font-weight:400;color:var(--text-3);">${_fmtDate(g.deadline)}</span></span>` : ''}
+            ${g.nextStep ? `<span style="font-size:.75rem;color:var(--text-2);">→ ${g.nextStep}</span>` : ''}
+        </div>
+    </div>`;
+}
+
+function _renderGoalsList() {
+    const c = document.getElementById('goals-list');
+    if (!c) return;
+    if (!goalsData.goals.length) {
+        c.innerHTML = `<div style="text-align:center;padding:14px;color:var(--text-3);font-size:.83rem;">Нажми + Цель чтобы добавить</div>`;
+        return;
+    }
+    c.innerHTML = '';
+    goalsData.goals.forEach((g, i) => {
+        const dl = _daysLeft(g.deadline);
+        const col = dl === null ? 'var(--text-3)' : dl < 0 ? 'var(--red)' : dl < 14 ? 'var(--yellow)' : 'var(--green)';
+        const dlTxt = dl === null ? '' : dl > 0 ? `${dl} дн.` : dl === 0 ? '🔥 СЕГОДНЯ' : '❗';
+        const isMain = g.isMain || (!goalsData.goals.some(x=>x.isMain) && i === 0);
+        const div = document.createElement('div');
+        div.className = `goal-card${isMain?' is-main':''}`;
+        div.innerHTML = `
+            <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
+                <div style="font-family:var(--font-d);font-size:.95rem;font-weight:700;color:var(--text-1);flex:1;">${g.name}</div>
+                <div style="display:flex;gap:5px;flex-shrink:0;">
+                    ${!isMain ? `<button onclick="_setMainGoal(${i})" style="background:transparent;border:1px solid var(--border);color:var(--text-3);padding:2px 6px;border-radius:5px;font-size:.68rem;cursor:pointer;" title="Сделать главной">★</button>` : `<span style="font-size:.68rem;color:var(--purple);padding:2px 7px;background:var(--purple-dim);border-radius:5px;">★</span>`}
+                    <button onclick="_delGoal(${i})" style="background:transparent;border:1px solid var(--border);color:var(--text-3);padding:2px 6px;border-radius:5px;font-size:.72rem;cursor:pointer;">✕</button>
+                </div>
+            </div>
+            ${g.why ? `<div style="font-size:.74rem;color:var(--text-3);margin-top:4px;font-style:italic;">${g.why}</div>` : ''}
+            <div style="display:flex;gap:9px;flex-wrap:wrap;margin-top:6px;align-items:center;">
+                ${g.deadline ? `<span style="font-size:.74rem;color:${col};font-family:var(--font-d);font-weight:700;">${dlTxt} <span style="font-weight:400;color:var(--text-3);">${_fmtDate(g.deadline)}</span></span>` : ''}
+                ${g.nextStep ? `<span style="font-size:.74rem;color:var(--text-2);">→ ${g.nextStep}</span>` : ''}
+            </div>`;
+        c.appendChild(div);
+    });
+}
+
+function _renderWeeklyCard() {
+    const c = document.getElementById('weekly-review-card');
+    if (!c) return;
+    const wk = _weekKey();
+    const done = localStorage.getItem(`wrd_${wk}`);
+    const isSun = new Date().getDay() === 0;
+    if (done) {
+        c.innerHTML = `<div style="background:var(--green-dim);border:1px solid rgba(52,211,153,.18);border-radius:var(--radius-sm);padding:14px;text-align:center;"><div style="color:var(--green);font-family:var(--font-d);font-weight:700;margin-bottom:3px;">✓ Обзор этой недели готов</div><div style="font-size:.76rem;color:var(--text-3);">Возвращайся в следующее воскресенье</div></div>`;
+    } else {
+        c.innerHTML = `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;">
+            <div style="font-size:.82rem;color:var(--text-2);margin-bottom:12px;line-height:1.5;">${isSun ? '🔔 Воскресенье — время для недельного обзора. 5 минут честного взгляда на прошедшую неделю.' : '5 минут каждое воскресенье — единственный способ не повторять одни и те же ошибки.'}</div>
+            <button onclick="_openWeeklyReview()" style="width:100%;background:linear-gradient(135deg,rgba(168,85,247,.16),rgba(168,85,247,.06));border:1px solid rgba(168,85,247,.35);color:var(--purple);padding:11px;border-radius:var(--radius-xs);font-family:var(--font-d);font-weight:700;font-size:.88rem;cursor:pointer;letter-spacing:.5px;">📋 Начать обзор (+10 WIS)</button>
+        </div>`;
+    }
+}
+
+function _renderReviewHistory() {
+    const c = document.getElementById('weekly-reviews-history');
+    if (!c) return;
+    const reviews = goalsData.reviews || [];
+    if (!reviews.length) { c.innerHTML = ''; return; }
+    c.innerHTML = `<div style="font-family:var(--font-d);font-size:.68rem;color:var(--text-3);letter-spacing:2px;margin-bottom:8px;">ПРОШЛЫЕ ОБЗОРЫ</div>` +
+        reviews.slice(0,4).map(r => `
+        <div class="review-card" onclick="this.querySelector('.rb').style.display=this.querySelector('.rb').style.display==='block'?'none':'block'">
+            <div style="display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-family:var(--font-d);font-size:.82rem;color:var(--text-1);">${r.week}</span>
+                <span style="font-family:var(--font-d);font-weight:700;font-size:.9rem;color:${r.score>=7?'var(--green)':r.score>=5?'var(--yellow)':'var(--red)'};">${r.score}/10</span>
+            </div>
+            <div class="rb" style="display:none;margin-top:9px;display:none;">
+                ${r.wins?`<div style="font-size:.77rem;color:var(--green);margin-bottom:5px;">✓ ${r.wins}</div>`:''}
+                ${r.blocks?`<div style="font-size:.77rem;color:var(--yellow);margin-bottom:5px;">⚡ ${r.blocks}</div>`:''}
+                ${r.change?`<div style="font-size:.77rem;color:var(--purple);">→ ${r.change}</div>`:''}
+            </div>
+        </div>`).join('');
+}
+
+function _renderAnime() {
+    const c = document.getElementById('anime-list');
+    if (!c) return;
+    const list = animeData.list || [];
+    if (!list.length) {
+        c.innerHTML = `<div style="text-align:center;padding:14px;color:var(--text-3);font-size:.83rem;">Список пуст. Добавь первое аниме!</div>`;
+    } else {
+        c.innerHTML = list.map((item, i) => `
+            <div class="anime-item">
+                <span class="anime-num">${i+1}</span>
+                <span class="anime-name">${item.name}</span>
+                <button class="anime-del" onclick="_delAnime(${i})">✕</button>
+            </div>`).join('');
+    }
+    // Bind add button (in codex page)
+    const addAnime = document.getElementById('btn-add-anime');
+    if (addAnime && !addAnime._b) {
+        addAnime._b = true;
+        addAnime.addEventListener('click', () => {
+            document.getElementById('anime-inp-name').value = '';
+            document.getElementById('anime-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('anime-inp-name').focus(), 80);
+        });
+    }
+}
+
+function _bindGoalsBtns() {
+    const addGoal = document.getElementById('btn-add-goal');
+    if (addGoal && !addGoal._b) {
+        addGoal._b = true;
+        addGoal.addEventListener('click', () => {
+            ['goal-inp-name','goal-inp-date','goal-inp-why','goal-inp-next'].forEach(id => document.getElementById(id).value = '');
+            document.getElementById('goal-modal-ttl').textContent = 'Новая цель';
+            document.getElementById('goal-modal').classList.remove('hidden');
+            setTimeout(() => document.getElementById('goal-inp-name').focus(), 80);
+        });
+    }
+
+}
+
+// ===== ДЕЙСТВИЯ =====
+window._saveGoalModal = function() {
+    const name = document.getElementById('goal-inp-name').value.trim();
+    if (!name) return;
+    const g = {
+        name,
+        deadline: document.getElementById('goal-inp-date').value,
+        why: document.getElementById('goal-inp-why').value.trim(),
+        nextStep: document.getElementById('goal-inp-next').value.trim(),
+        createdAt: _today()
+    };
+    if (!goalsData.goals.length) g.isMain = true;
+    goalsData.goals.push(g);
+    _saveGoals(goalsData);
+    document.getElementById('goal-modal').classList.add('hidden');
+    renderGoalsPage();
+};
+
+window._setMainGoal = function(i) {
+    goalsData.goals.forEach((g, idx) => g.isMain = (idx === i));
+    _saveGoals(goalsData);
+    renderGoalsPage();
+};
+
+window._delGoal = function(i) {
+    if (!confirm(`Удалить цель?`)) return;
+    goalsData.goals.splice(i, 1);
+    if (goalsData.goals.length && !goalsData.goals.find(g => g.isMain)) goalsData.goals[0].isMain = true;
+    _saveGoals(goalsData);
+    renderGoalsPage();
+};
+
+window._openWeeklyReview = function() {
+    document.getElementById('review-wk-label').textContent = 'Неделя ' + _weekKey();
+    ['review-wins','review-blocks','review-change'].forEach(id => document.getElementById(id).value = '');
+    document.getElementById('review-modal').classList.remove('hidden');
+};
+
+window._saveReviewModal = function() {
+    const wins = document.getElementById('review-wins').value.trim();
+    const blocks = document.getElementById('review-blocks').value.trim();
+    const change = document.getElementById('review-change').value.trim();
+    if (!wins && !blocks && !change) { document.getElementById('review-modal').classList.add('hidden'); return; }
+    const wk = _weekKey();
+    goalsData.reviews = (goalsData.reviews || []).filter(r => r.week !== wk);
+    goalsData.reviews.unshift({ week: wk, date: _today(), wins, blocks, change, score: _reviewScore });
+    if (goalsData.reviews.length > 12) goalsData.reviews = goalsData.reviews.slice(0, 12);
+    _saveGoals(goalsData);
+    if (typeof data !== 'undefined') {
+        data.stats.wis = (data.stats.wis || 0) + 10;
+        saveData();
+        showPointsPopup('+10 WIS');
+    }
+    localStorage.setItem(`wrd_${wk}`, '1');
+    document.getElementById('review-modal').classList.add('hidden');
+    renderGoalsPage();
+};
+
+window._saveAnimeModal = function() {
+    const name = document.getElementById('anime-inp-name').value.trim();
+    if (!name) return;
+    animeData.list = animeData.list || [];
+    animeData.list.push({ name, addedAt: _today() });
+    _saveAnime(animeData);
+    document.getElementById('anime-modal').classList.add('hidden');
+    _renderAnime();
+};
+
+window._delAnime = function(i) {
+    animeData.list.splice(i, 1);
+    _saveAnime(animeData);
+    _renderAnime();
+};
+
+// ===== ПЕРВИЧНЫЙ РЕНДЕР МИССИЙ =====
+if (typeof renderGoalsPage === 'function') renderGoalsPage();
+
+// ===== НАПОМИНАНИЕ ВОСКРЕСЕНЬЕ =====
+(function _wkReminder() {
+    const now = new Date();
+    if (now.getDay() !== 0 || now.getHours() < 20) return;
+    const wk = _weekKey();
+    if (localStorage.getItem(`wrd_${wk}`) || localStorage.getItem(`wrn_${wk}`)) return;
+    localStorage.setItem(`wrn_${wk}`, '1');
+    setTimeout(() => {
+        if (confirm('📋 Воскресный обзор недели\n5 минут честного взгляда. Открыть?')) {
+            switchPage('quests');
+            setTimeout(_openWeeklyReview, 400);
+        }
+    }, 2500);
+})();

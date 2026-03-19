@@ -85,7 +85,7 @@
         <section id="page-quests" class="page">
             <div class="header" style="align-items: flex-start; flex-direction: column; gap: 8px;">
                 <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
-                    <h1>⚔️ КВЕСТЫ</h1>
+                    <h1>⚔️ ДОСКА ЗАДАНИЙ</h1>
                     <button class="btn-rest-day" id="btn-rest-day" style="background: rgba(168, 85, 247, 0.15); border: 1px solid var(--purple); color: var(--purple); padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;">😴 Отдых</button>
                 </div>
                 <div class="quest-date" id="quest-date" style="align-self: flex-start;"></div>
@@ -94,7 +94,7 @@
             <div class="weekly-rule-card" id="weekly-rule-card" style="margin-bottom: 20px;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                     <div class="rule-header" style="margin-bottom: 0;">
-                        <span style="font-size: 0.8rem;">🎯 ВЫЗОВ НЕДЕЛИ</span>
+                        <span style="font-size: 0.8rem;">🌀 ИСПЫТАНИЕ НЕДЕЛИ</span>
                     </div>
                     <span id="weekly-progress" style="color: var(--purple); font-weight: bold; font-family: var(--font-display); font-size: 0.9rem;">0/7</span>
                 </div>
@@ -107,6 +107,22 @@
 
             <div id="daily-quote" class="daily-quote-card" style="margin-bottom: 20px;"></div>
 
+            <!-- STOIC DAILY (moved from Codex) -->
+            <div class="stoic-daily-card" id="stoic-daily-card" style="margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div style="font-size: 0.7rem; color: var(--purple); letter-spacing: 2px; font-family: var(--font-display);">⚔️ STOIC DAILY</div>
+                    <div id="stoic-streak-badge" style="font-size: 0.7rem; background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3); color: var(--purple); padding: 2px 8px; border-radius: 20px; font-family: var(--font-display);">0 дней</div>
+                </div>
+                <div id="stoic-daily-text" style="font-size: 1rem; color: var(--text-primary); font-style: italic; line-height: 1.6; margin-bottom: 6px;"></div>
+                <div id="stoic-daily-author" style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 14px;"></div>
+                <div id="stoic-daily-source" style="font-size: 0.72rem; color: rgba(168,85,247,0.6); margin-bottom: 14px;"></div>
+                <div style="font-size: 0.75rem; color: var(--text-secondary); border-top: 1px solid var(--border-subtle); padding-top: 10px; margin-bottom: 10px;" id="stoic-practice-hint"></div>
+                <div style="display: flex; gap: 8px;">
+                    <button id="btn-stoic-reflect" style="flex: 1; background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.3); color: var(--purple); padding: 10px; border-radius: 10px; font-family: var(--font-display); font-weight: 600; font-size: 0.8rem; cursor: pointer;">🌙 Вечерний экзамен</button>
+                    <button id="btn-stoic-done" style="flex: 1; background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); color: var(--green); padding: 10px; border-radius: 10px; font-family: var(--font-display); font-weight: 600; font-size: 0.8rem; cursor: pointer;">✓ Применил сегодня</button>
+                </div>
+            </div>
+
             <div style="display: flex; gap: 10px; margin-bottom: 24px;">
                 <button id="btn-open-training" style="flex: 1; background: linear-gradient(135deg, rgba(52, 211, 153, 0.1), rgba(16, 185, 129, 0.05)); border: 1px solid rgba(52, 211, 153, 0.3); color: var(--green); padding: 14px; border-radius: var(--radius-sm); font-family: var(--font-display); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
                     <span style="font-size: 1.5rem;">💪</span>
@@ -117,7 +133,7 @@
 
             <div class="section-title-row" style="margin-top: 24px;">
                 <div style="display:flex; align-items:baseline; gap:8px;">
-                    <h2 class="section-title" style="margin: 0;">⭐ Вызовы Дня</h2>
+                    <h2 class="section-title" style="margin: 0;">⭐ Элитные Вызовы</h2>
                     <span style="font-size:0.75rem; color:var(--text-dim);">(Макс 2)</span>
                 </div>
                 <div style="display:flex; gap:8px;">
@@ -126,26 +142,46 @@
                 </div>
             </div>
             <div class="quest-list" id="bonus-quests"></div>
+
+            <!-- ЦЕЛИ (перенесено из раздела Цели) -->
+            <div class="section-title-row" style="margin-top: 28px;">
+                <h2 class="section-title">🏆 МИССИИ</h2>
+                <button id="btn-add-goal" style="background:var(--purple-dim);border:1px solid rgba(168,85,247,.3);color:var(--purple);padding:6px 14px;border-radius:10px;font-family:var(--font-d);font-weight:700;font-size:.82rem;cursor:pointer;letter-spacing:.5px;">+ Цель</button>
+            </div>
+            <div id="goals-main-target" style="margin-bottom:18px;"></div>
+            <div id="goals-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:26px;"></div>
+
+            <div class="section-title-row" style="margin-top:4px;">
+                <span class="section-title">📋 РАЗБОР НЕДЕЛИ</span>
+            </div>
+            <div id="weekly-review-card" style="margin-bottom:26px;"></div>
+            <div id="weekly-reviews-history" style="margin-bottom:26px;"></div>
         </section>
 
         <!-- CODEX -->
         <section id="page-codex" class="page">
             <div class="header">
-                <h1>📜 КОДЕКС</h1>
+                <h1>📜 КОДЕКС ОХОТНИКА</h1>
                 <button class="btn-edit-toggle" id="btn-edit-habits">✏️</button>
             </div>
 
             <div class="section-title-row">
-                <span class="section-title">ЕЖЕДНЕВНЫЕ ПРИВЫЧКИ</span>
+                <span class="section-title">⚡ РИТУАЛЫ ОХОТНИКА</span>
                 <span class="habit-counter" id="habit-counter">0/0</span>
             </div>
             <div class="habit-list" id="habit-list"></div>
             <button class="btn-add hidden" id="btn-add-habit">+ Добавить привычку</button>
 
             <div class="section-title-row" style="margin-top:24px">
-                <span class="section-title">СВОД ПРАВИЛ</span>
+                <span class="section-title">📜 ЗАКОНЫ СИСТЕМЫ</span>
             </div>
             <div id="codex-reference"></div>
+
+            <div class="section-title-row" style="margin-top:28px;">
+                <span class="section-title">🎌 Аниме</span>
+                <button id="btn-add-anime" style="background:rgba(244,114,182,.1);border:1px solid rgba(244,114,182,.25);color:var(--pink);padding:4px 10px;border-radius:7px;font-size:.74rem;font-family:var(--font-d);font-weight:700;cursor:pointer;letter-spacing:.5px;">+ Добавить</button>
+            </div>
+            <div id="anime-list" style="display:flex;flex-direction:column;gap:6px;padding-bottom:8px;"></div>
         </section>
 
         <!-- FOCUS (REMOVED) -->
@@ -219,7 +255,7 @@
                     <polygon id="radar-polygon" points="" fill="rgba(168, 85, 247, 0.4)" stroke="var(--purple)" stroke-width="2"/>
                     
                     <!-- Labels will be generated here -->
-                    <g id="radar-labels" font-family="var(--font-display)" font-size="10" fill="var(--text-secondary)" font-weight="600" text-anchor="middle" dominant-baseline="middle"></g>
+                    <g id="radar-labels" font-family="var(--font-d)" font-size="10" fill="var(--text-2)" font-weight="600" text-anchor="middle" dominant-baseline="middle"></g>
                 </svg>
             </div>
 
@@ -302,6 +338,60 @@
                 <span class="nav-label">Статы</span>
             </button>
         </nav>
+    </div>
+
+    <!-- MORNING BRIEFING OVERLAY -->
+    <div id="morning-overlay" class="modal-overlay hidden" style="z-index:500; background: rgba(8,6,15,0.97);">
+        <div class="modal" style="max-width: 360px; border: 1px solid rgba(168,85,247,0.3); background: linear-gradient(160deg, #0e0a1a, #12082a);">
+            <div class="modal-glow"></div>
+            <div id="morning-greeting" style="font-size: 0.85rem; color: var(--text-dim); letter-spacing: 2px; margin-bottom: 8px; font-family: var(--font-display);">ДОБРОЕ УТРО, ОХОТНИК</div>
+            <div id="morning-date" style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 24px;"></div>
+
+            <div style="border-left: 3px solid var(--purple); padding: 12px 16px; background: rgba(168,85,247,0.06); border-radius: 0 12px 12px 0; margin-bottom: 20px; text-align: left;">
+                <div style="font-size: 0.7rem; color: var(--purple); letter-spacing: 1px; font-family: var(--font-display); margin-bottom: 6px;">⚔️ STOIC MAXIM</div>
+                <div id="morning-stoic-text" style="font-size: 1rem; color: var(--text-primary); line-height: 1.5; font-style: italic;"></div>
+                <div id="morning-stoic-author" style="font-size: 0.75rem; color: var(--text-dim); margin-top: 8px;"></div>
+            </div>
+
+            <div style="background: rgba(240,185,50,0.06); border: 1px solid rgba(240,185,50,0.2); border-radius: 12px; padding: 14px; margin-bottom: 20px; text-align: left;">
+                <div style="font-size: 0.7rem; color: var(--gold); letter-spacing: 1px; font-family: var(--font-display); margin-bottom: 8px;">🎯 НАМЕРЕНИЕ ДНЯ</div>
+                <div id="morning-focus" style="font-size: 0.9rem; color: var(--text-primary);"></div>
+            </div>
+
+            <div style="background: rgba(52,211,153,0.06); border: 1px solid rgba(52,211,153,0.15); border-radius: 12px; padding: 14px; margin-bottom: 24px; text-align: left;">
+                <div style="font-size: 0.7rem; color: var(--green); letter-spacing: 1px; font-family: var(--font-display); margin-bottom: 6px;">🔥 ГЛАВНАЯ ЦЕЛЬ</div>
+                <div style="font-size: 0.85rem; color: var(--text-secondary);">Каждое действие сегодня — кирпич к финансовой свободе. Deep Work = деньги в будущем.</div>
+            </div>
+
+            <button class="modal-btn" id="morning-dismiss" style="width: 100%; background: linear-gradient(135deg, var(--purple), #7c3aed);">Принять вызов ⚔️</button>
+        </div>
+    </div>
+
+    <!-- STOIC EXAMEN MODAL (Evening) -->
+    <div id="examen-overlay" class="modal-overlay hidden" style="z-index: 400;">
+        <div class="modal" style="max-width: 360px;">
+            <div class="modal-glow"></div>
+            <div class="modal-title" style="font-size: 1.2rem; margin-bottom: 4px;">🌙 ВЕЧЕРНИЙ ЭКЗАМЕН</div>
+            <div style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 20px;">Практика Марка Аврелия</div>
+            <div style="text-align: left; display: flex; flex-direction: column; gap: 14px;">
+                <div>
+                    <label style="font-size: 0.75rem; color: var(--green); font-family: var(--font-display); letter-spacing: 1px; display: block; margin-bottom: 6px;">1. ЧТО БЫЛО ПОД МОИМ КОНТРОЛЕМ И Я СДЕЛАЛ ЭТО ХОРОШО?</label>
+                    <textarea id="examen-good" style="width:100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle); color: var(--text-primary); border-radius: 10px; padding: 10px; font-family: var(--font-body); font-size: 0.85rem; resize: none; min-height: 60px;" placeholder="Сегодня я контролировал..."></textarea>
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: var(--yellow); font-family: var(--font-display); letter-spacing: 1px; display: block; margin-bottom: 6px;">2. ГДЕ Я ДЕЙСТВОВАЛ НЕ КАК СТОИК? ПОЧЕМУ?</label>
+                    <textarea id="examen-improve" style="width:100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle); color: var(--text-primary); border-radius: 10px; padding: 10px; font-family: var(--font-body); font-size: 0.85rem; resize: none; min-height: 60px;" placeholder="Я отреагировал не так, потому что..."></textarea>
+                </div>
+                <div>
+                    <label style="font-size: 0.75rem; color: var(--purple); font-family: var(--font-display); letter-spacing: 1px; display: block; margin-bottom: 6px;">3. ЗАВТРА Я СДЕЛАЮ ИНАЧЕ:</label>
+                    <textarea id="examen-plan" style="width:100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle); color: var(--text-primary); border-radius: 10px; padding: 10px; font-family: var(--font-body); font-size: 0.85rem; resize: none; min-height: 50px;" placeholder="Завтра я..."></textarea>
+                </div>
+            </div>
+            <div class="edit-actions" style="margin-top: 20px;">
+                <button class="modal-btn btn-secondary" id="examen-cancel">Пропустить</button>
+                <button class="modal-btn" id="examen-save">Сохранить +5 WIS</button>
+            </div>
+        </div>
     </div>
 
     <!-- Level Up Modal -->
