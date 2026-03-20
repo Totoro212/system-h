@@ -66,6 +66,51 @@
             <div class="quest-list" id="main-quests"></div>
             <button class="btn-add hidden" id="btn-add-main">+ Добавить квест</button>
 
+            <!-- ВЫЗОВ ДНЯ — появляется под ежедневными квестами -->
+            <div id="challenge-section" style="margin-top:10px;">
+
+                <!-- Состояние 1: кнопка принять первый вызов -->
+                <div id="challenge-offer" style="display:none;">
+                    <button id="btn-accept-challenge" style="
+                        width:100%; padding:13px 16px;
+                        background:linear-gradient(135deg,rgba(168,85,247,.07),rgba(240,185,50,.05));
+                        border:1px dashed rgba(168,85,247,.25);
+                        border-radius:var(--radius);
+                        color:var(--purple);
+                        font-family:var(--font-d); font-weight:700; font-size:.85rem;
+                        letter-spacing:.5px; cursor:pointer;
+                        display:flex; align-items:center; justify-content:center; gap:8px;
+                        transition:all .2s;">
+                        ⚡ Принять вызов дня
+                    </button>
+                </div>
+
+                <!-- Состояние 2: активный вызов + кнопка "добавить ещё" (если выполнен) -->
+                <div id="challenge-accepted" style="display:none;">
+                    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;">
+                        <span style="font-family:var(--font-d);font-size:.72rem;color:var(--gold);letter-spacing:2px;">⚡ ВЫЗОВ ДНЯ</span>
+                        <button id="btn-decline-challenge" style="font-size:.65rem;color:var(--text-3);background:none;border:1px solid var(--border);border-radius:6px;padding:2px 7px;cursor:pointer;font-family:var(--font-d);">✕ Отказаться</button>
+                    </div>
+                    <div class="quest-list" id="bonus-quests" style="margin-bottom:8px;"></div>
+                    <!-- Кнопка добавить ещё — показывается только если текущий вызов выполнен -->
+                    <div id="challenge-add-more" style="display:none;">
+                        <button id="btn-add-more-challenge" style="
+                            width:100%; padding:10px 14px;
+                            background:rgba(240,185,50,.06);
+                            border:1px dashed rgba(240,185,50,.25);
+                            border-radius:var(--radius-sm);
+                            color:var(--gold);
+                            font-family:var(--font-d); font-weight:700; font-size:.78rem;
+                            letter-spacing:.5px; cursor:pointer;
+                            display:flex; align-items:center; justify-content:center; gap:6px;
+                            transition:all .2s;">
+                            + Добавить ещё вызов
+                        </button>
+                    </div>
+                </div>
+
+            </div>
+
         </section>
 
         <!-- QUESTS -->
@@ -115,17 +160,6 @@
                 </button>
             </div>
 
-
-            <div class="section-title-row" style="margin-top: 24px;">
-                <div style="display:flex; align-items:baseline; gap:8px;">
-                    <h2 class="section-title" style="margin: 0;">⭐ Элитные Вызовы</h2>
-                    <span style="font-size:0.75rem; color:var(--text-dim);">(Макс 2)</span>
-                </div>
-                <div style="display:flex; gap:8px;">
-<button class="btn-edit-toggle" id="btn-edit-bonus">✏️</button>
-                </div>
-            </div>
-            <div class="quest-list" id="bonus-quests"></div>
 
             <!-- ЦЕЛИ (перенесено из раздела Цели) -->
             <div class="section-title-row" style="margin-top: 28px;">

@@ -3,28 +3,6 @@
 function updateCalendar() { /* calendar removed */ }
 function renderPoolList() { /* pool removed */ }
 function showMorningBriefing() { /* morning briefing removed */ }
-function renderCodexReference() {
-    const container = document.getElementById('codex-reference');
-    if (!container) return;
-    container.innerHTML = '';
-    CODEX_REFERENCE.forEach(section => {
-        const card = document.createElement('div');
-        card.className = 'codex-card';
-        card.innerHTML = `
-            <div class="codex-card-header">
-                <span class="codex-card-icon">${section.icon}</span>
-                <span class="codex-card-title">${section.title}</span>
-                <span class="codex-card-expand">▼</span>
-            </div>
-            <div class="codex-card-body">
-                ${section.rules.map(r => `<div class="codex-rule">· ${r}</div>`).join('')}
-            </div>`;
-        card.querySelector('.codex-card-header').addEventListener('click', () => {
-            card.classList.toggle('expanded');
-        });
-        container.appendChild(card);
-    });
-}
 
 // ========== STOIC DAILY MAXIMS ==========
 // Специально подобранные для практики — Сенека, Марк Аврелий, Эпиктет
@@ -254,27 +232,6 @@ const AUTO_KEYS = [
         reward: 50
     },
     {
-        name: '💪 Стальное тело',
-        desc: 'Выполни 30 тренировок',
-        check: (d) => (d.stats.str || 0) >= 30,
-        progress: (d) => `${Math.min(d.stats.str || 0, 30)} / 30`,
-        reward: 50
-    },
-    {
-        name: '🧠 Острый ум',
-        desc: 'Выполни 50 сессий кода или учёбы',
-        check: (d) => (d.stats.int || 0) >= 50,
-        progress: (d) => `${Math.min(d.stats.int || 0, 50)} / 50`,
-        reward: 50
-    },
-    {
-        name: '📚 Мудрец',
-        desc: 'Выполни 20 сессий чтения',
-        check: (d) => (d.stats.wis || 0) >= 20,
-        progress: (d) => `${Math.min(d.stats.wis || 0, 20)} / 20`,
-        reward: 50
-    },
-    {
         name: '⚡ Несокрушимый',
         desc: '30 дней подряд без пропуска',
         check: (d) => calcStreak() >= 30 || d.bestStreak >= 30,
@@ -288,48 +245,36 @@ const AUTO_KEYS = [
         reward: 50
     },
     {
-        name: '🎖️ Дисциплина мастера',
-        desc: 'DSC стат достигнет 30',
-        check: (d) => (d.stats.dsc || 0) >= 30,
-        progress: (d) => `${Math.min(d.stats.dsc || 0, 30)} / 30`,
-        reward: 50
-    },
-    {
-        name: '⭐ Выносливость',
-        desc: 'END стат достигнет 25',
-        check: (d) => (d.stats.end || 0) >= 25,
-        progress: (d) => `${Math.min(d.stats.end || 0, 25)} / 25`,
-        reward: 50
-    },
-    {
         name: '👑 Монарх',
-        desc: 'Набери 2000 очков и достигни S-ранга',
+        desc: 'Набери 2000 очков',
         check: (d) => d.totalPoints >= 2000,
         progress: (d) => `${Math.min(d.totalPoints, 2000)} / 2000`,
         reward: 200
     },
     {
-        name: '🌌 Легенда Системы',
-        desc: 'Достигни 5000 Очков Ранга',
+        name: '🌌 Легенда',
+        desc: 'Достигни 5000 очков',
         check: (d) => d.totalPoints >= 5000,
         progress: (d) => `${Math.min(d.totalPoints, 5000)} / 5000`,
         reward: 500
     },
     {
-        name: '🔥 Титан Постоянства',
-        desc: 'Удерживай стрик в 100 дней',
+        name: '🔥 Титан',
+        desc: '100 дней стрик',
         check: (d) => d.bestStreak >= 100,
         progress: (d) => `${Math.min(d.bestStreak, 100)} / 100`,
         reward: 300
-    },
-    {
-        name: '🦾 Машина Тренировок',
-        desc: 'Выполни в сумме 100 силовых и кардио сессий',
-        check: (d) => ((d.stats.str || 0) + (d.stats.end || 0)) >= 100,
-        progress: (d) => `${Math.min((d.stats.str || 0) + (d.stats.end || 0), 100)} / 100`,
-        reward: 200
     }
 ];
+
+// ========== STAT NAMES (kept for chest reward compatibility) ==========
+const STAT_NAMES = {
+    str: 'STR — Сила',
+    end: 'END — Выносливость',
+    int: 'INT — Интеллект',
+    wis: 'WIS — Мудрость',
+    dsc: 'DSC — Дисциплина'
+};
 
 // ========== RANKS ==========
 const RANKS = [
@@ -358,6 +303,29 @@ const WEEKLY_CHALLENGES = [
     'Интервальное голодание (16/8) 7 дней'
 ];
 
+// ========== DAILY QUOTES ==========
+const DAILY_QUOTES = [
+    { text: 'Мы страдаем чаще в воображении, чем в реальности.', author: 'Сенека' },
+    { text: 'Лучшее время посадить дерево было 20 лет назад. Второе лучшее — сейчас.', author: 'Китайская пословица' },
+    { text: 'Дисциплина — это мост между целями и их достижением.', author: 'Джим Рон' },
+    { text: 'Ты не поднимаешься до уровня своих целей. Ты падаешь до уровня своих систем.', author: 'Джеймс Клир' },
+    { text: 'Препятствие на пути становится путём.', author: 'Марк Аврелий' },
+    { text: 'Делай трудное, пока оно лёгкое. Делай великое, пока оно мало.', author: 'Лао-цзы' },
+    { text: 'Не тот силён, кто не падает, а тот, кто падая встаёт.', author: 'Конфуций' },
+    { text: 'Каждое утро у тебя два выбора: продолжить спать и видеть сны, или проснуться и воплощать их.', author: 'Неизвестный' },
+    { text: 'Боль временна. Она может длиться минуту, час, день. Но рано или поздно пройдёт. А если ты сдашься — это навсегда.', author: 'Эрик Томас' },
+    { text: 'Лёгкий выбор — трудная жизнь. Трудный выбор — лёгкая жизнь.', author: 'Ежи Грегорек' },
+    { text: 'Мотивация приходит и уходит. Дисциплина остаётся.', author: 'Жоко Виллинк' },
+    { text: 'Будь суров к себе, и жизнь будет мягка к тебе.', author: 'Стоицизм' },
+    { text: 'Качество твоей жизни определяется качеством твоих привычек.', author: 'Джеймс Клир' },
+    { text: 'Ты — среднее арифметическое пяти людей, с которыми проводишь больше всего времени.', author: 'Джим Рон' },
+    { text: 'Не бойся медленного прогресса. Бойся его отсутствия.', author: 'Китайская пословица' },
+    { text: 'Сначала ты формируешь свои привычки, а потом привычки формируют тебя.', author: 'Джон Драйден' },
+    { text: 'Тело достигает того, во что верит разум.', author: 'Наполеон Хилл' },
+    { text: 'Единственный человек, с которым ты должен сравнивать себя — это ты вчерашний.', author: 'Джордан Питерсон' },
+    { text: 'Сильные люди не рождаются. Они создаются через борьбу.', author: 'Неизвестный' },
+    { text: 'Дойдя до конца, люди смеются над страхами, мучившими их вначале.', author: 'Паоло Коэльо' }
+];
 
 // ========== TRAINING PLAN ==========
 const PROGRAMS_CONFIG = {
@@ -380,7 +348,7 @@ const PROGRAMS_CONFIG = {
         name: 'ELITE', 
         note: 'Высокоинтенсивные протоколы для экстремальной выносливости. ОПАСНО: Требуют идеального восстановления, использовать не чаще 1 раза в 10-14 дней (иначе перетрен ЦНС).',
         days: ['titan', 'vo2max'],
-        unlock: 'str30'
+        unlock: 'streak7'
     }
 };
 
@@ -558,7 +526,7 @@ const TRAINING = {
     titan: {
         title: 'TITAN — Метаболический Стресс',
         time: '~30 мин',
-        note: '⚠️ РЕЖИМ ПЕРЕРАБОТКИ [STR 30]. Использовать МАКСИМУМ 1 раз в 14 дней. Приводит к сверх-отказу мышечных волокон. Если делать чаще — поймаешь перетрен и обвал тестостерона.',
+        note: '⚠️ РЕЖИМ ПЕРЕРАБОТКИ. Использовать МАКСИМУМ 1 раз в 14 дней. Приводит к сверх-отказу мышечных волокон. Если делать чаще — поймаешь перетрен и обвал тестостерона.',
         warmup: {
             items: ['Jumping jacks — 60 сек', 'Медленные скручивания — 20 раз', 'Отжимания на коленях — 15 раз'],
             mobility: ['Вращения плечами', 'Вращения тазом и коленями'],
@@ -592,7 +560,7 @@ const TRAINING = {
     vo2max: {
         title: 'VO2 MAX — 4x4 Норвежские Интервалы',
         time: '~30-40 мин',
-        note: '⚠️ РЕЖИМ ПЕРЕРАБОТКИ [END 30]. Золотой стандарт выносливости и долголетия. Поднимает Ударный Объем Сердца.',
+        note: '⚠️ РЕЖИМ ПЕРЕРАБОТКИ. Золотой стандарт выносливости и долголетия. Поднимает Ударный Объем Сердца.',
         warmup: {
             items: ['Легкий бег или кручение педалей — 10 минут (Пульс Зона 2: можешь говорить, но с паузами)'],
             mobility: ['Динамическая растяжка ног'],
@@ -920,106 +888,6 @@ function renderSphereRadar() {
 }
 
 
-// ========== СВОД ПРАВИЛ ==========
-const CODEX_REFERENCE = [
-    {
-        icon: '👔', title: 'Внешний вид',
-        rules: [
-            'Одежда по размеру — не мешком, не в обтяжку',
-            'Без принтов и кричащих логотипов — однотон = взрослый вид',
-            'Базовые цвета: чёрный, белый, серый, тёмно-синий, хаки',
-            'Обувь чистая ВСЕГДА — люди смотрят на обувь',
-            'Гладь рубашку. Стирай кроссовки. Следи за состоянием вещей',
-            'Аксессуары: меньше = лучше. Часы > браслеты и цепочки'
-        ]
-    },
-    {
-        icon: '🗣️', title: 'Речь',
-        rules: [
-            'Говори медленнее — быстрая речь = нервозность',
-            'Убери слова-паразиты: «ну», «типа», «короче», «как бы»',
-            'Не оправдывайся: «Я считаю, что...» вместо «Ну, я просто подумал...»',
-            'Не извиняйся без причины: «У меня вопрос» вместо «Извини, можно спросить?»',
-            'Читай вслух 10 мин/день — тренировка дикции и словарного запаса',
-            'Задавай вопросы, а не заполняй тишину',
-            'Не перебивай. Не жалуйся. Не матерись через слово'
-        ]
-    },
-    {
-        icon: '🏋️', title: 'Тело и здоровье',
-        rules: [
-            'Душ каждый день, дезодорант — обязательно',
-            'Чистые ногти, зубы 2 раза в день, уход за кожей',
-            'Стрижка каждые 3–4 недели',
-            'Осанка: плечи назад, грудь вперёд, подбородок параллельно полу',
-            'Стой у стены 2 мин/день (затылок, лопатки, ягодицы, пятки)',
-            'Белок каждый приём пищи. Вода 2+ литра. Минимум сахара',
-            'Сон 7–9 часов. Ложись и вставай в одно время'
-        ]
-    },
-    {
-        icon: '🧠', title: 'Интеллект',
-        rules: [
-            'Читай минимум 20 мин/день — нон-фикшн + художественная',
-            'Формируй СВОЁ мнение, не повторяй чужие из тиктока',
-            'Каждый день 30 мин осознанной практики или учёбы',
-            'Критическое мышление: «Где доказательства? Кому выгодно?»',
-            'Соцсети не больше 30 мин/день',
-            'Скажи «Я не знаю» когда не знаешь — это зрелость'
-        ]
-    },
-    {
-        icon: '💰', title: 'Финансы',
-        rules: [
-            'Трать меньше, чем зарабатываешь. Всегда',
-            'Не покупай вещи, чтобы впечатлить людей',
-            'Инвестируй в навыки, не в вещи',
-            'Откладывай 10% от любого дохода',
-            'Учись как работают деньги — это не скучно, это свобода'
-        ]
-    },
-    {
-        icon: '🤝', title: 'Отношения',
-        rules: [
-            'Смотри в глаза при разговоре — мягко и уверенно',
-            'Запоминай имена. Повтори при знакомстве: «Приятно, Алишер»',
-            'Будь пунктуальным — приходи на 5 мин раньше',
-            'Помогай без ожидания ответа',
-            'Не сплетничай — если обсуждаешь за спиной, все это знают',
-            'Благодари конкретно: «Спасибо, что помог с этим»',
-            'Слово = закон. Сказал — сделай'
-        ]
-    },
-    {
-        icon: '🏠', title: 'Быт',
-        rules: [
-            'Заправляй кровать каждое утро (30 сек → тон дня)',
-            'Не копи грязную посуду. Убирай раз в неделю',
-            'Выброси хлам: не используешь 6 мес → не нужно',
-            'Проветривай комнату. Приятный запах',
-            'Умей готовить 5 блюд: яичница, паста, рис+мясо, салат, суп'
-        ]
-    },
-    {
-        icon: '⚔️', title: 'Дисциплина',
-        rules: [
-            'Делай то, что нужно, даже когда не хочется',
-            'Признавай ошибки быстро и без оправданий',
-            'Не жалуйся — решай проблему или прими её',
-            'Контролируй реакции — ты не контролируешь мир, но контролируешь себя',
-            'Будь спокоен под давлением — это отличает лидера от толпы',
-            'Каждый день на 1% лучше, чем вчера'
-        ]
-    }
-];
-
-const STAT_NAMES = {
-    str: 'STR — Сила',
-    end: 'END — Выносливость',
-    int: 'INT — Интеллект',
-    wis: 'WIS — Мудрость',
-    dsc: 'DSC — Дисциплина'
-};
 
 // ========== STORAGE ==========
 function getToday() {
@@ -1096,7 +964,7 @@ function getDayData(date) {
         saveData();
     }
     if (!data.days[date]) {
-        data.days[date] = { main: [], bonus: [], points: 0, done: false };
+        data.days[date] = { main: [], bonus: [], points: 0, done: false, challengeAccepted: false };
     }
     return data.days[date];
 }
@@ -1230,6 +1098,13 @@ function switchPage(page) {
     refreshPage(page);
 }
 
+function updateEditButtons() {
+    const mainBtn = document.getElementById('btn-edit-main');
+    if (mainBtn) mainBtn.classList.toggle('active', editModeMain);
+    const bonusBtn = document.getElementById('btn-edit-bonus');
+    if (bonusBtn) bonusBtn.classList.toggle('active', editModeBonus);
+}
+
 document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => {
         switchPage(btn.dataset.page);
@@ -1239,9 +1114,62 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 function refreshPage(page) {
     if (page === 'dashboard') updateDashboard();
     if (page === 'quests') { renderQuests(); updateQuestStates(); renderStoicDaily(); if (typeof renderGoalsPage === 'function') renderGoalsPage(); }
-    if (page === 'codex') { renderHabits(); renderCodexReference(); renderStoicDaily(); _renderAnime(); }
+    if (page === 'codex') { renderHabits(); renderStoicDaily(); _renderAnime(); }
     if (page === 'training') renderTraining(currentTrainDay || 'push');
     if (page === 'stats') { updateStats(); renderKeys(); }
+}
+
+// ========== MISSING BUTTON HANDLERS ==========
+
+// Edit main quests toggle
+const btnEditMain = document.getElementById('btn-edit-main');
+if (btnEditMain) {
+    btnEditMain.addEventListener('click', () => {
+        editModeMain = !editModeMain;
+        editModeBonus = false;
+        updateEditButtons();
+        renderQuests();
+    });
+}
+
+// Rest day button
+const btnRestDay = document.getElementById('btn-rest-day');
+if (btnRestDay) {
+    btnRestDay.addEventListener('click', async () => {
+        const today = getToday();
+        const todayData = getDayData(today);
+        if (todayData.isRestDay) {
+            todayData.isRestDay = false;
+            saveData();
+            renderQuests();
+            updateQuestStates();
+        } else {
+            const ok = await ariseConfirm('😴 День отдыха', 'Засчитать сегодня как день восстановления? Стрик сохранится.', 'Да, отдыхаю', 'linear-gradient(135deg,var(--purple),#7c3aed)');
+            if (!ok) return;
+            todayData.isRestDay = true;
+            saveData();
+            renderQuests();
+            updateQuestStates();
+            updateDashboard();
+        }
+    });
+}
+
+// Open training page button
+const btnOpenTraining = document.getElementById('btn-open-training');
+if (btnOpenTraining) {
+    btnOpenTraining.addEventListener('click', () => {
+        renderTraining(currentTrainDay || 'push');
+        document.getElementById('page-training').classList.add('active');
+    });
+}
+
+// Close training page button
+const btnCloseTraining = document.getElementById('btn-close-training');
+if (btnCloseTraining) {
+    btnCloseTraining.addEventListener('click', () => {
+        document.getElementById('page-training').classList.remove('active');
+    });
 }
 
 
@@ -1367,10 +1295,10 @@ function updateDashboard() {
 
     // Render sphere radar on dashboard
     renderSphereRadar();
+    renderChallengeSection();
 
     // Check auto-unlock keys
     checkAutoKeys();
-    
 }
 
 
@@ -1441,7 +1369,7 @@ function renderQuestItem(quest, isBonus, isHardModeMain) {
             <div class="quest-desc">${quest.desc}${bonusHint}</div>
             ${infoBtnHtml}
         </div>
-        <div class="quest-stat">${quest.stat.toUpperCase()}</div>
+        <div class="quest-stat">${quest.stat ? quest.stat.toUpperCase() : ''}</div>
         <div class="quest-edit-btns">
             <button class="btn-quest-edit">✏️</button>
             <button class="btn-quest-delete">🗑️</button>
@@ -1474,93 +1402,49 @@ function renderQuestItem(quest, isBonus, isHardModeMain) {
     return div;
 }
 
-function renderQuests() {
-    const mc = document.getElementById('main-quests');
-    const bc = document.getElementById('bonus-quests');
-    mc.innerHTML = '';
-    bc.innerHTML = '';
-    
-    const todayData = getDayData(getToday());
-    
-    // Hard Mode specific logic
-    let currentMain = [...data.mainQuests];
-    let currentBonus = [...data.bonusQuests];
-    
 
-    if (todayData.isRestDay) {
-        mc.innerHTML = '<div style="text-align: center; color: var(--text-dim); padding: 20px; font-style: italic;">Сегодня день восстановления. Набирайся сил! 😴</div>';
-    } else {
-        currentMain.forEach(q => mc.appendChild(renderQuestItem(q, false, data.hardMode)));
-    }
-    
-    currentBonus.forEach(q => bc.appendChild(renderQuestItem(q, true, false)));
-    mc.classList.toggle('editing', editModeMain);
-    bc.classList.toggle('editing', editModeBonus);
-}
-
+// ========== QUEST RENDERING ==========
 function updateQuestStates() {
     const today = getToday();
     const todayData = getDayData(today);
     const d = new Date();
     const months = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
-    document.getElementById('quest-date').textContent = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
+    const qd = document.getElementById('quest-date');
+    if (qd) qd.textContent = `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`;
     document.querySelectorAll('.quest-item').forEach(item => {
         const qid = item.dataset.quest;
         item.classList.toggle('completed', todayData.main.includes(qid) || todayData.bonus.includes(qid));
     });
 }
 
-// ========== STAT MILESTONES (REWORK SYSTEM) ==========
 function checkStatMilestones() {
     if (!data.unlockedContent) data.unlockedContent = [];
-    const thresholds = [
-        { stat: 'str', val: 30, code: 'str30', title: 'ФИЗИЧЕСКАЯ АДАПТАЦИЯ', text: 'Базовые тренировки больше не рвут мышечные волокна. Твое тело адаптировалось.\n\n🔓 ДОСТУПЕН ПРОТОКОЛ "TITAN" И СИСТЕМА "UPPER/LOWER"\n🔓 ГЛАВА "ПИТАНИЕ И ГОРМОНЫ" (Кодекс)' },
-        { stat: 'int', val: 30, code: 'int30', title: 'КОГНИТИВНАЯ АДАПТАЦИЯ', text: 'Твой мозг легко справляется с семантической рутиной. Пришло время поменять архитектуру мышления.\n\n🔓 ДОСТУПНА ГЛАВА "АРХИТЕКТУРА СИСТЕМ" (Кодекс)' },
-        { stat: 'wis', val: 30, code: 'wis30', title: 'БИОХИМИЧЕСКАЯ АДАПТАЦИЯ', text: 'Ты научился базовой дисциплине. Теперь нужно подчинить себе нейромедиаторы.\n\n🔓 ДОСТУПНА ГЛАВА "ФИЗИОЛОГИЯ ДОФАМИНА" (Кодекс)' },
-        { stat: 'end', val: 30, code: 'end30', title: 'КАРДИО-АДАПТАЦИЯ', text: 'Твое сердце бьется ровно на базовых нагрузках. Пришло время расширить бензобак.\n\n🔓 ДОСТУПЕН ПРОТОКОЛ "VO2 MAX 4x4", "CORE" И "FLEX"\n🔓 ГЛАВА "БИОХАКИНГ СНА" (Кодекс)' },
-        { stat: 'dsc', val: 30, code: 'dsc30', title: 'МЕНТАЛЬНАЯ КРЕПОСТЬ', text: 'Твоя воля стала твердой как сталь. Ты больше не раб своих импульсов.\n\n🔓 ДОСТУПНА ГЛАВА "ФИЛОСОФИЯ СТОИЦИЗМА" (Кодекс)' }
-    ];
-
-    thresholds.forEach(t => {
-        if ((data.stats[t.stat] || 0) >= t.val && !data.unlockedContent.includes(t.code)) {
-            data.unlockedContent.push(t.code);
-            saveData();
-            setTimeout(() => {
-                showModal(`⚠️ ${t.title}`, t.text);
-            }, 1000); // slight delay so it happens after normal popups
-        }
-    });
+    // Разблокировка по стрику и очкам (статы убраны)
+    const streak = calcStreak();
+    if ((streak >= 7 || data.bestStreak >= 7) && !data.unlockedContent.includes('streak7')) {
+        data.unlockedContent.push('streak7');
+        saveData();
+        setTimeout(() => showModal('🔓 ELITE РАЗБЛОКИРОВАН', 'Ты держишь стрик 7+ дней.\n\nПротоколы TITAN и VO2MAX теперь доступны в Тренировках.'), 1000);
+    }
+    if (data.totalPoints >= 300 && !data.unlockedContent.includes('pts300')) {
+        data.unlockedContent.push('pts300');
+        saveData();
+    }
+    if (data.totalPoints >= 1000 && !data.unlockedContent.includes('pts1000')) {
+        data.unlockedContent.push('pts1000');
+        saveData();
+    }
 }
-
 
 function toggleQuest(questId, isBonus) {
     const today = getToday();
     const todayData = getDayData(today);
-    
-    // Hard Mode specific logic for determining which list it belongs to
-    // If it's hard mode, and the quest is a main quest BUT not 'code' or 'activity', treat it as a bonus
-    let actualIsBonus = isBonus;
-    if (data.hardMode && !isBonus) {
-        if (questId !== 'code' && questId !== 'activity') {
-            actualIsBonus = true;
-        }
-    }
-
-    const list = actualIsBonus ? todayData.bonus : todayData.main;
-    // Find quest object across both arrays since it might have been moved virtually
+    const list = isBonus ? todayData.bonus : todayData.main;
     const quest = data.mainQuests.find(q => q.id === questId) || data.bonusQuests.find(q => q.id === questId);
     if (!quest) return;
 
     const item = document.querySelector(`.quest-item[data-quest="${questId}"]`);
-    
-    const currentMult = getMultiplier(calcStreak());
-    
-    // Base points logic calculation
-    let basePoints = 2;
-    // Apply Hero's Journey Phase multiplier
-    const phaseMult = 1.0;
-    
-    const pointsGained = basePoints * currentMult * phaseMult;
+    const pointsGained = 2 * getMultiplier(calcStreak());
 
     if (list.includes(questId)) {
         list.splice(list.indexOf(questId), 1);
@@ -1579,9 +1463,8 @@ function toggleQuest(questId, isBonus) {
         if (quest.stat) data.stats[quest.stat] = (data.stats[quest.stat] || 0) + 1;
         showPointsPopup(`+${pointsGained > 2 ? pointsGained.toFixed(1) : pointsGained}`);
 
-        // Check chest completion condition
-        const requiredMainLength = data.mainQuests.length;
-        if (!actualIsBonus && todayData.main.length === requiredMainLength) {
+        // All main quests done → open chest
+        if (!isBonus && todayData.main.length === data.mainQuests.length) {
             if (!todayData.chestOpened) {
                 document.getElementById('chest-modal-overlay').classList.remove('hidden');
                 document.getElementById('chest-closed').style.display = 'inline-block';
@@ -1591,14 +1474,17 @@ function toggleQuest(questId, isBonus) {
                 document.getElementById('chest-modal').classList.add('chest-pop');
                 setTimeout(() => document.getElementById('chest-modal').classList.remove('chest-pop'), 200);
             } else {
-                showModal('КВЕСТЫ ВЫПОЛНЕНЫ!', `Все ежедневные квесты на сегодня!\n+${data.mainQuests.length * 2} очков\n\nОтличная работа, Охотник.`);
+                showModal('КВЕСТЫ ВЫПОЛНЕНЫ!', `Все ежедневные квесты на сегодня!\n\nОтличная работа, Охотник.`);
             }
-            
             const prev = getRankIndex(data.totalPoints - 2);
             const cur = getRankIndex(data.totalPoints);
-            if (cur > prev) {
-                setTimeout(() => showModal('RANK UP!', `${RANKS[cur].name}\n"${RANKS[cur].title}"\nЭра ${cur} достигнута!`), 2500);
-            }
+            if (cur > prev) setTimeout(() => showModal('RANK UP!', `${RANKS[cur].name}\n"${RANKS[cur].title}"\nЭра ${cur} достигнута!`), 2500);
+        }
+
+        // All bonus quests done → show "add more" button
+        if (isBonus) {
+            const allBonusDone = data.bonusQuests.every(q => todayData.bonus.includes(q.id));
+            if (allBonusDone) renderChallengeSection();
         }
     }
     todayData.done = todayData.main.length >= Math.ceil(data.mainQuests.length / 2);
@@ -1617,63 +1503,132 @@ function deleteQuest(questId, isBonus) {
     updateDashboard();
 }
 
-// ========== REST DAY ==========
-document.getElementById('btn-rest-day').addEventListener('click', () => {
+
+function renderQuests() {
+    const mc = document.getElementById('main-quests');
+    const bc = document.getElementById('bonus-quests');
+    if (!mc) return;
+    mc.innerHTML = '';
+    if (bc) bc.innerHTML = '';
+
     const todayData = getDayData(getToday());
-    
-    // Check if max 2 rest days per week exceeded
-    const todayDate = new Date();
-    const dayOfWeek = todayDate.getDay() === 0 ? 6 : todayDate.getDay() - 1;
-    const weekStart = new Date(todayDate);
-    weekStart.setDate(todayDate.getDate() - dayOfWeek);
-    let restDaysThisWeek = 0;
-    for (let i = 0; i < 7; i++) {
-        const d = new Date(weekStart);
-        d.setDate(d.getDate() + i);
-        const ds = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
-        if (data.days[ds] && data.days[ds].isRestDay) restDaysThisWeek++;
+    let currentMain = [...data.mainQuests];
+    let currentBonus = [...data.bonusQuests];
+
+    if (todayData.isRestDay) {
+        mc.innerHTML = '<div style="text-align:center;color:var(--text-dim);padding:20px;font-style:italic;">Сегодня день восстановления. Набирайся сил! 😴</div>';
+    } else {
+        currentMain.forEach(q => mc.appendChild(renderQuestItem(q, false, false)));
     }
 
-    if (!todayData.isRestDay && restDaysThisWeek >= 2) {
-        alert('Ты уже брал 2 дня отдыха на этой неделе. Пора браться за работу! ⚔️');
+    // Бонусные квесты рендерим только если вызов принят
+    if (bc && todayData.challengeAccepted) {
+        currentBonus.forEach(q => bc.appendChild(renderQuestItem(q, true, false)));
+    }
+
+    mc.classList.toggle('editing', editModeMain);
+    if (bc) bc.classList.toggle('editing', editModeBonus);
+    renderChallengeSection();
+}
+
+// ========== CHALLENGE SECTION ==========
+function renderChallengeSection() {
+    const today = getToday();
+    const todayData = getDayData(today);
+    const offer = document.getElementById('challenge-offer');
+    const accepted = document.getElementById('challenge-accepted');
+    const addMore = document.getElementById('challenge-add-more');
+    if (!offer || !accepted) return;
+
+    const hasBonusQuests = data.bonusQuests && data.bonusQuests.length > 0;
+    const isAccepted = todayData.challengeAccepted;
+
+    if (todayData.isRestDay) {
+        offer.style.display = 'none';
+        accepted.style.display = 'none';
         return;
     }
 
-    todayData.isRestDay = !todayData.isRestDay;
-    if (todayData.isRestDay) {
-        todayData.main = []; // Clear main quests for rest day
+    if (isAccepted && hasBonusQuests) {
+        offer.style.display = 'none';
+        accepted.style.display = 'block';
+
+        // Показываем "добавить ещё" только если текущий вызов выполнен
+        if (addMore) {
+            const currentBonus = data.bonusQuests || [];
+            const doneBonuses = todayData.bonus || [];
+            const allDone = currentBonus.length > 0 && currentBonus.every(q => doneBonuses.includes(q.id));
+            addMore.style.display = allDone ? 'block' : 'none';
+        }
+    } else {
+        offer.style.display = 'block';
+        accepted.style.display = 'none';
     }
+}
+
+// Получить следующий случайный вызов которого ещё нет в активных
+function _getNextChallenge() {
+    const active = (data.bonusQuests || []).map(q => q.id);
+    const pool = ALL_BONUS_QUESTS.filter(q => !active.includes(q.id));
+    if (!pool.length) return null;
+    return { ...pool[Math.floor(Math.random() * pool.length)] };
+}
+
+// Принять первый вызов
+document.getElementById('btn-accept-challenge').addEventListener('click', () => {
+    const todayData = getDayData(getToday());
+    // Берём один случайный вызов
+    const challenge = _getNextChallenge();
+    if (challenge) {
+        data.bonusQuests = [challenge];
+        saveData();
+    }
+    todayData.challengeAccepted = true;
     saveData();
     renderQuests();
     updateQuestStates();
     updateDashboard();
-    // updateCalendar removed
 });
 
-// ========== TRAINING NAVIGATION ==========
-document.getElementById('btn-open-training').addEventListener('click', () => {
-    switchPage('training');
-});
-document.getElementById('btn-close-training').addEventListener('click', () => {
-    switchPage('quests');
+// Добавить ещё один вызов (только после выполнения текущего)
+document.getElementById('btn-add-more-challenge').addEventListener('click', () => {
+    const challenge = _getNextChallenge();
+    if (!challenge) {
+        showModal('Всё выполнено!', 'Ты прошёл все доступные вызовы. Уважение. 🔥');
+        return;
+    }
+    data.bonusQuests = [...(data.bonusQuests || []), challenge];
+    saveData();
+    renderQuests();
+    updateQuestStates();
+    updateDashboard();
 });
 
-// ========== FOCUS NAVIGATION (REMOVED) ==========
-
-// ========== EDIT TOGGLES ==========
-function updateEditButtons() {
-    document.getElementById('btn-edit-main').classList.toggle('active', editModeMain);
-    document.getElementById('btn-edit-bonus').classList.toggle('active', editModeBonus);
-    document.getElementById('btn-add-main').classList.toggle('hidden', !editModeMain);
-    document.getElementById('main-quests').classList.toggle('editing', editModeMain);
-    document.getElementById('bonus-quests').classList.toggle('editing', editModeBonus);
-}
-
-document.getElementById('btn-edit-main').addEventListener('click', () => {
-    editModeMain = !editModeMain; editModeBonus = false; updateEditButtons();
-});
-document.getElementById('btn-edit-bonus').addEventListener('click', () => {
-    editModeBonus = !editModeBonus; editModeMain = false; updateEditButtons();
+// Отказаться от вызова
+document.getElementById('btn-decline-challenge').addEventListener('click', async () => {
+    const ok = await ariseConfirm('Отказаться от вызова?', 'Прогресс по вызовам за сегодня будет потерян.', 'Отказаться');
+    if (!ok) return;
+    const today = getToday();
+    const todayData = getDayData(today);
+    todayData.challengeAccepted = false;
+    // Убираем очки за выполненные вызовы
+    const bonusIds = (data.bonusQuests || []).map(q => q.id);
+    if (todayData.bonus) {
+        bonusIds.forEach(id => {
+            const idx = todayData.bonus.indexOf(id);
+            if (idx !== -1) {
+                todayData.bonus.splice(idx, 1);
+                data.totalPoints = Math.max(0, data.totalPoints - 2);
+                const q = (data.bonusQuests || []).find(bq => bq.id === id);
+                if (q && q.stat) data.stats[q.stat] = Math.max(0, (data.stats[q.stat]||0) - 1);
+            }
+        });
+    }
+    data.bonusQuests = [];
+    saveData();
+    renderQuests();
+    updateQuestStates();
+    updateDashboard();
 });
 document.getElementById('btn-add-main').addEventListener('click', () => openEditModal('main', null));
 
@@ -1798,6 +1753,7 @@ function updateMatrix() {
     }
 }
 
+function updateRadarChart(){}
 
 // ========== STATS ==========
 function updateStats() {
@@ -1837,7 +1793,144 @@ const DEFAULT_HABITS = [
     { id: 'tidyup', name: '🧹 Порядок: 5 мин уборки / наведения порядка' }
 ];
 
+const CODEX_REFERENCE = [
+    {
+        icon: '👔', title: 'Внешний вид',
+        rules: [
+            'Одежда по размеру — не мешком, не в обтяжку',
+            'Без принтов и кричащих логотипов — однотон = взрослый вид',
+            'Базовые цвета: чёрный, белый, серый, тёмно-синий, хаки',
+            'Обувь чистая ВСЕГДА — люди смотрят на обувь',
+            'Гладь рубашки. Стирай кроссовки. Следи за состоянием вещей',
+            'Аксессуары: меньше = лучше. Часы > браслеты и цепочки'
+        ]
+    },
+    {
+        icon: '🗣️', title: 'Речь',
+        rules: [
+            'Говори медленнее — быстрая речь = нервозность',
+            'Убери слова-паразиты: «ну», «типа», «короче», «как бы»',
+            'Не оправдывайся: «Я считаю, что...» вместо «Ну, я просто подумал...»',
+            'Не извиняйся без причины: «У меня вопрос» вместо «Извини, можно спросить?»',
+            'Читай вслух 10 мин/день — тренировка дикции и словарного запаса',
+            'Задавай вопросы, а не заполняй тишину',
+            'Не перебивай. Не жалуйся. Не матерись через слово'
+        ]
+    },
+    {
+        icon: '🏋️', title: 'Тело и здоровье',
+        rules: [
+            'Душ каждый день, дезодорант — обязательно',
+            'Чистые ногти, зубы 2 раза в день, уход за кожей',
+            'Стрижка каждые 3–4 недели',
+            'Осанка: плечи назад, грудь вперёд, подбородок параллельно полу',
+            'Стой у стены 2 мин/день (затылок, лопатки, ягодицы, пятки)',
+            'Белок каждый приём пищи. Вода 2+ литра. Минимум сахара',
+            'Сон 7–9 часов. Ложись и вставай в одно время'
+        ]
+    },
+    {
+        icon: '🧠', title: 'Интеллект',
+        rules: [
+            'Читай минимум 20 мин/день — нон-фикшн + художественная',
+            'Формируй СВОЁ мнение, не повторяй чужие из тиктока',
+            'Каждый день 30 мин осознанной практики кода',
+            'Критическое мышление: «Где доказательства? Кому выгодно?»',
+            'Соцсети не больше 30 мин/день',
+            'Скажи «Я не знаю» когда не знаешь — это зрелость'
+        ]
+    },
+    {
+        icon: '💰', title: 'Финансы',
+        rules: [
+            'Трать меньше, чем зарабатываешь. Всегда',
+            'Не покупай вещи, чтобы впечатлить людей',
+            'Инвестируй в навыки, не в вещи',
+            'Откладывай 10% от любого дохода',
+            'Программирование — твоё оружие для заработка. Прокачивай'
+        ]
+    },
+    {
+        icon: '🤝', title: 'Социалка',
+        rules: [
+            'Смотри в глаза при разговоре — мягко и уверенно',
+            'Запоминай имена. Повтори при знакомстве: «Приятно, Максим»',
+            'Будь пунктуальным — приходи на 5 мин раньше',
+            'Помогай без ожидания ответа',
+            'Не сплетничай — если обсуждаешь за спиной, все это знают',
+            'Благодари конкретно: «Спасибо, что помог с этим»',
+            'Слово = закон. Сказал — сделай'
+        ]
+    },
+    {
+        icon: '🏠', title: 'Быт',
+        rules: [
+            'Заправляй кровать каждое утро (30 сек → тон дня)',
+            'Не копи грязную посуду. Убирай раз в неделю',
+            'Выброси хлам: не используешь 6 мес → не нужно',
+            'Проветривай комнату. Приятный запах',
+            'Умей готовить 5 блюд: яичница, паста, рис+мясо, салат, суп'
+        ]
+    },
+    {
+        icon: '⚔️', title: 'Дисциплина',
+        rules: [
+            'Делай то, что нужно, даже когда не хочется',
+            'Признавай ошибки быстро и без оправданий',
+            'Не жалуйся — решай проблему или прими её',
+            'Контролируй реакции — ты не контролируешь мир, но контролируешь себя',
+            'Будь спокоен под давлением — это отличает лидера от толпы',
+            'Каждый день на 1% лучше, чем вчера'
+        ]
+    }
+];
 
+const UNLOCKABLE_CODEX = {
+    int30: {
+        icon: '📐', title: 'Архитектура Систем',
+        rules: [
+            'Принцип Инверсии (Charlie Munger): Хочешь решить проблему? Сначала придумай, как гарантированно её создать, и избегай этих шагов.',
+            'Закон Галла: Сложная система, которая работает, неизменно произошла от простой системы, которая работала. Нельзя спроектировать сложную систему с нуля.',
+            'Бритва Оккама: Из множества решений самое простое (с наименьшим числом допущений) — верное.',
+            'Принцип Парето 80/20: 20% усилий дают 80% результата. Найди этот рычаг.'
+        ]
+    },
+    wis30: {
+        icon: '🧪', title: 'Физиология Дофамина',
+        rules: [
+            'Базовый уровень дофамина важнее пиков. Дешевый дофамин (рилсы, сахар) роняет базовый уровень. Тебе становится скучно жить.',
+            'Тяжелая работа (код, тренировка) вызывает боль ДО и здоровый пик дофамина ПОСЛЕ. Это устойчивая мотивация.',
+            'Случайное вознаграждение (как рулетка или сундук) цепляет мозг сильнее, чем предсказуемое.',
+            'Протокол восстановления (Dr. Huberman): Холодный душ повышает базовый дофамин на 250% на 3 часа без последующего спада.'
+        ]
+    },
+    dsc30: {
+        icon: '🏛️', title: 'Философия Стоицизма',
+        rules: [
+            'Дихотомия контроля: Разделяй то, на что можешь повлиять (твои усилия, твоя реакция), и то, на что не можешь (погода, чужое мнение, кризисы). Фокус только на первом.',
+            'Amor Fati (Любовь к судьбе): Полюби любое препятствие. То, что стоит на пути, становится путем (Марк Аврелий).',
+            'Memento Mori (Помни о смерти): Осознавая конечность жизни, ты перестаешь тратить ее на страхи, прокрастинацию и пустые конфликты.',
+            'Смысл дисциплины — свобода: Раб своих эмоций и желаний не имеет свободы. Строгий график и правила делают тебя единственным хозяином самого себя.'
+        ]
+    },
+    str30: {
+        icon: '🥩', title: 'Питание и Гормоны',
+        rules: [
+            'Тестостерон (Dr. Peter Attia): База мужского гормона — это тяжелый силовой тренинг (базовые движения), сон 8 часов и достаточное количество полезных жиров в диете.',
+            'Углеводное окно миф: Важно общее потребление белка за 24 часа. Цельсь в 1.6 - 2.0 грамма белка на каждый килограмм целевого веса.',
+            'Сахар = Воспаление: Резкие выбросы инсулина вызывают микровоспаления сосудов и разрушают митохондрии. Перейди на сложные углеводы.',
+            'Цинк, Магний и Витамин D3: Базовая тройка мужского здоровья. Их почти невозможно добрать только из современной еды.'
+        ]
+    },
+    end30: {
+        icon: '🌙', title: 'Биохакинг Сна',
+        rules: [
+            'Циркадный якорь (Dr. Huberman): Свет в глаза в первые 30 минут после пробуждения запускает часы кортизола (бодрость) и таймер мелатонина (сон через 12-14 часов).',
+            'Температура: Для глубокого (медленного волнами) сна тело должно остыть на 1-2°C. Спальня: 18-19°C. Прими горячий душ перед сном — сосуды расширятся, и тело быстрее остынет на воздухе.',
+            'Магний бисглицинат или теанин за 30 минут до сна выключают "мыслемешалку" в голове и ускоряют фазу перехода ко сну.'
+        ]
+    }
+};
 
 // Habits storage (separate from main data)
 function loadHabits() {
@@ -1900,11 +1993,10 @@ function renderHabits() {
     if (done === total && total > 0) {
         const bonusKey = `habitBonus_${today}`;
         if (!localStorage.getItem(bonusKey)) {
-            data.stats.dsc = (data.stats.dsc || 0) + 1;
             data.totalPoints += 3;
             saveData();
             localStorage.setItem(bonusKey, '1');
-            showPointsPopup('+3 🔥 +1 DSC (привычки)');
+            showPointsPopup('+3 🔥 Привычки!');
         }
     }
 
@@ -1953,6 +2045,36 @@ window._saveHabitModal = function() {
 };
 
 // Reference rendering
+function renderCodexReference() {
+    const container = document.getElementById('codex-reference');
+    let html = '';
+    const allRef = [...CODEX_REFERENCE];
+    // Добавляем все расширенные разделы
+    Object.values(UNLOCKABLE_CODEX).forEach(u => allRef.push(u));
+    
+    // Inject unlocks
+    
+    
+    
+    
+    
+
+    allRef.forEach(cat => {
+        const isUnlock = cat.title.includes('[');
+        html += `
+        <div class="codex-card ${isUnlock ? 'unlock-card' : ''}" onclick="this.classList.toggle('expanded')">
+            <div class="codex-card-header">
+                <span class="codex-card-icon">${cat.icon}</span>
+                <span class="codex-card-title ${isUnlock ? 'unlock-title' : ''}">${cat.title}</span>
+                <span class="codex-card-expand">▼</span>
+            </div>
+            <div class="codex-card-body">
+                ${cat.rules.map(r => `<div class="codex-rule">• ${r}</div>`).join('')}
+            </div>
+        </div>`;
+    });
+    container.innerHTML = html;
+}
 
 // ========== TRAINING ==========
 let currentTrainDay = 'push';
@@ -2319,10 +2441,10 @@ document.getElementById('btn-stoic-done').addEventListener('click', () => {
         stoicData.completedDays.push(today);
         localStorage.setItem('stoicData', JSON.stringify(stoicData));
         // Reward: +2 WIS for applying stoic principle
-        data.stats.wis = (data.stats.wis || 0) + 2;
+        data.totalPoints += 2;
         data.totalPoints += 2;
         saveData();
-        showPointsPopup('+2 WIS ⚔️');
+        showPointsPopup('+2 ⚔️');
     }
     renderStoicDaily();
 });
@@ -2360,11 +2482,11 @@ document.getElementById('examen-save').addEventListener('click', () => {
     // Reward: +5 WIS for evening examen
     const examKey = `examBonus_${today}`;
     if (!localStorage.getItem(examKey)) {
-        data.stats.wis = (data.stats.wis || 0) + 5;
+        data.totalPoints += 5;
         data.totalPoints += 5;
         saveData();
         localStorage.setItem(examKey, '1');
-        showPointsPopup('+5 WIS 🌙');
+        showPointsPopup('+5 🌙');
     }
     
     document.getElementById('examen-overlay').classList.add('hidden');
@@ -2372,7 +2494,7 @@ document.getElementById('examen-save').addEventListener('click', () => {
     document.getElementById('examen-improve').value = '';
     document.getElementById('examen-plan').value = '';
     
-    showModal('🌙 ЭКЗАМЕН ЗАВЕРШЁН', `Марк Аврелий делал это каждый день.\n\nКаждый вечерний экзамен — это нейронная тренировка стоического мышления.\n\n+5 WIS получено.`);
+    showModal('🌙 ЭКЗАМЕН ЗАВЕРШЁН', 'Марк Аврелий делал это каждый день.\n\nКаждый вечерний экзамен — это нейронная тренировка стоического мышления.\n\n+5 очков получено.');
     renderStoicDaily();
 });
 
@@ -2476,10 +2598,9 @@ function renderHabitsV2() {
     if (done === total && total > 0 && !localStorage.getItem(habitsStreakKey)) {
         const currentStreak = calcHabitStreak();
         let bonus = 3;
-        let bonusMsg = '+3 🔥 +1 DSC (привычки)';
-        if (currentStreak >= 7) { bonus = 10; bonusMsg = '+10 🔥 +2 DSC (7 дней привычки!)'; data.stats.dsc = (data.stats.dsc || 0) + 1; }
-        if (currentStreak >= 30) { bonus = 25; bonusMsg = '+25 🔥 +3 DSC (30 дней привычки!)'; data.stats.dsc = (data.stats.dsc || 0) + 1; }
-        data.stats.dsc = (data.stats.dsc || 0) + 1;
+        let bonusMsg = '+3 🔥 Привычки!';
+        if (currentStreak >= 7) { bonus = 10; bonusMsg = '+10 🔥 7 дней подряд!'; }
+        if (currentStreak >= 30) { bonus = 25; bonusMsg = '+25 🔥 30 дней подряд!'; }
         data.totalPoints += bonus;
         saveData();
         localStorage.setItem(habitsStreakKey, '1');
@@ -2688,7 +2809,7 @@ _createModal('review-modal', `
     </div>
     <div class="edit-actions">
         <button class="modal-btn btn-secondary" onclick="document.getElementById('review-modal').classList.add('hidden')">Пропустить</button>
-        <button class="modal-btn" onclick="_saveReviewModal()">Сохранить +10 WIS</button>
+        <button class="modal-btn" onclick="_saveReviewModal()">Сохранить +10 очков</button>
     </div>
 </div>`);
 
@@ -2787,7 +2908,7 @@ function _renderWeeklyCard() {
     } else {
         c.innerHTML = `<div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-sm);padding:14px;">
             <div style="font-size:.82rem;color:var(--text-2);margin-bottom:12px;line-height:1.5;">${isSun ? '🔔 Воскресенье — время для недельного обзора. 5 минут честного взгляда на прошедшую неделю.' : '5 минут каждое воскресенье — единственный способ не повторять одни и те же ошибки.'}</div>
-            <button onclick="_openWeeklyReview()" style="width:100%;background:linear-gradient(135deg,rgba(168,85,247,.16),rgba(168,85,247,.06));border:1px solid rgba(168,85,247,.35);color:var(--purple);padding:11px;border-radius:var(--radius-xs);font-family:var(--font-d);font-weight:700;font-size:.88rem;cursor:pointer;letter-spacing:.5px;">📋 Начать обзор (+10 WIS)</button>
+            <button onclick="_openWeeklyReview()" style="width:100%;background:linear-gradient(135deg,rgba(168,85,247,.16),rgba(168,85,247,.06));border:1px solid rgba(168,85,247,.35);color:var(--purple);padding:11px;border-radius:var(--radius-xs);font-family:var(--font-d);font-weight:700;font-size:.88rem;cursor:pointer;letter-spacing:.5px;">📋 Начать обзор (+10 очков)</button>
         </div>`;
     }
 }
@@ -2906,9 +3027,9 @@ window._saveReviewModal = function() {
     if (goalsData.reviews.length > 12) goalsData.reviews = goalsData.reviews.slice(0, 12);
     _saveGoals(goalsData);
     if (typeof data !== 'undefined') {
-        data.stats.wis = (data.stats.wis || 0) + 10;
+        data.totalPoints += 10;
         saveData();
-        showPointsPopup('+10 WIS');
+        showPointsPopup('+10 🔥');
     }
     localStorage.setItem(`wrd_${wk}`, '1');
     document.getElementById('review-modal').classList.add('hidden');
