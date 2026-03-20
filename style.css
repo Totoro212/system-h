@@ -856,3 +856,84 @@ body::before {
     display: inline-block;
     transition: transform 0.2s ease;
 }
+
+/* ===== МОБИЛЬНАЯ АДАПТАЦИЯ ===== */
+
+/* Penalty banner — вертикальный на малых экранах */
+.penalty-banner {
+    flex-wrap: wrap;
+}
+.penalty-banner .penalty-text {
+    width: 100%;
+    flex: unset;
+}
+
+/* Quest name — не переполняется с бейджем */
+.quest-name {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* Water tracker cups — не переполняются */
+#water-cups {
+    flex-wrap: wrap;
+    justify-content: center;
+    max-width: 180px;
+}
+
+/* Spheres legend — переносится нормально */
+#spheres-legend {
+    row-gap: 5px;
+}
+
+/* Stats grid — 2 колонки на очень малых экранах */
+@media (max-width: 360px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    .rank-name {
+        font-size: 2rem;
+    }
+    .quest-name {
+        font-size: .82rem;
+    }
+    .nav-label {
+        font-size: .48rem;
+    }
+}
+
+/* Общее — не выходить за экран */
+* {
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+/* Total stats card — текст не обрезается */
+.total-label {
+    font-size: .55rem;
+    line-height: 1.3;
+}
+
+/* Stoic daily card — нормальный на малых */
+.stoic-daily-card {
+    word-break: break-word;
+}
+
+/* Matrix — минимальный размер квадратов */
+.matrix-box {
+    min-width: 7px;
+    min-height: 7px;
+}
+
+/* Кнопки в рядах не выходят за край */
+.section-title-row {
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+/* Goals — не обрезаются */
+.goals-main-banner {
+    word-break: break-word;
+}
