@@ -1443,9 +1443,13 @@ function toggleQuest(questId, isBonus) {
             if (!todayData.chestOpened) {
                 document.getElementById('chest-modal-overlay').classList.remove('hidden');
                 document.getElementById('chest-closed').style.display = 'inline-block';
-                document.getElementById('chest-opened').style.display = 'none';
-                document.getElementById('chest-close-btn').style.display = 'none';
-                document.getElementById('chest-hint').style.display = 'block';
+                const chestOpened = document.getElementById('chest-opened');
+                chestOpened.classList.add('hidden');
+                chestOpened.style.display = 'none';
+                const chestCloseBtn = document.getElementById('chest-close-btn');
+                chestCloseBtn.classList.add('hidden');
+                chestCloseBtn.style.display = 'none';
+                document.getElementById('chest-hint').classList.remove('hidden');
                 document.getElementById('chest-modal').classList.add('chest-pop');
                 setTimeout(() => document.getElementById('chest-modal').classList.remove('chest-pop'), 200);
             } else {
@@ -2270,8 +2274,9 @@ if ('serviceWorker' in navigator) {
 document.getElementById('chest-closed').addEventListener('click', () => {
     document.getElementById('chest-closed').style.display = 'none';
     const opened = document.getElementById('chest-opened');
+    opened.classList.remove('hidden');
     opened.style.display = 'flex';
-    document.getElementById('chest-hint').style.display = 'none';
+    document.getElementById('chest-hint').classList.add('hidden');
     
     const rand = Math.random();
     let rewardText = '';
@@ -2297,7 +2302,9 @@ document.getElementById('chest-closed').addEventListener('click', () => {
     todayData.chestOpened = true;
     
     document.getElementById('chest-reward-text').innerText = rewardText;
-    document.getElementById('chest-close-btn').style.display = 'block';
+    const closeBtn = document.getElementById('chest-close-btn');
+    closeBtn.classList.remove('hidden');
+    closeBtn.style.display = 'block';
     
     saveData();
     updateDashboard();
