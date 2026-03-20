@@ -1169,9 +1169,9 @@ function updateDashboard() {
     document.getElementById('streak-count').textContent = streak;
     
     // Streak Shield indicator (shows freeze protection status)
-    const streakContainer = document.getElementById('streak-count').parentElement;
+    const streakContainer = document.getElementById('streak-count') ? document.getElementById('streak-count').parentElement : null;
     let shieldEl = document.getElementById('streak-shield');
-    if (!shieldEl) {
+    if (!shieldEl && streakContainer) {
         shieldEl = document.createElement('span');
         shieldEl.id = 'streak-shield';
         shieldEl.style.cssText = 'position: absolute; top: -5px; left: -20px; font-size: 0.8rem; cursor: help;';
@@ -1247,7 +1247,7 @@ function updateDashboard() {
                 e.stopPropagation();
                 if (isActive) {
                     // Clicking an active slot removes 1 progress (Undo)
-                    data.weeklyCount--;
+                    data.weeklyCount = Math.max(0, data.weeklyCount - 1);
                     const currentMult = getMultiplier(calcStreak());
                     data.totalPoints = Math.max(0, data.totalPoints - (2 * currentMult));
                     showPointsPopup(`Отменено (-1)`);
@@ -2416,7 +2416,6 @@ document.getElementById('btn-stoic-done').addEventListener('click', () => {
         localStorage.setItem('stoicData', JSON.stringify(stoicData));
         // Reward: +2 WIS for applying stoic principle
         data.totalPoints += 2;
-        data.totalPoints += 2;
         saveData();
         showPointsPopup('+2 ⚔️');
     }
@@ -2456,7 +2455,6 @@ document.getElementById('examen-save').addEventListener('click', () => {
     // Reward: +5 WIS for evening examen
     const examKey = `examBonus_${today}`;
     if (!localStorage.getItem(examKey)) {
-        data.totalPoints += 5;
         data.totalPoints += 5;
         saveData();
         localStorage.setItem(examKey, '1');
@@ -2670,63 +2668,6 @@ function init() {
     }
 }
 
-init();
-
-// ============================================================
-// ARISE v2.1 — ЦЕЛИ | ОБЗОР НЕДЕЛИ | АНИМЕ
-// ============================================================
-
-// ===== ХРАНИЛИЩЕ =====
-const _loadGoals = () => { try { return JSON.parse(localStorage.getItem('ariseGoals') || 'null') || { goals:[], reviews:[] }; } catch(e){ return {goals:[],reviews:[]}; } };
-const _saveGoals = g => localStorage.setItem('ariseGoals', JSON.stringify(g));
-const _loadAnime = () => { try { return JSON.parse(localStorage.getItem('ariseAnime') || 'null') || { list:[] }; } catch(e){ return {list:[]}; } };
-const _saveAnime = a => localStorage.setItem('ariseAnime', JSON.stringify(a));
-
-let goalsData = _loadGoals();
-let animeData = _loadAnime();
-
-// ===== НАВИГАЦИЯ =====
-// Расширяем refreshPage для goals
-const __origRefresh = refreshPage;
-window.refreshPage = function(page) {
-    __origRefresh(page);
-    if (page === 'goals' || page === 'quests') renderGoalsPage();
-};
-
-// ===== УТИЛИТЫ =====
-const _today = () => typeof getToday === 'function' ? getToday() : new Date().toISOString().split('T')[0];
-
-function _daysLeft(ds) {
-    if (!ds) return null;
-    const t = new Date(); t.setHours(0,0,0,0);
-    const d = new Date(ds); d.setHours(0,0,0,0);
-    return Math.round((d - t) / 86400000);
-}
-function _fmtDate(ds) {
-    if (!ds) return '';
-    const d = new Date(ds);
-    const m = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
-    return `${d.getDate()} ${m[d.getMonth()]}`;
-}
-function _weekKey() {
-    const n = new Date(), y = n.getFullYear();
-    const s = new Date(y, 0, 1);
-    const w = Math.ceil(((n - s) / 86400000 + s.getDay() + 1) / 7);
-    return `${y}-W${String(w).padStart(2,'0')}`;
-}
-
-// ===== МОДАЛКИ =====
-let _reviewScore = 7;
-
-function _createModal(id, html) {
-    if (document.getElementById(id)) return;
-    const el = document.createElement('div');
-    el.id = id; el.className = 'modal-overlay hidden';
-    el.innerHTML = html;
-    document.body.appendChild(el);
-    el.addEventListener('click', e => { if (e.target.id === id) el.classList.add('hidden'); });
-}
-
 _createModal('goal-modal', `
 <div class="modal edit-modal" style="max-width:350px;">
     <div class="modal-glow"></div>
@@ -2786,6 +2727,63 @@ _createModal('review-modal', `
         <button class="modal-btn" onclick="_saveReviewModal()">Сохранить +10 очков</button>
     </div>
 </div>`);
+
+init();
+
+// ============================================================
+// ARISE v2.1 — ЦЕЛИ | ОБЗОР НЕДЕЛИ | АНИМЕ
+// ============================================================
+
+// ===== ХРАНИЛИЩЕ =====
+const _loadGoals = () => { try { return JSON.parse(localStorage.getItem('ariseGoals') || 'null') || { goals:[], reviews:[] }; } catch(e){ return {goals:[],reviews:[]}; } };
+const _saveGoals = g => localStorage.setItem('ariseGoals', JSON.stringify(g));
+const _loadAnime = () => { try { return JSON.parse(localStorage.getItem('ariseAnime') || 'null') || { list:[] }; } catch(e){ return {list:[]}; } };
+const _saveAnime = a => localStorage.setItem('ariseAnime', JSON.stringify(a));
+
+let goalsData = _loadGoals();
+let animeData = _loadAnime();
+
+// ===== НАВИГАЦИЯ =====
+// Расширяем refreshPage для goals
+const __origRefresh = refreshPage;
+window.refreshPage = function(page) {
+    __origRefresh(page);
+    if (page === 'goals' || page === 'quests') renderGoalsPage();
+};
+
+// ===== УТИЛИТЫ =====
+const _today = () => typeof getToday === 'function' ? getToday() : new Date().toISOString().split('T')[0];
+
+function _daysLeft(ds) {
+    if (!ds) return null;
+    const t = new Date(); t.setHours(0,0,0,0);
+    const d = new Date(ds); d.setHours(0,0,0,0);
+    return Math.round((d - t) / 86400000);
+}
+function _fmtDate(ds) {
+    if (!ds) return '';
+    const d = new Date(ds);
+    const m = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+    return `${d.getDate()} ${m[d.getMonth()]}`;
+}
+function _weekKey() {
+    const n = new Date(), y = n.getFullYear();
+    const s = new Date(y, 0, 1);
+    const w = Math.ceil(((n - s) / 86400000 + s.getDay() + 1) / 7);
+    return `${y}-W${String(w).padStart(2,'0')}`;
+}
+
+// ===== МОДАЛКИ =====
+let _reviewScore = 7;
+
+function _createModal(id, html) {
+    if (document.getElementById(id)) return;
+    const el = document.createElement('div');
+    el.id = id; el.className = 'modal-overlay hidden';
+    el.innerHTML = html;
+    document.body.appendChild(el);
+    el.addEventListener('click', e => { if (e.target.id === id) el.classList.add('hidden'); });
+}
 
 // Score buttons
 (function _buildScoreBtns() {
