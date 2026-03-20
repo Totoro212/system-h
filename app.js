@@ -1,8 +1,7 @@
 
 // ========== STUBS FOR REMOVED FEATURES ==========
-function updateCalendar() { /* calendar removed */ }
-function renderPoolList() { /* pool removed */ }
-function showMorningBriefing() { /* morning briefing removed */ }
+function updateCalendar() {}
+function updateHardModeUI() {}
 
 // ========== STOIC DAILY MAXIMS ==========
 // Специально подобранные для практики — Сенека, Марк Аврелий, Эпиктет
@@ -303,29 +302,6 @@ const WEEKLY_CHALLENGES = [
     'Интервальное голодание (16/8) 7 дней'
 ];
 
-// ========== DAILY QUOTES ==========
-const DAILY_QUOTES = [
-    { text: 'Мы страдаем чаще в воображении, чем в реальности.', author: 'Сенека' },
-    { text: 'Лучшее время посадить дерево было 20 лет назад. Второе лучшее — сейчас.', author: 'Китайская пословица' },
-    { text: 'Дисциплина — это мост между целями и их достижением.', author: 'Джим Рон' },
-    { text: 'Ты не поднимаешься до уровня своих целей. Ты падаешь до уровня своих систем.', author: 'Джеймс Клир' },
-    { text: 'Препятствие на пути становится путём.', author: 'Марк Аврелий' },
-    { text: 'Делай трудное, пока оно лёгкое. Делай великое, пока оно мало.', author: 'Лао-цзы' },
-    { text: 'Не тот силён, кто не падает, а тот, кто падая встаёт.', author: 'Конфуций' },
-    { text: 'Каждое утро у тебя два выбора: продолжить спать и видеть сны, или проснуться и воплощать их.', author: 'Неизвестный' },
-    { text: 'Боль временна. Она может длиться минуту, час, день. Но рано или поздно пройдёт. А если ты сдашься — это навсегда.', author: 'Эрик Томас' },
-    { text: 'Лёгкий выбор — трудная жизнь. Трудный выбор — лёгкая жизнь.', author: 'Ежи Грегорек' },
-    { text: 'Мотивация приходит и уходит. Дисциплина остаётся.', author: 'Жоко Виллинк' },
-    { text: 'Будь суров к себе, и жизнь будет мягка к тебе.', author: 'Стоицизм' },
-    { text: 'Качество твоей жизни определяется качеством твоих привычек.', author: 'Джеймс Клир' },
-    { text: 'Ты — среднее арифметическое пяти людей, с которыми проводишь больше всего времени.', author: 'Джим Рон' },
-    { text: 'Не бойся медленного прогресса. Бойся его отсутствия.', author: 'Китайская пословица' },
-    { text: 'Сначала ты формируешь свои привычки, а потом привычки формируют тебя.', author: 'Джон Драйден' },
-    { text: 'Тело достигает того, во что верит разум.', author: 'Наполеон Хилл' },
-    { text: 'Единственный человек, с которым ты должен сравнивать себя — это ты вчерашний.', author: 'Джордан Питерсон' },
-    { text: 'Сильные люди не рождаются. Они создаются через борьбу.', author: 'Неизвестный' },
-    { text: 'Дойдя до конца, люди смеются над страхами, мучившими их вначале.', author: 'Паоло Коэльо' }
-];
 
 // ========== TRAINING PLAN ==========
 const PROGRAMS_CONFIG = {
@@ -1114,7 +1090,7 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 function refreshPage(page) {
     if (page === 'dashboard') updateDashboard();
     if (page === 'quests') { renderQuests(); updateQuestStates(); renderStoicDaily(); if (typeof renderGoalsPage === 'function') renderGoalsPage(); }
-    if (page === 'codex') { renderHabits(); renderStoicDaily(); _renderAnime(); }
+    if (page === 'codex') { (window.renderHabits || renderHabits)(); renderStoicDaily(); _renderAnime(); renderCodexReference(); }
     if (page === 'training') renderTraining(currentTrainDay || 'push');
     if (page === 'stats') { updateStats(); renderKeys(); }
 }
@@ -1317,7 +1293,6 @@ function _clearPenalty(type) {
 document.getElementById('btn-penalty-berpi').addEventListener('click', () => _clearPenalty('berpi'));
 document.getElementById('btn-penalty-shower').addEventListener('click', () => _clearPenalty('shower'));
 
-function updateContractUI(){}
 
 // ========== AUTO KEYS CHECK ==========
 function checkAutoKeys() {
@@ -1753,7 +1728,6 @@ function updateMatrix() {
     }
 }
 
-function updateRadarChart(){}
 
 // ========== STATS ==========
 function updateStats() {
@@ -2013,20 +1987,20 @@ function toggleHabit(id) {
     else { completed.push(id); }
     habits.completed[today] = completed;
     saveHabits();
-    renderHabits();
+    (window.renderHabits || renderHabits)();
 }
 
 function deleteHabit(id) {
     habits.list = habits.list.filter(h => h.id !== id);
     saveHabits();
-    renderHabits();
+    (window.renderHabits || renderHabits)();
 }
 
 // Edit mode toggle
 document.getElementById('btn-edit-habits').addEventListener('click', () => {
     habitEditMode = !habitEditMode;
     document.getElementById('btn-edit-habits').classList.toggle('active', habitEditMode);
-    renderHabits();
+    (window.renderHabits || renderHabits)();
 });
 
 // Add habit
@@ -2039,7 +2013,7 @@ window._saveHabitModal = function() {
     if (!name) return;
     habits.list.push({ id: 'h' + Date.now().toString(36), name });
     saveHabits();
-    renderHabits();
+    (window.renderHabits || renderHabits)();
     document.getElementById('habit-inp-name').value = '';
     document.getElementById('habit-add-modal').classList.add('hidden');
 };
