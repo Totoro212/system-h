@@ -40,36 +40,19 @@
                 <div class="penalty-icon">☠️</div>
                 <div class="penalty-text">
                     <strong>ПРОТОКОЛ ВОССТАНОВЛЕНИЯ</strong>
-                    <p>Система зафиксировала сбой. Для сброса: 30 Берпи, 3 мин ледяного душа ИЛИ 15 мин NSDR (Медитация).</p>
+                    <p>Система зафиксировала сбой. Выбери отработку:</p>
                 </div>
-                <button class="btn-penalty" id="btn-clear-penalty" style="background: rgba(168, 85, 247, 0.2); border: 1px solid var(--purple); color: var(--text-primary);">Восстановлен</button>
+                <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px;">
+                    <button class="btn-penalty" id="btn-penalty-berpi" style="background:rgba(248,113,113,0.15);border:1px solid var(--red);color:var(--red);padding:7px 12px;border-radius:8px;font-family:var(--font-d);font-weight:700;font-size:0.78rem;cursor:pointer;">💥 50 Берпи</button>
+                    <button class="btn-penalty" id="btn-penalty-shower" style="background:rgba(96,165,250,0.15);border:1px solid var(--blue);color:var(--blue);padding:7px 12px;border-radius:8px;font-family:var(--font-d);font-weight:700;font-size:0.78rem;cursor:pointer;">🧊 Ледяной душ 3 мин</button>
+                </div>
             </div>
 
-            <!-- SKIN IN THE GAME: КОНТРАКТ -->
-            <div class="contract-card" id="contract-card">
-                <!-- If no active bet -->
-                <div id="contract-setup" style="display: none;">
-                    <div class="contract-header">
-                        <span>🎲 СТАВКА НА ДИСЦИПЛИНУ</span>
-                    </div>
-                    <div class="contract-desc">Поставь свои очки. Удержи стрик 7 дней — получишь х3 от ставки. Сорвешься — потеряешь всё.</div>
-                    <div class="contract-input-row">
-                        <input type="number" id="contract-bet-amount" class="edit-input" placeholder="Сумма" min="10" max="1000">
-                        <button class="btn-action btn-bet" id="btn-make-bet">Заключить контракт</button>
-                    </div>
-                </div>
-
-                <!-- If bet is active -->
-                <div id="contract-active" style="display: none;">
-                    <div class="contract-header">
-                        <span>🩸 АКТИВНЫЙ КОНТРАКТ</span>
-                        <span id="contract-days-left" class="contract-badge">0/7 ДНЕЙ</span>
-                    </div>
-                    <div class="contract-desc" id="contract-status-text">На кону: 100 очков. Потенциальный выигрыш: 300. Не прерывай стрик!</div>
-                    <div class="stat-bar-track" style="margin-top: 12px; background: rgba(0,0,0,0.5);">
-                        <div class="stat-bar-fill dsc" id="contract-progress-bar" style="width: 0%;"></div>
-                    </div>
-                </div>
+            <!-- БАЛАНС 6 СФЕР -->
+            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:14px;">
+                <div style="font-family:var(--font-d);font-size:0.72rem;color:var(--purple);letter-spacing:2px;margin-bottom:10px;">⚖️ БАЛАНС 6 СФЕР — НЕДЕЛЯ</div>
+                <canvas id="spheres-radar" width="280" height="200" style="display:block;margin:0 auto;"></canvas>
+                <div id="spheres-legend" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;justify-content:center;"></div>
             </div>
 
             <div class="section-title-row" style="margin-top: 24px;">
@@ -137,7 +120,6 @@
                     <span style="font-size:0.75rem; color:var(--text-dim);">(Макс 2)</span>
                 </div>
                 <div style="display:flex; gap:8px;">
-                    <button id="btn-open-pool" style="background: rgba(240, 185, 50, 0.1); border: 1px solid var(--gold); color: var(--gold); padding: 4px 10px; border-radius: 6px; font-weight: 600; font-size: 0.75rem; cursor: pointer; transition: 0.2s;">🔀 Заменить</button>
                     <button class="btn-edit-toggle" id="btn-edit-bonus">✏️</button>
                 </div>
             </div>
@@ -145,17 +127,25 @@
 
             <!-- ЦЕЛИ (перенесено из раздела Цели) -->
             <div class="section-title-row" style="margin-top: 28px;">
-                <h2 class="section-title">🏆 МИССИИ</h2>
+                <h2 class="section-title" style="cursor:pointer;display:flex;align-items:center;gap:6px;" id="missions-toggle">
+                    🏆 МИССИИ <span id="missions-arrow" style="font-size:0.75rem;color:var(--text-dim);transition:transform 0.2s;">▼</span>
+                </h2>
                 <button id="btn-add-goal" style="background:var(--purple-dim);border:1px solid rgba(168,85,247,.3);color:var(--purple);padding:6px 14px;border-radius:10px;font-family:var(--font-d);font-weight:700;font-size:.82rem;cursor:pointer;letter-spacing:.5px;">+ Цель</button>
             </div>
-            <div id="goals-main-target" style="margin-bottom:18px;"></div>
-            <div id="goals-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:26px;"></div>
+            <div id="missions-body">
+                <div id="goals-main-target" style="margin-bottom:18px;"></div>
+                <div id="goals-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:26px;"></div>
+            </div>
 
             <div class="section-title-row" style="margin-top:4px;">
-                <span class="section-title">📋 РАЗБОР НЕДЕЛИ</span>
+                <span class="section-title" style="cursor:pointer;display:flex;align-items:center;gap:6px;" id="review-toggle">
+                    📋 РАЗБОР НЕДЕЛИ <span id="review-arrow" style="font-size:0.75rem;color:var(--text-dim);transition:transform 0.2s;">▼</span>
+                </span>
             </div>
-            <div id="weekly-review-card" style="margin-bottom:26px;"></div>
-            <div id="weekly-reviews-history" style="margin-bottom:26px;"></div>
+            <div id="review-body">
+                <div id="weekly-review-card" style="margin-bottom:26px;"></div>
+                <div id="weekly-reviews-history" style="margin-bottom:26px;"></div>
+            </div>
         </section>
 
         <!-- CODEX -->
@@ -171,11 +161,6 @@
             </div>
             <div class="habit-list" id="habit-list"></div>
             <button class="btn-add hidden" id="btn-add-habit">+ Добавить привычку</button>
-
-            <div class="section-title-row" style="margin-top:24px">
-                <span class="section-title">📜 ЗАКОНЫ СИСТЕМЫ</span>
-            </div>
-            <div id="codex-reference"></div>
 
             <div class="section-title-row" style="margin-top:28px;">
                 <span class="section-title">🎌 Аниме</span>
@@ -242,24 +227,6 @@
                 </div>
             </div>
 
-            <h2 class="section-title" style="margin: 0 0 12px; text-align: center;">АБСОЛЮТНЫЙ БАЛАНС</h2>
-            <div class="radar-container">
-                <svg id="radar-chart" width="240" height="240" viewBox="0 0 240 240">
-                    <polygon id="radar-bg-3" points="" fill="rgba(255,255,255,0.02)" stroke="var(--border-subtle)" stroke-width="1"/>
-                    <polygon id="radar-bg-2" points="" fill="rgba(255,255,255,0.02)" stroke="var(--border-subtle)" stroke-width="1"/>
-                    <polygon id="radar-bg-1" points="" fill="rgba(255,255,255,0.02)" stroke="var(--border-subtle)" stroke-width="1"/>
-                    
-                    <!-- Axis lines will be generated here -->
-                    <g id="radar-axes"></g>
-
-                    <polygon id="radar-polygon" points="" fill="rgba(168, 85, 247, 0.4)" stroke="var(--purple)" stroke-width="2"/>
-                    
-                    <!-- Labels will be generated here -->
-                    <g id="radar-labels" font-family="var(--font-d)" font-size="10" fill="var(--text-2)" font-weight="600" text-anchor="middle" dominant-baseline="middle"></g>
-                </svg>
-            </div>
-
-            <div class="stats-bars" id="stats-bars" style="margin-top: 24px;"></div>
             <div class="total-stats-card">
                 <div class="total-stat">
                     <span class="total-label">Всего очков</span>
@@ -359,8 +326,8 @@
             </div>
 
             <div style="background: rgba(52,211,153,0.06); border: 1px solid rgba(52,211,153,0.15); border-radius: 12px; padding: 14px; margin-bottom: 24px; text-align: left;">
-                <div style="font-size: 0.7rem; color: var(--green); letter-spacing: 1px; font-family: var(--font-display); margin-bottom: 6px;">🔥 ГЛАВНАЯ ЦЕЛЬ</div>
-                <div style="font-size: 0.85rem; color: var(--text-secondary);">Каждое действие сегодня — кирпич к финансовой свободе. Deep Work = деньги в будущем.</div>
+                <div style="font-size: 0.7rem; color: var(--green); letter-spacing: 1px; font-family: var(--font-display); margin-bottom: 6px;">🏆 ГЛАВНАЯ МИССИЯ</div>
+                <div id="morning-main-goal" style="font-size: 0.85rem; color: var(--text-secondary);">Добавь главную миссию в разделе Квесты → Миссии.</div>
             </div>
 
             <button class="modal-btn" id="morning-dismiss" style="width: 100%; background: linear-gradient(135deg, var(--purple), #7c3aed);">Принять вызов ⚔️</button>
@@ -433,21 +400,6 @@
         </div>
     </div>
 
-    <!-- BONUS POOL MODAL -->
-    <div class="modal-overlay hidden" id="pool-modal-overlay">
-        <div class="modal" id="pool-modal" style="max-height: 80vh; display: flex; flex-direction: column;">
-            <div class="modal-title" style="margin-bottom: 8px;">🔥 ПУЛ ВЫЗОВОВ</div>
-            <div class="modal-content" style="margin-bottom: 12px; font-size: 0.8rem; color: var(--text-dim);">Выберите до 2 квестов на день. Назад дороги нет.</div>
-            <div id="pool-list" style="overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 8px; text-align: left; margin-bottom: 16px; padding-right: 4px;">
-                <!-- items injected via JS -->
-            </div>
-            <div class="edit-actions">
-                <button class="modal-btn btn-secondary" id="pool-btn-custom">+ Свой</button>
-                <button class="modal-btn" id="pool-btn-close">Закрыть</button>
-            </div>
-        </div>
-    </div>
-
     <!-- MYSTERY CHEST MODAL -->
     <div id="chest-modal-overlay" class="modal-overlay hidden" style="z-index: 300;">
         <div class="modal" id="chest-modal" style="background: linear-gradient(160deg, var(--bg-deep), var(--bg-card)); border: 2px solid var(--gold); box-shadow: 0 0 50px rgba(240, 185, 50, 0.3); transform: scale(0.9); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
@@ -479,6 +431,19 @@
             transform: scale(1.05) !important;
         }
     </style>
+
+    <!-- CUSTOM CONFIRM MODAL -->
+    <div id="confirm-overlay" class="modal-overlay hidden" style="z-index:600;">
+        <div class="modal" style="max-width:320px;">
+            <div class="modal-glow"></div>
+            <div id="confirm-title" class="modal-title" style="font-size:1.1rem;margin-bottom:8px;"></div>
+            <div id="confirm-text" style="font-size:0.85rem;color:var(--text-secondary);margin-bottom:20px;line-height:1.5;"></div>
+            <div class="edit-actions">
+                <button class="modal-btn btn-secondary" id="confirm-cancel">Отмена</button>
+                <button class="modal-btn" id="confirm-ok" style="background:linear-gradient(135deg,var(--red),#dc2626);">Подтвердить</button>
+            </div>
+        </div>
+    </div>
 
     <script src="app.js"></script>
 </body>

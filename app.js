@@ -173,6 +173,28 @@ const STOIC_MAXIMS = [
 ];
 
 // ========== QUESTS CONFIG ==========
+
+// ========== CUSTOM CONFIRM ==========
+function ariseConfirm(title, text, okLabel, okColor) {
+    return new Promise(resolve => {
+        const overlay = document.getElementById('confirm-overlay');
+        document.getElementById('confirm-title').textContent = title;
+        document.getElementById('confirm-text').textContent = text;
+        const okBtn = document.getElementById('confirm-ok');
+        okBtn.textContent = okLabel || 'Подтвердить';
+        okBtn.style.background = okColor || 'linear-gradient(135deg,var(--red),#dc2626)';
+        overlay.classList.remove('hidden');
+        const cleanup = (result) => {
+            overlay.classList.add('hidden');
+            document.getElementById('confirm-ok').replaceWith(okBtn.cloneNode(true));
+            document.getElementById('confirm-cancel').onclick = null;
+            resolve(result);
+        };
+        document.getElementById('confirm-ok').addEventListener('click', () => cleanup(true));
+        document.getElementById('confirm-cancel').addEventListener('click', () => cleanup(false));
+    });
+}
+
 const DEFAULT_MAIN_QUESTS = [
     { id: 'activity', name: '🏃 Движение тела', desc: '45 мин — силовая, кардио или растяжка', stat: 'str', hint: 'Ровно 45 минут физической активности.\n\nСегодня можно:\n- Силовая по плану (открой ТРЕНИРОВКИ)\n- Кардио: бег или быстрая ходьба\n- Растяжка / йога (программа FLEX)' },
     { id: 'code', name: '💻 Deep Work (Код)', desc: '90 мин — одна задача без отвлечений', stat: 'int', hint: 'Ровно 90 минут. Телефон в авиарежим.\n\nЧто именно делать:\n1. Открой свой текущий проект (ARISE или другой)\n2. Выбери ОДНУ конкретную задачу (фича, баг, компонент)\n3. Никаких соцсетей и мессенджеров\n4. Работай пока не пройдёт 90 мин' },
@@ -803,6 +825,89 @@ const STAT_NAMES = {
     dsc: 'DSC — Дисциплина'
 };
 
+// ========== 6 СФЕР ЖИЗНИ ==========
+const SIX_SPHERES = [
+    { key: 'health',    label: '💪 Здоровье',  color: '#34d399' },
+    { key: 'mind',      label: '🧠 Ум',         color: '#60a5fa' },
+    { key: 'finance',   label: '💰 Финансы',    color: '#f0b932' },
+    { key: 'relations', label: '❤️ Связи',      color: '#f472b6' },
+    { key: 'purpose',   label: '🎯 Цель',       color: '#a855f7' },
+    { key: 'inner',     label: '😌 Внутреннее', color: '#22d3ee' }
+];
+const QUEST_TO_SPHERE = {
+    activity:'health', cold:'health', nutrition:'health', posture:'health',
+    cooldown:'health', stretching:'health', sunlight:'health',
+    code:'mind', language:'mind', focus90:'mind', read:'mind',
+    budget:'finance',
+    reflect:'inner', meditate:'inner', nodopamine:'inner',
+};
+const STAT_TO_SPHERE = { str:'health', end:'health', int:'mind', wis:'inner', dsc:'purpose' };
+
+function getSphereScores() {
+    const scores = { health:0, mind:0, finance:0, relations:0, purpose:0, inner:0 };
+    for (let i = 0; i < 7; i++) {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        const dd = data.days[ds]; if (!dd) continue;
+        [...(dd.main||[]),...(dd.bonus||[])].forEach(qid => {
+            const sp = QUEST_TO_SPHERE[qid] || STAT_TO_SPHERE[(data.mainQuests.find(q=>q.id===qid)||{}).stat||''];
+            if (sp) scores[sp]++;
+        });
+        if (dd.done) scores.purpose += 0.3;
+    }
+    try {
+        const gd = JSON.parse(localStorage.getItem('arise_goals')||'{}');
+        const now = new Date(), y = now.getFullYear();
+        const mon = new Date(now); mon.setDate(mon.getDate()-((mon.getDay()+6)%7));
+        const wk = `${y}-W${String(Math.ceil((((mon-new Date(y,0,1))/86400000)+1)/7)).padStart(2,'0')}`;
+        const rev = (gd.reviews||[]).find(r=>r.week===wk);
+        if (rev && rev.finance) scores.finance = Math.max(scores.finance, 4);
+    } catch(e){}
+    const result = {};
+    SIX_SPHERES.forEach(s => { result[s.key] = Math.min(100, Math.round((scores[s.key]/7)*100)); });
+    return result;
+}
+
+function renderSphereRadar() {
+    const canvas = document.getElementById('spheres-radar');
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const cx = W/2, cy = H/2, R = Math.min(cx,cy)-28, N = SIX_SPHERES.length;
+    const scores = getSphereScores();
+    ctx.clearRect(0,0,W,H);
+    for (let lv=1; lv<=4; lv++) {
+        const r=R*lv/4; ctx.beginPath();
+        for (let i=0;i<N;i++){const a=(Math.PI*2*i/N)-Math.PI/2;i===0?ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));}
+        ctx.closePath(); ctx.strokeStyle='rgba(148,108,255,0.13)'; ctx.lineWidth=1; ctx.stroke();
+    }
+    for (let i=0;i<N;i++){
+        const a=(Math.PI*2*i/N)-Math.PI/2;
+        ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));
+        ctx.strokeStyle='rgba(148,108,255,0.15)';ctx.lineWidth=1;ctx.stroke();
+    }
+    ctx.beginPath();
+    for (let i=0;i<N;i++){
+        const a=(Math.PI*2*i/N)-Math.PI/2, val=Math.max(0.05,(scores[SIX_SPHERES[i].key]||0)/100), r=R*val;
+        i===0?ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
+    }
+    ctx.closePath(); ctx.fillStyle='rgba(168,85,247,0.18)'; ctx.fill();
+    ctx.strokeStyle='rgba(168,85,247,0.7)'; ctx.lineWidth=2; ctx.stroke();
+    for (let i=0;i<N;i++){
+        const a=(Math.PI*2*i/N)-Math.PI/2, val=Math.max(0.05,(scores[SIX_SPHERES[i].key]||0)/100);
+        const r=R*val, px=cx+r*Math.cos(a), py=cy+r*Math.sin(a);
+        ctx.beginPath();ctx.arc(px,py,4,0,Math.PI*2);ctx.fillStyle=SIX_SPHERES[i].color;ctx.fill();
+        const lx=cx+(R+18)*Math.cos(a), ly=cy+(R+18)*Math.sin(a);
+        ctx.font='13px serif';
+        ctx.textAlign=lx<cx-5?'right':lx>cx+5?'left':'center';
+        ctx.textBaseline=ly<cy-5?'bottom':ly>cy+5?'top':'middle';
+        ctx.fillStyle=SIX_SPHERES[i].color;
+        ctx.fillText(SIX_SPHERES[i].label.split(' ')[0],lx,ly);
+    }
+    const leg=document.getElementById('spheres-legend');
+    if(leg) leg.innerHTML=SIX_SPHERES.map(s=>`<span style="font-size:0.68rem;color:${s.color};background:${s.color}18;border:1px solid ${s.color}38;padding:2px 7px;border-radius:20px;">${s.label} <b>${scores[s.key]||0}%</b></span>`).join('');
+}
+
 // ========== STORAGE ==========
 function getToday() {
     const d = new Date();
@@ -1021,7 +1126,7 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 function refreshPage(page) {
     if (page === 'dashboard') updateDashboard();
     if (page === 'quests') { renderQuests(); updateQuestStates(); renderDailyQuote(); renderStoicDaily(); if (typeof renderGoalsPage === 'function') renderGoalsPage(); }
-    if (page === 'codex') { renderHabits(); renderCodexReference(); renderStoicDaily(); _renderAnime(); }
+    if (page === 'codex') { renderHabits(); renderStoicDaily(); _renderAnime(); }
     if (page === 'training') renderTraining(currentTrainDay || 'push');
     if (page === 'stats') { updateStats(); renderKeys(); updateCalendar(); }
 }
@@ -1172,133 +1277,29 @@ function updateDashboard() {
 
     // Check auto-unlock keys
     checkAutoKeys();
-    
-    // Check Contract (Skin in the Game)
-    updateContractUI();
+
+    // Render 6 spheres radar
+    renderSphereRadar();
 }
 
-// ========== CONTRACT (SKIN IN THE GAME) ==========
-function updateContractUI() {
-    const setupUI = document.getElementById('contract-setup');
-    const activeUI = document.getElementById('contract-active');
-    
-    // Only show contract card if user has at least 50 points to bet to avoid cluttering new users
-    if (!data.activeBet && data.totalPoints < 50) {
-        document.getElementById('contract-card').style.display = 'none';
-        return;
-    }
-    
-    document.getElementById('contract-card').style.display = 'block';
+// ========== CONTRACT (disabled - removed from UI) ==========
+function updateContractUI() { /* removed */ }
 
-    if (data.activeBet) {
-        setupUI.style.display = 'none';
-        activeUI.style.display = 'block';
-        
-        // Check if failed
-        const streak = calcStreak();
-        if (streak === 0 && data.activeBet.daysPassed > 0) {
-            // Failed
-            showModal('🩸 КОНТРАКТ СОРВАН', `Ты потерял свой стрик. Твоя ставка в ${data.activeBet.amount} очков сгорает.`);
-            data.activeBet = null;
-            saveData();
-            updateContractUI();
-            return;
-        }
-        
-        // Calculate days passed based on data history (not just simple date diff to account for rest days)
-        let daysPassed = 0;
-        let d = new Date(data.activeBet.startDate);
-        const todayStr = getToday();
-        
-        while(true) {
-            const dStr = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
-            if (dStr > todayStr) break;
-            
-            const dayData = data.days[dStr];
-            // If the day was processed and it's either done or a rest day, it counts towards the contract survival
-            if (dayData && (dayData.done || dayData.isRestDay)) {
-                daysPassed++;
-            }
-            d.setDate(d.getDate() + 1);
-        }
-        
-        data.activeBet.daysPassed = daysPassed - 1; // Since today might not be over yet, we just show UI progress
-        
-        // Check win condition
-        if (data.activeBet.daysPassed >= data.activeBet.targetDays) {
-            const reward = data.activeBet.amount * 3;
-            data.totalPoints += reward; // Gives them the 3x reward (so +2x net profit)
-            showModal('💵 КОНТРАКТ ВЫПОЛНЕН!', `Ты доказал свою силу.\nСтавка: ${data.activeBet.amount}\nВыигрыш: +${reward} очков!`);
-            data.activeBet = null;
-            saveData();
-            updateContractUI();
-            
-            // Re-render dashboard to update points
-            setTimeout(updateDashboard, 500);
-            return;
-        }
-        
-        const prog = Math.min(100, (data.activeBet.daysPassed / data.activeBet.targetDays) * 100);
-        document.getElementById('contract-progress-bar').style.width = `${prog}%`;
-        document.getElementById('contract-days-left').textContent = `${data.activeBet.daysPassed}/${data.activeBet.targetDays} ДНЕЙ`;
-        document.getElementById('contract-status-text').textContent = `На кону: ${data.activeBet.amount} очков. Потенциальный выигрыш: ${data.activeBet.amount * 3}. Не прерывай стрик!`;
-        
-    } else {
-        setupUI.style.display = 'block';
-        activeUI.style.display = 'none';
-    }
+// ========== PENALTY BUTTONS ==========
+function _clearPenalty(type) {
+    data.penalty = false;
+    const yesterday = new Date();
+    yesterday.setDate(yesterday.getDate() - 1);
+    const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth()+1).padStart(2,'0')}-${String(yesterday.getDate()).padStart(2,'0')}`;
+    if (!data.days[yStr]) data.days[yStr] = { main: [], bonus: [], points: 0, done: true };
+    else data.days[yStr].done = true;
+    saveData();
+    const msg = type === 'berpi' ? '💥 50 БЕРПИ ВЫПОЛНЕНО\nПульс в космосе. Долг погашен.' : '🧊 ЛЕДЯНОЙ ДУШ 3 МИН\nДофамин восстановлен. Долг погашен.';
+    showModal('ПРОТОКОЛ ЗАВЕРШЁН', `${msg}\n\nТы сильнее своего оправдания.`);
+    updateDashboard();
 }
-
-// Make a bet logic
-document.getElementById('btn-make-bet').addEventListener('click', () => {
-    const input = document.getElementById('contract-bet-amount');
-    const amount = parseInt(input.value);
-    
-    if (isNaN(amount) || amount <= 0) {
-        alert('Введите корректную сумму.');
-        return;
-    }
-    
-    if (amount > data.totalPoints) {
-        alert('У вас нет столько очков.');
-        return;
-    }
-    
-    if (confirm(`Ты ставишь ${amount} очков на то, что удержишь плотный график (стрик) 7 дней. Если сорвешься — очки сгорят. Хочешь заключить контракт?`)) {
-        // Deduct points immediately
-        data.totalPoints -= amount;
-        
-        data.activeBet = {
-            amount: amount,
-            targetDays: 7,
-            startDate: getToday(),
-            daysPassed: 0
-        };
-        
-        saveData();
-        input.value = '';
-        updateDashboard();
-    }
-});
-
-document.getElementById('btn-clear-penalty').addEventListener('click', () => {
-    const answer = prompt('Выбери протокол отработки:\nВведите "50" (50 Берпи)\nВведите "3" (3 мин ледяного душа)');
-    if (answer === '50' || answer === '3') {
-        data.penalty = false;
-        const yesterday = new Date();
-        yesterday.setDate(yesterday.getDate() - 1);
-        const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
-        if (!data.days[yStr]) data.days[yStr] = { main: [], bonus: [], points: 0, done: true };
-        else data.days[yStr].done = true;
-        saveData();
-        
-        const protocolText = answer === '50' ? '50 БЕРПИ ВЫПОЛНЕНО ✅\nПульс в космосе, легкие горят.' : '3 МИН ЛЕДЯНОГО ДУША ✅\nДофамин восстановлен.';
-        showModal('ДОФАМИНОВЫЙ ДОЛГ ПОГАШЕН', `${protocolText}\n\nТы сильнее своего оправдания.`);
-        updateDashboard();
-    } else if (answer !== null) {
-        alert('Введен неверный протокол. Штраф остается активным.');
-    }
-});
+document.getElementById('btn-penalty-berpi').addEventListener('click', () => _clearPenalty('berpi'));
+document.getElementById('btn-penalty-shower').addEventListener('click', () => _clearPenalty('shower'));
 
 // ========== AUTO KEYS CHECK ==========
 function checkAutoKeys() {
@@ -1340,10 +1341,14 @@ function renderQuestItem(quest, isBonus, isHardModeMain) {
 
     let infoBtnHtml = quest.hint ? `<button class="quest-hint-btn" type="button">Подробнее ▸</button>` : '';
 
+    const _spKey = QUEST_TO_SPHERE[quest.id] || STAT_TO_SPHERE[quest.stat] || '';
+    const _sp = SIX_SPHERES.find(s=>s.key===_spKey);
+    const sphereBadge = _sp ? `<span style="font-size:0.6rem;color:${_sp.color};background:${_sp.color}18;border:1px solid ${_sp.color}38;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">${_sp.label.split(' ')[0]}</span>` : '';
+
     div.innerHTML = `
         <div class="quest-check"></div>
         <div class="quest-info">
-            <div class="quest-name">${quest.name}</div>
+            <div class="quest-name">${quest.name}${sphereBadge}</div>
             <div class="quest-desc">${quest.desc}${bonusHint}</div>
             ${infoBtnHtml}
         </div>
@@ -1372,11 +1377,10 @@ function renderQuestItem(quest, isBonus, isHardModeMain) {
         e.stopPropagation();
         openEditModal(isBonus ? 'bonus' : 'main', quest);
     });
-    div.querySelector('.btn-quest-delete').addEventListener('click', (e) => {
+    div.querySelector('.btn-quest-delete').addEventListener('click', async (e) => {
         e.stopPropagation();
-        if (confirm(`Удалить "${quest.name}"?`)) {
-            deleteQuest(quest.id, isBonus);
-        }
+        const ok = await ariseConfirm('Удалить квест?', `"${quest.name}" будет удалён навсегда.`, 'Удалить');
+        if (ok) deleteQuest(quest.id, isBonus);
     });
     return div;
 }
@@ -1615,68 +1619,6 @@ document.getElementById('btn-edit-bonus').addEventListener('click', () => {
 });
 document.getElementById('btn-add-main').addEventListener('click', () => openEditModal('main', null));
 
-// ========== BONUS POOL ==========
-document.getElementById('btn-open-pool').addEventListener('click', () => {
-    renderPoolList();
-    document.getElementById('pool-modal-overlay').classList.remove('hidden');
-});
-document.getElementById('pool-btn-close').addEventListener('click', () => {
-    document.getElementById('pool-modal-overlay').classList.add('hidden');
-});
-document.getElementById('pool-btn-custom').addEventListener('click', () => {
-    document.getElementById('pool-modal-overlay').classList.add('hidden');
-    openEditModal('bonus', null);
-});
-
-function renderPoolList() {
-    const list = document.getElementById('pool-list');
-    list.innerHTML = '';
-    
-    ALL_BONUS_QUESTS.forEach(q => {
-        const isSelected = data.bonusQuests.some(activeQ => activeQ.id === q.id);
-        const div = document.createElement('div');
-        div.style.padding = '10px 12px';
-        div.style.background = isSelected ? 'rgba(240, 185, 50, 0.1)' : 'rgba(255, 255, 255, 0.03)';
-        div.style.border = isSelected ? '1px solid var(--gold)' : '1px solid rgba(255, 255, 255, 0.06)';
-        div.style.borderRadius = 'var(--radius-sm)';
-        div.style.cursor = 'pointer';
-        div.style.transition = 'all 0.2s';
-        
-        div.innerHTML = `
-            <div style="font-family: var(--font-display); font-weight: 600; font-size: 0.95rem; color: ${isSelected ? 'var(--gold)' : 'var(--text-primary)'}; display:flex; justify-content:space-between;">
-                <span>${q.name}</span>
-                <span>${isSelected ? '✅' : '+'}</span>
-            </div>
-            <div style="font-size: 0.75rem; color: var(--text-dim); margin-top: 4px;">${q.desc}</div>
-        `;
-        
-        div.addEventListener('click', () => {
-            if (isSelected) {
-                // Deselect
-                data.bonusQuests = data.bonusQuests.filter(activeQ => activeQ.id !== q.id);
-            } else {
-                // Select
-                if (data.bonusQuests.length >= 2) {
-                    alert('Максимум 2 бонусных вызова на день! Сначала убери один из текущих.');
-                    return;
-                }
-                data.bonusQuests.push({...q});
-            }
-            
-            saveData();
-            renderQuests();
-            updateDashboard();
-            renderPoolList(); 
-            
-            if (!isSelected && data.bonusQuests.length >= 2) {
-                document.getElementById('pool-modal-overlay').classList.add('hidden');
-            }
-        });
-
-        list.appendChild(div);
-    });
-}
-
 // ========== EDIT MODAL ==========
 let editContext = { type: null, item: null };
 
@@ -1797,126 +1739,12 @@ function updateMatrix() {
     }
 }
 
-// ========== RADAR CHART (АБСОЛЮТНЫЙ БАЛАНС) ==========
-function updateRadarChart() {
-    // Axes: STR, INT, WIS, END, DSC (Discipline = Rank Points scaled)
-    // We scale Discipline: 1 rank ~ 1000 pts. Let's make it comparable to stats.
-    // 5000 pts = ~50 stat. So DSC = points / 100.
-    const stats = data.stats;
-    const values = [
-        stats.str || 0,
-        stats.int || 0,
-        stats.wis || 0,
-        stats.end || 0,
-        Math.floor(data.totalPoints / 100) // DSC
-    ];
-    
-    const labels = ['СИЛА', 'ИНТЕЛЛЕКТ', 'МУДРОСТЬ', 'ВЫНОСЛ.', 'ДИСЦИПЛ.'];
-    const maxVal = Math.max(20, ...values); // Minimum scale is 20
-    
-    const centerX = 120;
-    const centerY = 120;
-    const radius = 90; // Max radius for the chart
-    
-    // Helper to get X, Y for a given angle and value
-    const getPoint = (val, max, angle, r) => {
-        const ratio = Math.min(1, val / max);
-        const distance = ratio * r;
-        const x = centerX + distance * Math.cos(angle);
-        const y = centerY + distance * Math.sin(angle);
-        return `${x},${y}`;
-    };
-
-    // 1. Draw Background Polygons (Web)
-    const drawBg = (id, scale) => {
-        const pts = [];
-        for (let i = 0; i < 5; i++) {
-            const angle = (Math.PI / 2) - (2 * Math.PI * i / 5);
-            pts.push(getPoint(scale, 1, angle, radius));
-        }
-        const el = document.getElementById(id);
-        el.setAttribute('points', pts.join(' '));
-        el.setAttribute('stroke-opacity', '0.4');
-    };
-    drawBg('radar-bg-3', 1.0);  // 100%
-    drawBg('radar-bg-2', 0.66); // 66%
-    drawBg('radar-bg-1', 0.33); // 33%
-
-    // 2. Draw Axes & Labels
-    const axesGrp = document.getElementById('radar-axes');
-    const labelsGrp = document.getElementById('radar-labels');
-    axesGrp.innerHTML = '';
-    labelsGrp.innerHTML = '';
-    
-    let polyPoints = [];
-
-    for (let i = 0; i < 5; i++) {
-        const angle = (Math.PI / 2) - (2 * Math.PI * i / 5); // Start at top (90 deg), go clockwise
-        
-        // Axis line
-        const endPt = getPoint(1, 1, angle, radius);
-        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-        const [x2, y2] = endPt.split(',');
-        line.setAttribute('x1', centerX);
-        line.setAttribute('y1', centerY);
-        line.setAttribute('x2', x2);
-        line.setAttribute('y2', y2);
-        line.setAttribute('stroke', 'rgba(168, 85, 247, 0.25)'); // Restore purple axis
-        line.setAttribute('stroke-width', '1');
-        axesGrp.appendChild(line);
-
-        // Label
-        const labelR = radius + 15;
-        const lx = centerX + labelR * Math.cos(angle);
-        const ly = centerY + labelR * Math.sin(angle);
-        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
-        text.setAttribute('x', lx);
-        text.setAttribute('y', ly);
-        text.textContent = labels[i];
-        text.setAttribute('fill', 'var(--text-2)');
-        
-        // Adjust alignment for better look
-        if (Math.abs(Math.cos(angle)) < 0.1) text.setAttribute('text-anchor', 'middle');
-        else if (Math.cos(angle) > 0) text.setAttribute('text-anchor', 'start');
-        else text.setAttribute('text-anchor', 'end');
-        
-        labelsGrp.appendChild(text);
-
-        // Calculate actual polygon points
-        polyPoints.push(getPoint(values[i], maxVal, angle, radius));
-    }
-
-    // 3. Draw Main Polygon
-    document.getElementById('radar-polygon').setAttribute('points', polyPoints.join(' '));
-}
-
 // ========== STATS ==========
 function updateStats() {
-    const container = document.getElementById('stats-bars');
-    container.innerHTML = '';
-    const stats = data.stats;
-    const maxStat = Math.max(10, ...Object.values(stats));
-
-    Object.entries(STAT_NAMES).forEach(([key, label]) => {
-        let val = stats[key] || 0;
-        if (key === 'dsc') val = Math.floor(data.totalPoints / 100);
-        
-        const pct = (val / maxStat) * 100;
-        const div = document.createElement('div');
-        div.className = 'stat-bar-item';
-        div.innerHTML = `
-            <div class="stat-bar-label"><span>${label}</span><span class="stat-bar-value">${val}</span></div>
-            <div class="stat-bar-track"><div class="stat-bar-fill ${key}" style="width:${Math.min(100, pct)}%"></div></div>
-        `;
-        container.appendChild(div);
-    });
-
     document.getElementById('stats-total-points').textContent = data.totalPoints;
     document.getElementById('stats-best-streak').textContent = data.bestStreak;
     document.getElementById('stats-total-days').textContent = calcDaysInSystem();
-    
     updateMatrix();
-    updateRadarChart();
 }
 
 // ========== CALENDAR ==========
@@ -2438,9 +2266,11 @@ themeToggle.addEventListener('click', () => {
 // ========== HARD WORK MODE TOGGLE ==========
 const hardModeToggle = document.getElementById('hard-mode-toggle');
 function updateHardModeUI() {
-    hardModeToggle.style.background = data.hardMode ? 'var(--purple)' : 'var(--bg-card)';
-    hardModeToggle.style.borderColor = data.hardMode ? 'var(--purple)' : 'var(--border-subtle)';
-    hardModeToggle.style.color = data.hardMode ? '#fff' : 'var(--text-2)';
+    hardModeToggle.style.background = data.hardMode ? 'rgba(251,191,36,0.2)' : 'var(--bg-card)';
+    hardModeToggle.style.borderColor = data.hardMode ? 'var(--yellow)' : 'var(--border-subtle)';
+    hardModeToggle.style.color = data.hardMode ? 'var(--yellow)' : 'var(--text-2)';
+    hardModeToggle.style.boxShadow = data.hardMode ? '0 0 12px rgba(251,191,36,0.35)' : 'none';
+    hardModeToggle.title = data.hardMode ? '💼 Режим выживания АКТИВЕН' : 'Режим выживания (Hard Work)';
     
     // Also save it to today's data so the calendar knows this was a hard mode day
     const todayData = getDayData(getToday());
@@ -2748,6 +2578,18 @@ function showMorningBriefing() {
         ? `Сегодня: ${data.mainQuests.map(q => q.name).join(', ')}`
         : 'Выполни все главные квесты';
     document.getElementById('morning-focus').textContent = mainFocus;
+
+    // Main goal from goalsData (dynamic, not hardcoded)
+    const goalsDataNow = JSON.parse(localStorage.getItem('ariseGoals') || 'null') || { goals: [] };
+    const mainGoal = goalsDataNow.goals.find(g => g.isMain) || goalsDataNow.goals[0];
+    const goalEl = document.getElementById('morning-main-goal');
+    if (goalEl) {
+        if (mainGoal) {
+            goalEl.textContent = mainGoal.name + (mainGoal.why ? ` — ${mainGoal.why}` : '');
+        } else {
+            goalEl.textContent = 'Добавь главную миссию в разделе Квесты → Миссии.';
+        }
+    }
     
     document.getElementById('morning-overlay').classList.remove('hidden');
 }
@@ -3058,6 +2900,9 @@ _createModal('review-modal', `
         <label class="edit-label" style="color:var(--purple);">Одно изменение на следующую неделю
             <textarea class="edit-input" id="review-change" rows="2" style="resize:none;line-height:1.4;" placeholder="Конкретное изменение..."></textarea>
         </label>
+        <label class="edit-label" style="color:var(--cyan);">💰 Финансы: сколько отложил за неделю?
+            <input class="edit-input" id="review-finance" type="text" placeholder="Например: 50 000 сум или 0">
+        </label>
         <label class="edit-label" style="color:var(--gold);">Неделя на сколько? (1–10)
             <div id="review-score-row" style="display:flex;gap:4px;flex-wrap:wrap;margin-top:2px;"></div>
         </label>
@@ -3183,7 +3028,8 @@ function _renderReviewHistory() {
             <div class="rb" style="display:none;margin-top:9px;display:none;">
                 ${r.wins?`<div style="font-size:.77rem;color:var(--green);margin-bottom:5px;">✓ ${r.wins}</div>`:''}
                 ${r.blocks?`<div style="font-size:.77rem;color:var(--yellow);margin-bottom:5px;">⚡ ${r.blocks}</div>`:''}
-                ${r.change?`<div style="font-size:.77rem;color:var(--purple);">→ ${r.change}</div>`:''}
+                ${r.change?`<div style="font-size:.77rem;color:var(--purple);margin-bottom:5px;">→ ${r.change}</div>`:''}
+                ${r.finance?`<div style="font-size:.77rem;color:var(--cyan);">💰 ${r.finance}</div>`:''}
             </div>
         </div>`).join('');
 }
@@ -3252,8 +3098,9 @@ window._setMainGoal = function(i) {
     renderGoalsPage();
 };
 
-window._delGoal = function(i) {
-    if (!confirm(`Удалить цель?`)) return;
+window._delGoal = async function(i) {
+    const ok = await ariseConfirm('Удалить миссию?', `"${goalsData.goals[i]?.name}" будет удалена навсегда.`, 'Удалить');
+    if (!ok) return;
     goalsData.goals.splice(i, 1);
     if (goalsData.goals.length && !goalsData.goals.find(g => g.isMain)) goalsData.goals[0].isMain = true;
     _saveGoals(goalsData);
@@ -3270,10 +3117,11 @@ window._saveReviewModal = function() {
     const wins = document.getElementById('review-wins').value.trim();
     const blocks = document.getElementById('review-blocks').value.trim();
     const change = document.getElementById('review-change').value.trim();
+    const finance = (document.getElementById('review-finance')||{}).value?.trim()||'';
     if (!wins && !blocks && !change) { document.getElementById('review-modal').classList.add('hidden'); return; }
     const wk = _weekKey();
     goalsData.reviews = (goalsData.reviews || []).filter(r => r.week !== wk);
-    goalsData.reviews.unshift({ week: wk, date: _today(), wins, blocks, change, score: _reviewScore });
+    goalsData.reviews.unshift({ week: wk, date: _today(), wins, blocks, change, finance, score: _reviewScore });
     if (goalsData.reviews.length > 12) goalsData.reviews = goalsData.reviews.slice(0, 12);
     _saveGoals(goalsData);
     if (typeof data !== 'undefined') {
@@ -3312,10 +3160,38 @@ if (typeof renderGoalsPage === 'function') renderGoalsPage();
     const wk = _weekKey();
     if (localStorage.getItem(`wrd_${wk}`) || localStorage.getItem(`wrn_${wk}`)) return;
     localStorage.setItem(`wrn_${wk}`, '1');
-    setTimeout(() => {
-        if (confirm('📋 Воскресный обзор недели\n5 минут честного взгляда. Открыть?')) {
+    setTimeout(async () => {
+        const ok = await ariseConfirm('📋 Воскресный разбор недели', '5 минут честного взгляда на прошедшую неделю. Открыть сейчас?', 'Открыть', 'linear-gradient(135deg,var(--purple),#7c3aed)');
+        if (ok) {
             switchPage('quests');
             setTimeout(_openWeeklyReview, 400);
         }
     }, 2500);
+})();
+
+// ===== СВОРАЧИВАЕМЫЕ СЕКЦИИ =====
+(function _initCollapsibles() {
+    const sections = [
+        { toggleId: 'missions-toggle', bodyId: 'missions-body', arrowId: 'missions-arrow', key: 'arise_missions_open' },
+        { toggleId: 'review-toggle',   bodyId: 'review-body',   arrowId: 'review-arrow',   key: 'arise_review_open'   }
+    ];
+    sections.forEach(({ toggleId, bodyId, arrowId, key }) => {
+        const toggle = document.getElementById(toggleId);
+        const body   = document.getElementById(bodyId);
+        const arrow  = document.getElementById(arrowId);
+        if (!toggle || !body || !arrow) return;
+
+        const isOpen = localStorage.getItem(key) !== 'closed';
+        if (!isOpen) {
+            body.style.display = 'none';
+            arrow.style.transform = 'rotate(-90deg)';
+        }
+
+        toggle.addEventListener('click', () => {
+            const open = body.style.display !== 'none';
+            body.style.display = open ? 'none' : '';
+            arrow.style.transform = open ? 'rotate(-90deg)' : 'rotate(0deg)';
+            localStorage.setItem(key, open ? 'closed' : 'open');
+        });
+    });
 })();

@@ -846,3 +846,13 @@ body::before {
     outline: none; border-color: rgba(168,85,247,.48);
     box-shadow: 0 0 0 2px rgba(168,85,247,.08);
 }
+
+/* ===== COLLAPSIBLE SECTIONS ===== */
+#missions-body, #review-body {
+    overflow: hidden;
+    transition: opacity 0.2s ease;
+}
+#missions-arrow, #review-arrow {
+    display: inline-block;
+    transition: transform 0.2s ease;
+}
