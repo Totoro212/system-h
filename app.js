@@ -1,7 +1,7 @@
 
 // ========== STUBS FOR REMOVED FEATURES ==========
-function updateCalendar() {}
-function updateHardModeUI() {}
+function updateCalendar() { }
+function updateHardModeUI() { }
 
 // ========== STOIC DAILY MAXIMS ==========
 // Специально подобранные для практики — Сенека, Марк Аврелий, Эпиктет
@@ -305,23 +305,23 @@ const WEEKLY_CHALLENGES = [
 
 // ========== TRAINING PLAN ==========
 const PROGRAMS_CONFIG = {
-    ppl: { 
-        name: 'BASE (PPL)', 
+    ppl: {
+        name: 'BASE (PPL)',
         note: '3-дневный базовый сплит (Push/Pull/Legs). Испольуется для построения фундамента и силы. Идеально для Фазы 1.',
-        days: ['push', 'pull', 'legs'] 
+        days: ['push', 'pull', 'legs']
     },
-    ul: { 
-        name: 'SPLIT (U/L)', 
+    ul: {
+        name: 'SPLIT (U/L)',
         note: '4-дневный сплит (Верх/Низ). Позволяет прорабатывать мышечные группы чаще. Для продвинутых пользователей.',
-        days: ['upper', 'lower'] 
+        days: ['upper', 'lower']
     },
-    extra: { 
-        name: 'SUPPORT', 
+    extra: {
+        name: 'SUPPORT',
         note: 'Дополнительные протоколы на кор и гибкость. Можно добавлять к основным тренировкам или делать в дни отдыха.',
-        days: ['core', 'flex'] 
+        days: ['core', 'flex']
     },
-    pro: { 
-        name: 'ELITE', 
+    pro: {
+        name: 'ELITE',
         note: 'Высокоинтенсивные протоколы для экстремальной выносливости. ОПАСНО: Требуют идеального восстановления, использовать не чаще 1 раза в 10-14 дней (иначе перетрен ЦНС).',
         days: ['titan', 'vo2max'],
         unlock: 'streak7'
@@ -339,10 +339,11 @@ const TRAINING = {
         },
         exercises: [
             {
-                name: 'Отжимания на брусьях', sets: '4×13', rest: '90 сек',
+                name: 'Отжимания на брусьях', sets: '4×10', rest: '90 сек',
                 muscles: 'грудь, трицепс, передняя дельта',
+                weight: '+4 кг (надень все 4 утяжелителя на лодыжки)',
                 technique: ['Наклон корпуса вперёд ~30° = больше грудь', 'Корпус вертикально = больше трицепс', 'Не разгибай локти полностью в верхней точке (береги суставы)', 'Опускайся до угла 90° в локтях'],
-                progression: 'Когда делаешь 4×12 легко → добавь рюкзак с весом (2–5 кг)'
+                progression: 'Доведи до 4×12 с утяжелителями, затем добавь рюкзак с весом.'
             },
             {
                 name: 'Отжимания — широкий хват', sets: '3×14', rest: '60 сек',
@@ -359,6 +360,7 @@ const TRAINING = {
             {
                 name: 'Пайк-отжимания (Pike Push-Ups)', sets: '3×10', rest: '90 сек',
                 muscles: 'передняя дельта, трицепс',
+                weight: '+4 кг (все 4 утяжелителя на лодыжки для рычага)',
                 technique: ['Встань в перевёрнутую «V» — руки и ноги на полу, таз вверх', 'Опускай голову к полу между руками', 'Чем ближе ноги к рукам — тем сложнее'],
                 progression: 'Ноги на возвышении → со временем → стойка на руках у стены'
             },
@@ -370,7 +372,7 @@ const TRAINING = {
                 progression: 'Увеличивай вес / замедляй негативную фазу'
             },
             {
-                name: '⭐ Жим гантелей стоя', sets: '3×10–12', rest: '60 сек',
+                name: '⭐ Жим гантелей стоя', sets: '3×12', rest: '60 сек',
                 muscles: 'дельты, трицепс', optional: true,
                 weight: '7 кг — подходит',
                 technique: ['Стоя, гантели на уровне плеч', 'Жми вверх до полного выпрямления рук', 'Контролируй спуск'],
@@ -389,11 +391,12 @@ const TRAINING = {
         },
         exercises: [
             {
-                name: 'Подтягивания — широкий хват', sets: '4×9', rest: '120 сек',
+                name: 'Подтягивания — широкий хват', sets: '4×8', rest: '120 сек',
                 muscles: 'широчайшие («крылья»), большая круглая, бицепс',
+                weight: '+4 кг (надень все 4 утяжелителя на лодыжки)',
                 technique: ['Хват шире плеч, ладони от себя', 'Тяни ЛОКТИ вниз и назад, а не руки', 'Подбородок выше перекладины', 'Опускайся ПЛАВНО (2–3 сек негативная фаза = больше рост!)'],
                 alt: 'Если не можешь 6 раз: негативные подтягивания (запрыгни наверх, опускайся медленно 5 сек × 5–8 раз) или резиновая лента',
-                progression: 'Когда делаешь 4×10 → добавь вес (рюкзак)'
+                progression: 'С утяжелителями на ногах делай чистые повторения. Цель — 4×10.'
             },
             {
                 name: 'Подтягивания — обратный хват', sets: '3×10', rest: '90 сек',
@@ -449,18 +452,18 @@ const TRAINING = {
         },
         exercises: [
             {
-                name: 'Приседания (гоблет)', sets: '4×13', rest: '90 сек',
+                name: 'Болгарские сплит-приседания (вместо Гоблет)', sets: '3×10 /ногу', rest: '90 сек',
                 muscles: 'квадрицепсы, ягодицы, задняя поверхность бедра',
-                weight: '10–15 кг (гоблет у груди). Темп: 3 сек вниз, пауза 2 сек внизу, 1 сек вверх',
-                technique: ['Стопы на ширине плеч, носки слегка наружу', 'Садись так, будто садишься на стул за спиной', 'Колени движутся по направлению носков (не внутрь!)', 'Спина прямая, взгляд вперёд', 'Опускайся до параллели бёдер с полом (или ниже)'],
-                progression: 'Болгарские сплит-приседания → добавляй вес гантелей'
+                weight: '+4 кг (по 2 утяжелителя на лодыжки, гантели в руках)',
+                technique: ['Одна нога сзади на стуле/диване', 'Опускайся плавно (3 сек вниз, 1 сек пауза)', 'Колено передней ноги может выходить за носок', 'Спина прямая, упор на пятку передней ноги'],
+                progression: 'Сначала доведи до 3×12 на ногу, затем увеличивай вес гантелей'
             },
             {
-                name: 'Выпады', sets: '3×14 /ногу', rest: '60 сек',
+                name: 'Выпады (медленный темп)', sets: '3×10 /ногу', rest: '60 сек',
                 muscles: 'ягодицы (акцент), квадрицепсы, стабилизаторы',
-                weight: '10+ кг в каждой руке, или без веса с медленным темпом (3 сек вниз)',
-                technique: ['Широкий шаг вперёд', 'Заднее колено почти касается пола', 'Переднее колено не выходит далеко за носок', 'Корпус вертикально'],
-                progression: 'С гантелями в руках (когда будут тяжелее)'
+                weight: '10+ кг в каждой руке. Темп: 3 сек вниз, 1 сек пауза внизу',
+                technique: ['Широкий шаг вперёд', 'Заднее колено почти касается пола', 'Переднее колено не выходит далеко за носок', 'Корпус вертикально', 'Опускайся медленно — 3 секунды вниз!'],
+                progression: 'Доведи до 3×12, затем увеличивай вес гантелей'
             },
             {
                 name: 'Румынская тяга (Romanian Deadlift)', sets: '3×12', rest: '90 сек',
@@ -470,19 +473,20 @@ const TRAINING = {
                 progression: 'Увеличивай вес гантелей'
             },
             {
-                name: 'Ягодичный мостик', sets: '3×18', rest: '60 сек',
+                name: 'Ягодичный мостик (одноногий)', sets: '3×10 /ногу', rest: '60 сек',
                 muscles: 'ягодицы, задняя поверхность бедра, мышцы тазового дна',
-                weight: 'Одноногий вариант без веса, или 15+ кг на таз. Пауза 3 сек вверху',
-                technique: ['Лёжа на спине, ноги согнуты, стопы на полу', 'Поднимай таз, сжимая ягодицы в верхней точке (задержись на 3 сек)', 'Не прогибай поясницу чрезмерно'],
+                weight: 'Без доп. веса — одна нога удваивает нагрузку. Пауза 3 сек вверху',
+                technique: ['Лёжа на спине, одна нога согнута (стопа на полу), вторая прямая в воздухе', 'Поднимай таз на одной ноге, сжимая ягодицу в верхней точке (задержись на 3 сек)', 'Не прогибай поясницу чрезмерно', 'Если слишком тяжело — делай на двух ногах с гантелью 15 кг на тазу'],
                 alt: 'Это упражнение напрямую улучшает кровообращение в тазовой области (Dorey et al., 2005)',
-                progression: 'Одноногий вариант → с тяжёлой гантелью на тазу'
+                progression: 'Доведи до 3×12 на ногу, затем добавь гантель на таз'
             },
             {
-                name: 'Подъём ног в висе на турнике', sets: '3×13', rest: '60 сек',
+                name: 'Подъём ног в висе на турнике', sets: '3×10', rest: '60 сек',
                 muscles: 'прямая мышца живота, косые, сгибатели бедра',
+                weight: '+2-4 кг (утяжелители на лодыжки)',
                 technique: ['Виси на турнике, ноги вместе', 'Поднимай прямые ноги до параллели с полом (или выше)', 'Если слишком сложно — поднимай согнутые колени к груди', 'НЕ раскачивайся!'],
                 alt: 'Лучшее упражнение на пресс: ЭМГ-исследования показывают максимальную активацию',
-                progression: 'Прямые ноги → ноги к перекладине → с утяжелителями'
+                progression: 'С утяжелителями рычаг прямых ног сожжет пресс. Доведи до 3×12.'
             },
             {
                 name: 'Планка', sets: '3×45 сек', rest: '45 сек',
@@ -491,10 +495,10 @@ const TRAINING = {
                 progression: 'Увеличивай время → переходи на боковую планку'
             },
             {
-                name: '⭐ Подъёмы на носки', sets: '3×23', rest: '—',
+                name: '⭐ Подъёмы на носки (одноногие)', sets: '3×12 /ногу', rest: '30 сек',
                 muscles: 'икроножные, камбаловидные', optional: true,
-                technique: ['Стоя на краю ступеньки, опускай и поднимай пятки на полную амплитуду'],
-                progression: 'Одноногий вариант → с гантелей'
+                technique: ['Стоя на одной ноге на краю ступеньки', 'Опускай пятку максимально вниз (полная растяжка)', 'Поднимайся на носок до упора (пауза 1 сек вверху)', 'Держись рукой за стену для баланса'],
+                progression: 'Доведи до 3×15, затем возьми гантель в свободную руку'
             }
         ],
         cooldown: ['Растяжка квадрицепса — стоя, подтяни пятку к ягодице — 30 сек', 'Растяжка задней поверхности бедра — наклон вперёд с прямыми ногами — 30 сек', 'Растяжка сгибателей бедра — выпад с коленом на полу, подай таз вперёд — 30 сек', 'Дыхание: вдох 4 сек → выдох 6 сек × 5 раз']
@@ -769,34 +773,34 @@ const TRAINING_INFO = {
 
 // ========== 6 СФЕР ЖИЗНИ ==========
 const SIX_SPHERES = [
-    { key: 'health',    label: '💪 Здоровье',  color: '#34d399' },
-    { key: 'mind',      label: '🧠 Ум',         color: '#60a5fa' },
-    { key: 'finance',   label: '💰 Финансы',    color: '#f0b932' },
-    { key: 'relations', label: '❤️ Связи',      color: '#f472b6' },
-    { key: 'purpose',   label: '🎯 Цель',       color: '#a855f7' },
-    { key: 'inner',     label: '😌 Внутреннее', color: '#22d3ee' }
+    { key: 'health', label: '💪 Здоровье', color: '#34d399' },
+    { key: 'mind', label: '🧠 Ум', color: '#60a5fa' },
+    { key: 'finance', label: '💰 Финансы', color: '#f0b932' },
+    { key: 'relations', label: '❤️ Связи', color: '#f472b6' },
+    { key: 'purpose', label: '🎯 Цель', color: '#a855f7' },
+    { key: 'inner', label: '😌 Внутреннее', color: '#22d3ee' }
 ];
 const QUEST_TO_SPHERE = {
-    activity:'health', cold:'health', nutrition:'health', posture:'health',
-    cooldown:'health', stretching:'health', sunlight:'health',
-    code:'mind', language:'mind', focus90:'mind', read:'mind',
-    budget:'finance',
-    reflect:'inner', meditate:'inner', nodopamine:'inner',
+    activity: 'health', cold: 'health', nutrition: 'health', posture: 'health',
+    cooldown: 'health', stretching: 'health', sunlight: 'health',
+    code: 'mind', language: 'mind', focus90: 'mind', read: 'mind',
+    budget: 'finance',
+    reflect: 'inner', meditate: 'inner', nodopamine: 'inner',
 };
-const STAT_TO_SPHERE = { str:'health', end:'health', int:'mind', wis:'inner', dsc:'purpose' };
+const STAT_TO_SPHERE = { str: 'health', end: 'health', int: 'mind', wis: 'inner', dsc: 'purpose' };
 
 function getSphereScores() {
     // Считаем: был ли хотя бы 1 квест из сферы в этот день (0 или 1 за день)
     // Максимум = 7 дней = 100%
-    const dayScores = { health:0, mind:0, finance:0, relations:0, purpose:0, inner:0 };
+    const dayScores = { health: 0, mind: 0, finance: 0, relations: 0, purpose: 0, inner: 0 };
     for (let i = 0; i < 7; i++) {
         const d = new Date(); d.setDate(d.getDate() - i);
-        const ds = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        const ds = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
         const dd = data.days[ds]; if (!dd) continue;
         const touched = new Set();
         // Считаем каждую сферу как "выполнена за день" если хоть один квест из неё сделан
-        [...(dd.main||[]),...(dd.bonus||[])].forEach(qid => {
-            const sp = QUEST_TO_SPHERE[qid] || STAT_TO_SPHERE[(data.mainQuests.find(q=>q.id===qid)||{}).stat||''];
+        [...(dd.main || []), ...(dd.bonus || [])].forEach(qid => {
+            const sp = QUEST_TO_SPHERE[qid] || STAT_TO_SPHERE[(data.mainQuests.find(q => q.id === qid) || {}).stat || ''];
             if (sp) touched.add(sp);
         });
         // Если день выполнен — цель тоже засчитывается
@@ -805,14 +809,14 @@ function getSphereScores() {
     }
     // Финансы и связи из недельного разбора
     try {
-        const gd = JSON.parse(localStorage.getItem('arise_goals')||'{}');
+        const gd = JSON.parse(localStorage.getItem('arise_goals') || '{}');
         const now = new Date(), y = now.getFullYear();
-        const mon = new Date(now); mon.setDate(mon.getDate()-((mon.getDay()+6)%7));
-        const wk = `${y}-W${String(Math.ceil((((mon-new Date(y,0,1))/86400000)+1)/7)).padStart(2,'0')}`;
-        const rev = (gd.reviews||[]).find(r=>r.week===wk);
+        const mon = new Date(now); mon.setDate(mon.getDate() - ((mon.getDay() + 6) % 7));
+        const wk = `${y}-W${String(Math.ceil((((mon - new Date(y, 0, 1)) / 86400000) + 1) / 7)).padStart(2, '0')}`;
+        const rev = (gd.reviews || []).find(r => r.week === wk);
         if (rev && rev.finance) dayScores.finance = Math.max(dayScores.finance, 4);
         if (rev && rev.relations) dayScores.relations = Math.max(dayScores.relations, 4);
-    } catch(e){}
+    } catch (e) { }
     const result = {};
     // 7 дней = 100%, строго не больше
     SIX_SPHERES.forEach(s => { result[s.key] = Math.min(100, Math.round((dayScores[s.key] / 7) * 100)); });
@@ -828,39 +832,39 @@ function renderSphereRadar() {
     canvas.height = Math.round(displayW * 0.72);
     const ctx = canvas.getContext('2d');
     const W = canvas.width, H = canvas.height;
-    const cx = W/2, cy = H/2, R = Math.min(cx,cy)-28, N = SIX_SPHERES.length;
+    const cx = W / 2, cy = H / 2, R = Math.min(cx, cy) - 28, N = SIX_SPHERES.length;
     const scores = getSphereScores();
-    ctx.clearRect(0,0,W,H);
-    for (let lv=1; lv<=4; lv++) {
-        const r=R*lv/4; ctx.beginPath();
-        for (let i=0;i<N;i++){const a=(Math.PI*2*i/N)-Math.PI/2;i===0?ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));}
-        ctx.closePath(); ctx.strokeStyle='rgba(148,108,255,0.13)'; ctx.lineWidth=1; ctx.stroke();
+    ctx.clearRect(0, 0, W, H);
+    for (let lv = 1; lv <= 4; lv++) {
+        const r = R * lv / 4; ctx.beginPath();
+        for (let i = 0; i < N; i++) { const a = (Math.PI * 2 * i / N) - Math.PI / 2; i === 0 ? ctx.moveTo(cx + r * Math.cos(a), cy + r * Math.sin(a)) : ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a)); }
+        ctx.closePath(); ctx.strokeStyle = 'rgba(148,108,255,0.13)'; ctx.lineWidth = 1; ctx.stroke();
     }
-    for (let i=0;i<N;i++){
-        const a=(Math.PI*2*i/N)-Math.PI/2;
-        ctx.beginPath();ctx.moveTo(cx,cy);ctx.lineTo(cx+R*Math.cos(a),cy+R*Math.sin(a));
-        ctx.strokeStyle='rgba(148,108,255,0.15)';ctx.lineWidth=1;ctx.stroke();
+    for (let i = 0; i < N; i++) {
+        const a = (Math.PI * 2 * i / N) - Math.PI / 2;
+        ctx.beginPath(); ctx.moveTo(cx, cy); ctx.lineTo(cx + R * Math.cos(a), cy + R * Math.sin(a));
+        ctx.strokeStyle = 'rgba(148,108,255,0.15)'; ctx.lineWidth = 1; ctx.stroke();
     }
     ctx.beginPath();
-    for (let i=0;i<N;i++){
-        const a=(Math.PI*2*i/N)-Math.PI/2, val=Math.max(0.05,(scores[SIX_SPHERES[i].key]||0)/100), r=R*val;
-        i===0?ctx.moveTo(cx+r*Math.cos(a),cy+r*Math.sin(a)):ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));
+    for (let i = 0; i < N; i++) {
+        const a = (Math.PI * 2 * i / N) - Math.PI / 2, val = Math.max(0.05, (scores[SIX_SPHERES[i].key] || 0) / 100), r = R * val;
+        i === 0 ? ctx.moveTo(cx + r * Math.cos(a), cy + r * Math.sin(a)) : ctx.lineTo(cx + r * Math.cos(a), cy + r * Math.sin(a));
     }
-    ctx.closePath(); ctx.fillStyle='rgba(168,85,247,0.18)'; ctx.fill();
-    ctx.strokeStyle='rgba(168,85,247,0.7)'; ctx.lineWidth=2; ctx.stroke();
-    for (let i=0;i<N;i++){
-        const a=(Math.PI*2*i/N)-Math.PI/2, val=Math.max(0.05,(scores[SIX_SPHERES[i].key]||0)/100);
-        const r=R*val, px=cx+r*Math.cos(a), py=cy+r*Math.sin(a);
-        ctx.beginPath();ctx.arc(px,py,4,0,Math.PI*2);ctx.fillStyle=SIX_SPHERES[i].color;ctx.fill();
-        const lx=cx+(R+18)*Math.cos(a), ly=cy+(R+18)*Math.sin(a);
-        ctx.font='13px serif';
-        ctx.textAlign=lx<cx-5?'right':lx>cx+5?'left':'center';
-        ctx.textBaseline=ly<cy-5?'bottom':ly>cy+5?'top':'middle';
-        ctx.fillStyle=SIX_SPHERES[i].color;
-        ctx.fillText(SIX_SPHERES[i].label.split(' ')[0],lx,ly);
+    ctx.closePath(); ctx.fillStyle = 'rgba(168,85,247,0.18)'; ctx.fill();
+    ctx.strokeStyle = 'rgba(168,85,247,0.7)'; ctx.lineWidth = 2; ctx.stroke();
+    for (let i = 0; i < N; i++) {
+        const a = (Math.PI * 2 * i / N) - Math.PI / 2, val = Math.max(0.05, (scores[SIX_SPHERES[i].key] || 0) / 100);
+        const r = R * val, px = cx + r * Math.cos(a), py = cy + r * Math.sin(a);
+        ctx.beginPath(); ctx.arc(px, py, 4, 0, Math.PI * 2); ctx.fillStyle = SIX_SPHERES[i].color; ctx.fill();
+        const lx = cx + (R + 18) * Math.cos(a), ly = cy + (R + 18) * Math.sin(a);
+        ctx.font = '13px serif';
+        ctx.textAlign = lx < cx - 5 ? 'right' : lx > cx + 5 ? 'left' : 'center';
+        ctx.textBaseline = ly < cy - 5 ? 'bottom' : ly > cy + 5 ? 'top' : 'middle';
+        ctx.fillStyle = SIX_SPHERES[i].color;
+        ctx.fillText(SIX_SPHERES[i].label.split(' ')[0], lx, ly);
     }
-    const leg=document.getElementById('spheres-legend');
-    if(leg) leg.innerHTML=SIX_SPHERES.map(s=>`<span style="font-size:0.68rem;color:${s.color};background:${s.color}18;border:1px solid ${s.color}38;padding:2px 7px;border-radius:20px;">${s.label} <b>${scores[s.key]||0}%</b></span>`).join('');
+    const leg = document.getElementById('spheres-legend');
+    if (leg) leg.innerHTML = SIX_SPHERES.map(s => `<span style="font-size:0.68rem;color:${s.color};background:${s.color}18;border:1px solid ${s.color}38;padding:2px 7px;border-radius:20px;">${s.label} <b>${scores[s.key] || 0}%</b></span>`).join('');
 }
 
 
@@ -882,7 +886,7 @@ function loadData() {
         } else if (d.bonusQuests.length > 3) {
             d.bonusQuests = d.bonusQuests.slice(0, 3);
         }
-        
+
         // Force flush for old users on the new system
         if (!d.migratedBonusPool) {
             d.bonusQuests = [];
@@ -936,7 +940,7 @@ function getDayData(date) {
         data.lastActiveDay = date;
         // Auto-select 2 random bonus quests for the day
         const shuffled = [...ALL_BONUS_QUESTS].sort(() => 0.5 - Math.random());
-        data.bonusQuests = shuffled.slice(0, 2).map(q => ({...q})); 
+        data.bonusQuests = shuffled.slice(0, 2).map(q => ({ ...q }));
         saveData();
     }
     if (!data.days[date]) {
@@ -965,16 +969,16 @@ function calcStreak() {
     const todayStr = getToday();
     const todayData = data.days[todayStr];
     const mainCount = data.mainQuests.length;
-    
+
     if (todayData && (todayData.isRestDay || (todayData.main && todayData.main.length === mainCount))) {
         streak = 1;
     }
-    
+
     let checkDate = new Date(today);
     checkDate.setDate(checkDate.getDate() - 1);
     let freezesUsed = 0;
     const MAX_FREEZES = 1; // Защитная заморозка на 1 пропущенный день
-    
+
     while (true) {
         const ds = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
         const dData = data.days[ds];
@@ -1023,7 +1027,15 @@ function calcDaysInSystem() {
 
 function getWeekNumber() {
     const start = new Date(data.startDate || getToday());
-    return Math.floor((new Date() - start) / 604800000);
+    start.setHours(0, 0, 0, 0); // Обнуляем часы
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0); // Обнуляем часы сегодня
+
+    const diffTime = today - start;
+    const diffDays = Math.floor(diffTime / 86400000);
+
+    return Math.floor(diffDays / 7);
 }
 
 function getMultiplier(streak) {
@@ -1041,9 +1053,9 @@ function checkPenalty() {
     yesterday.setDate(yesterday.getDate() - 1);
     const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
     const yData = data.days[yStr];
-    
+
     if (yData && (yData.done || yData.isRestDay)) return data.penalty || false;
-    
+
     if (yData && yData.main && yData.main.length < Math.ceil(data.mainQuests.length / 2)) {
         if (yData.main.length > 0 || yData.bonus.length > 0) return true;
     }
@@ -1061,15 +1073,15 @@ function switchPage(page) {
 
     // 2. Hide all pages, show the target one
     document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-    
+
     const targetPage = document.getElementById(`page-${page}`);
     if (targetPage) targetPage.classList.add('active');
 
     // 3. Reset edit states if navigating away
-    editModeMain = false; 
+    editModeMain = false;
     editModeBonus = false;
     updateEditButtons();
-    
+
     // 4. Refresh data on the new page
     refreshPage(page);
 }
@@ -1167,7 +1179,7 @@ function updateDashboard() {
 
     const streak = calcStreak();
     document.getElementById('streak-count').textContent = streak;
-    
+
     // Streak Shield indicator (shows freeze protection status)
     const streakContainer = document.getElementById('streak-count') ? document.getElementById('streak-count').parentElement : null;
     let shieldEl = document.getElementById('streak-shield');
@@ -1184,7 +1196,7 @@ function updateDashboard() {
     } else {
         shieldEl.textContent = '';
     }
-    
+
     // Multiplier display
     const mult = getMultiplier(streak);
     const multSpan = document.getElementById('streak-mult');
@@ -1199,7 +1211,7 @@ function updateDashboard() {
             multSpan.style.color = 'var(--text-dim)';
         }
     }
-    
+
     if (streak > data.bestStreak) { data.bestStreak = streak; saveData(); }
 
     const today = getToday();
@@ -1221,28 +1233,28 @@ function updateDashboard() {
     const startOfWeekObj = new Date(todayDate);
     startOfWeekObj.setDate(todayDate.getDate() - dayOfWeek);
     const mondayStr = `${startOfWeekObj.getFullYear()}-${String(startOfWeekObj.getMonth() + 1).padStart(2, '0')}-${String(startOfWeekObj.getDate()).padStart(2, '0')}`;
-    
+
     // Reset global counter if a new week started
     if (!data.weeklyResetDate || data.weeklyResetDate !== mondayStr) {
         data.weeklyCount = 0;
         data.weeklyResetDate = mondayStr;
         saveData();
     }
-    
+
     // Update weekly progress text and generate 7 slots
     document.getElementById('weekly-progress').textContent = `${data.weeklyCount}/7`;
-    
+
     // Generate Interactive Energy Slots
     const slotsContainer = document.getElementById('weekly-slots');
     if (slotsContainer) {
         slotsContainer.innerHTML = '';
-        
+
         for (let i = 0; i < 7; i++) {
             const slot = document.createElement('div');
             // If i is less than the current count, the slot is filled
             const isActive = i < data.weeklyCount;
             slot.className = `weekly-slot ${isActive ? 'active' : ''}`;
-            
+
             slot.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (isActive) {
@@ -1264,7 +1276,7 @@ function updateDashboard() {
                 saveData();
                 updateDashboard();
             });
-            
+
             slotsContainer.appendChild(slot);
         }
     }
@@ -1282,7 +1294,7 @@ function _clearPenalty(type) {
     data.penalty = false;
     const yesterday = new Date();
     yesterday.setDate(yesterday.getDate() - 1);
-    const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth()+1).padStart(2,'0')}-${String(yesterday.getDate()).padStart(2,'0')}`;
+    const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
     if (!data.days[yStr]) data.days[yStr] = { main: [], bonus: [], points: 0, done: true };
     else data.days[yStr].done = true;
     saveData();
@@ -1317,13 +1329,13 @@ function renderQuestItem(quest, isBonus, isHardModeMain) {
     const div = document.createElement('div');
     div.className = `quest-item${isBonus ? ' bonus' : ''}`;
     div.dataset.quest = quest.id;
-    
+
     let bonusHint = '';
-    
+
     // Check Phase Multiplier to show a hint on the card
     const todayData = getDayData(getToday());
     const phaseMult = 1.0;
-    
+
     if (isHardModeMain) {
         bonusHint = `<div style="font-size: 0.65rem; color: var(--yellow); margin-top:2px;">💼 x2 Опыта</div>`;
     } else if (phaseMult > 1.0) {
@@ -1334,7 +1346,7 @@ function renderQuestItem(quest, isBonus, isHardModeMain) {
 
     let infoBtnHtml = quest.hint ? `<button class="quest-hint-btn" type="button">Подробнее ▸</button>` : '';
     const _spKey = QUEST_TO_SPHERE[quest.id] || STAT_TO_SPHERE[quest.stat] || '';
-    const _sp = SIX_SPHERES.find(s=>s.key===_spKey);
+    const _sp = SIX_SPHERES.find(s => s.key === _spKey);
     const sphereBadge = _sp ? `<span style="font-size:0.6rem;color:${_sp.color};background:${_sp.color}18;border:1px solid ${_sp.color}38;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">${_sp.label.split(' ')[0]}</span>` : '';
 
     div.innerHTML = `
@@ -1350,7 +1362,7 @@ function renderQuestItem(quest, isBonus, isHardModeMain) {
             <button class="btn-quest-delete">🗑️</button>
         </div>
     `;
-    
+
     // Bind Info Button Click
     const infoBtn = div.querySelector('.quest-hint-btn');
     if (infoBtn) {
@@ -1599,7 +1611,7 @@ document.getElementById('btn-decline-challenge').addEventListener('click', async
                 todayData.bonus.splice(idx, 1);
                 data.totalPoints = Math.max(0, data.totalPoints - 2);
                 const q = (data.bonusQuests || []).find(bq => bq.id === id);
-                if (q && q.stat) data.stats[q.stat] = Math.max(0, (data.stats[q.stat]||0) - 1);
+                if (q && q.stat) data.stats[q.stat] = Math.max(0, (data.stats[q.stat] || 0) - 1);
             }
         });
     }
@@ -1688,27 +1700,27 @@ function updateMatrix() {
     const container = document.getElementById('matrix-container');
     if (!container) return;
     container.innerHTML = '';
-    
+
     const todayStr = getToday();
-    
+
     // Find the end of the current week (Sunday)
     let endDate = new Date();
     let dow = endDate.getDay();
     let daysToSunday = dow === 0 ? 0 : 7 - dow;
     endDate.setDate(endDate.getDate() + daysToSunday);
-    
+
     const WEEKS = 30; // ~7 months of history (fits nice, looks dense)
     const totalDays = WEEKS * 7;
-    
+
     let currentDate = new Date(endDate);
     currentDate.setDate(currentDate.getDate() - totalDays + 1);
-    
+
     for (let i = 0; i < totalDays; i++) {
-        const dStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth()+1).padStart(2,'0')}-${String(currentDate.getDate()).padStart(2,'0')}`;
-        
+        const dStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
+
         const box = document.createElement('div');
         box.className = 'matrix-box empty';
-        
+
         if (dStr <= todayStr) {
             const dd = data.days[dStr];
             if (dd) {
@@ -1721,12 +1733,12 @@ function updateMatrix() {
                 }
             }
         }
-        
+
         // Quick format for tooltip (e.g. "14 Марта")
-        const months = ['Янв','Фев','Мар','Апр','Май','Июн','Июл','Авг','Сен','Окт','Ноя','Дек'];
+        const months = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
         const mName = months[currentDate.getMonth()];
         box.title = `${currentDate.getDate()} ${mName}`;
-        
+
         container.appendChild(box);
         currentDate.setDate(currentDate.getDate() + 1);
     }
@@ -2012,7 +2024,7 @@ document.getElementById('btn-add-habit').addEventListener('click', () => {
     document.getElementById('habit-add-modal').classList.remove('hidden');
     setTimeout(() => document.getElementById('habit-inp-name').focus(), 80);
 });
-window._saveHabitModal = function() {
+window._saveHabitModal = function () {
     const name = document.getElementById('habit-inp-name').value.trim();
     if (!name) return;
     habits.list.push({ id: 'h' + Date.now().toString(36), name });
@@ -2029,13 +2041,13 @@ function renderCodexReference() {
     const allRef = [...CODEX_REFERENCE];
     // Добавляем все расширенные разделы
     Object.values(UNLOCKABLE_CODEX).forEach(u => allRef.push(u));
-    
+
     // Inject unlocks
-    
-    
-    
-    
-    
+
+
+
+
+
 
     allRef.forEach(cat => {
         const isUnlock = cat.title.includes('[');
@@ -2064,7 +2076,7 @@ function renderTraining(day) {
         day = PROGRAMS_CONFIG[currentProgram].days[0];
     }
     currentTrainDay = day;
-    
+
     const container = document.getElementById('train-content');
     const tabsContainer = document.getElementById('train-tabs');
     const programSelector = document.getElementById('train-program-selector');
@@ -2074,7 +2086,7 @@ function renderTraining(day) {
     let selectorHtml = '';
     Object.entries(PROGRAMS_CONFIG).forEach(([id, config]) => {
         const isLocked = config.unlock && (!data.unlockedContent || !data.unlockedContent.includes(config.unlock));
-        
+
         if (isLocked) {
             selectorHtml += `<button class="program-chip locked" data-locked="true" data-program="${id}">🔒 ${config.name}</button>`;
         } else {
@@ -2102,7 +2114,7 @@ function renderTraining(day) {
     // 2. Render Tabs for current program
     let tabsHtml = '';
     const visibleDays = [...PROGRAMS_CONFIG[currentProgram].days, 'info'];
-    
+
     visibleDays.forEach(d => {
         const label = d === 'info' ? '📖' : d.toUpperCase();
         tabsHtml += `<button class="train-tab ${currentTrainDay === d ? 'active' : ''}" data-day="${d}">${label}</button>`;
@@ -2267,7 +2279,7 @@ document.getElementById('import-file').addEventListener('change', (e) => {
 
 // ========== PWA ==========
 if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.register('sw.js').catch(() => {});
+    navigator.serviceWorker.register('sw.js').catch(() => { });
 }
 
 // ========== CHEST ==========
@@ -2277,12 +2289,12 @@ document.getElementById('chest-closed').addEventListener('click', () => {
     opened.classList.remove('hidden');
     opened.style.display = 'flex';
     document.getElementById('chest-hint').classList.add('hidden');
-    
+
     const rand = Math.random();
     let rewardText = '';
-    
+
     const currentMult = getMultiplier(calcStreak());
-    
+
     if (rand < 0.5) {
         const reward = 5 * currentMult;
         data.totalPoints += reward;
@@ -2297,15 +2309,15 @@ document.getElementById('chest-closed').addEventListener('click', () => {
         data.stats[randStat] = (data.stats[randStat] || 0) + 1;
         rewardText = `+1 ${STAT_NAMES[randStat].split('—')[0].trim()} 🔋`;
     }
-    
+
     const todayData = getDayData(getToday());
     todayData.chestOpened = true;
-    
+
     document.getElementById('chest-reward-text').innerText = rewardText;
     const closeBtn = document.getElementById('chest-close-btn');
     closeBtn.classList.remove('hidden');
     closeBtn.style.display = 'block';
-    
+
     saveData();
     updateDashboard();
 });
@@ -2328,7 +2340,7 @@ document.getElementById('chest-close-btn').addEventListener('click', () => {
                 old.unlockedKeys = [];
                 localStorage.setItem('hunterSystem', JSON.stringify(old));
             }
-        } catch(e) {}
+        } catch (e) { }
     }
 })();
 
@@ -2353,18 +2365,18 @@ function renderStoicDaily() {
     if (!card) return;
     const maxim = getStoicToday();
     const today = getToday();
-    
+
     // Load stoic data
     const stoicData = JSON.parse(localStorage.getItem('stoicData') || '{}');
     const todayDone = stoicData.completedDays && stoicData.completedDays.includes(today);
     const streak = calcStoicStreak(stoicData);
-    
+
     document.getElementById('stoic-daily-text').textContent = maxim.text;
     document.getElementById('stoic-daily-author').textContent = `— ${maxim.author}`;
     document.getElementById('stoic-daily-source').textContent = maxim.source;
     document.getElementById('stoic-practice-hint').textContent = maxim.practice;
     document.getElementById('stoic-streak-badge').textContent = `${streak} дней`;
-    
+
     const doneBtn = document.getElementById('btn-stoic-done');
     if (todayDone) {
         doneBtn.style.background = 'rgba(52,211,153,0.3)';
@@ -2375,7 +2387,7 @@ function renderStoicDaily() {
         doneBtn.disabled = false;
         doneBtn.textContent = '✓ Применил сегодня';
     }
-    
+
     // Apply visual card state
     if (todayDone) {
         card.style.borderColor = 'rgba(52,211,153,0.4)';
@@ -2388,7 +2400,7 @@ function calcStoicStreak(stoicData) {
     let streak = 0;
     let checkDate = new Date();
     const todayStr = getToday();
-    
+
     if (days[0] === todayStr) {
         streak = 1;
         checkDate.setDate(checkDate.getDate() - 1);
@@ -2401,9 +2413,9 @@ function calcStoicStreak(stoicData) {
         checkDate.setDate(checkDate.getDate() - 1);
         streak = 1;
     }
-    
+
     for (let i = (days[0] === todayStr ? 1 : 1); i < days.length; i++) {
-        const expected = `${checkDate.getFullYear()}-${String(checkDate.getMonth()+1).padStart(2,'0')}-${String(checkDate.getDate()).padStart(2,'0')}`;
+        const expected = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
         if (days[i] === expected) {
             streak++;
             checkDate.setDate(checkDate.getDate() - 1);
@@ -2444,21 +2456,21 @@ document.getElementById('examen-save').addEventListener('click', () => {
     const good = document.getElementById('examen-good').value.trim();
     const improve = document.getElementById('examen-improve').value.trim();
     const plan = document.getElementById('examen-plan').value.trim();
-    
+
     if (!good && !improve && !plan) {
         document.getElementById('examen-overlay').classList.add('hidden');
         return;
     }
-    
+
     const today = getToday();
     const stoicData = JSON.parse(localStorage.getItem('stoicData') || '{ "completedDays": [], "examens": {} }');
     if (!stoicData.examens) stoicData.examens = {};
     stoicData.examens[today] = { good, improve, plan, maxim: getStoicToday().text };
     if (!stoicData.completedDays) stoicData.completedDays = [];
     if (!stoicData.completedDays.includes(today)) stoicData.completedDays.push(today);
-    
+
     localStorage.setItem('stoicData', JSON.stringify(stoicData));
-    
+
     // Reward: +5 WIS for evening examen
     const examKey = `examBonus_${today}`;
     if (!localStorage.getItem(examKey)) {
@@ -2467,12 +2479,12 @@ document.getElementById('examen-save').addEventListener('click', () => {
         localStorage.setItem(examKey, '1');
         showPointsPopup('+5 🌙');
     }
-    
+
     document.getElementById('examen-overlay').classList.add('hidden');
     document.getElementById('examen-good').value = '';
     document.getElementById('examen-improve').value = '';
     document.getElementById('examen-plan').value = '';
-    
+
     showModal('🌙 ЭКЗАМЕН ЗАВЕРШЁН', 'Марк Аврелий делал это каждый день.\n\nКаждый вечерний экзамен — это нейронная тренировка стоического мышления.\n\n+5 очков получено.');
     renderStoicDaily();
 });
@@ -2483,44 +2495,44 @@ document.getElementById('examen-save').addEventListener('click', () => {
 // ========== HABITS 2.0 WITH TRIGGERS ==========
 // Upgraded habit definitions with trigger + ritual
 const DEFAULT_HABITS_V2 = [
-    { 
-        id: 'watermorning', 
+    {
+        id: 'watermorning',
         name: '💧 Гидратация: Стакан воды сразу после пробуждения',
         trigger: 'После того как встал с кровати',
         ritual: 'Иди на кухню, налей стакан воды, выпей стоя'
     },
-    { 
-        id: 'nodopamine', 
+    {
+        id: 'nodopamine',
         name: '🧠 Дофаминовый щит: Утро без телефона (мин. 15 мин)',
         trigger: 'После пробуждения, ДО проверки телефона',
         ritual: 'Положи телефон экраном вниз. Встань, умойся, выпей воды — потом телефон'
     },
-    { 
-        id: 'mindfuleating', 
+    {
+        id: 'mindfuleating',
         name: '🍽️ Осознанное питание: Без перекусов на автопилоте',
         trigger: 'Когда хочешь что-то перекусить',
         ritual: 'Спроси: "Я голоден или скучаю/стрессую?" Если не голоден — выпей воды'
     },
-    { 
-        id: 'movement', 
+    {
+        id: 'movement',
         name: '🚶 Движение: 30+ мин активности (прогулка/разминка)',
         trigger: 'После обеда или в начале вечера',
         ritual: 'Надень кроссовки (это триггер) → выйди → не думай, просто иди'
     },
-    { 
-        id: 'reflect', 
+    {
+        id: 'reflect',
         name: '📝 Рефлексия: 3 итога дня + план на завтра',
         trigger: 'За 30-60 мин до сна',
         ritual: 'Открой блокнот/заметки. 3 итога. 3 задачи завтра. 1 благодарность.'
     },
-    { 
-        id: 'sunset', 
+    {
+        id: 'sunset',
         name: '🌙 Цифровой закат: 30 мин до сна без экранов',
         trigger: 'За 30 мин до запланированного времени сна',
         ritual: 'Поставь "Не беспокоить". Отложи телефон. Читай книгу или медитируй.'
     },
-    { 
-        id: 'tidyup', 
+    {
+        id: 'tidyup',
         name: '🧹 Порядок: 5 мин уборки / наведения порядка',
         trigger: 'Перед тем как сесть за работу утром',
         ritual: 'Убери стол, застели кровать. Чистое пространство = чистый ум.'
@@ -2532,7 +2544,7 @@ function initHabitsV2() {
     const storedHabits = JSON.parse(localStorage.getItem('ariseHabits') || '{}');
     if (!storedHabits.v2migrated && storedHabits.list) {
         // Merge existing custom habits with v2 defaults
-        const customHabits = storedHabits.list.filter(h => 
+        const customHabits = storedHabits.list.filter(h =>
             !DEFAULT_HABITS_V2.some(d => d.id === h.id)
         );
         storedHabits.list = [...DEFAULT_HABITS_V2, ...customHabits];
@@ -2593,7 +2605,7 @@ function calcHabitStreak() {
     let streak = 0;
     let checkDate = new Date();
     for (let i = 0; i < 365; i++) {
-        const ds = `${checkDate.getFullYear()}-${String(checkDate.getMonth()+1).padStart(2,'0')}-${String(checkDate.getDate()).padStart(2,'0')}`;
+        const ds = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
         const key = `habitStreak_${ds}`;
         if (localStorage.getItem(key)) {
             streak++;
@@ -2605,7 +2617,7 @@ function calcHabitStreak() {
     return streak;
 }
 
-window.showHabitDetail = function(id) {
+window.showHabitDetail = function (id) {
     const habit = habits.list.find(h => h.id === id);
     if (!habit) return;
     const content = `${habit.trigger ? `⚡ КОГДА: ${habit.trigger}\n\n` : ''}${habit.ritual ? `🔄 КАК: ${habit.ritual}` : ''}`;
@@ -2626,15 +2638,15 @@ function init() {
         data.startDate = today;
         saveData();
     }
-    
+
     // Initialize upgraded habits
     initHabitsV2();
-    
+
     // Rotate bonus quests daily
     if (data.lastBonusRotation !== today) {
         // Keep custom quests (IDs starting with 'q')
         const customQuests = (data.bonusQuests || []).filter(q => q.id.startsWith('q'));
-        
+
         // Pick 4 random quests using today's date as a seed
         const seed = new Date(today).getTime();
         const rand = (s) => {
@@ -2643,10 +2655,10 @@ function init() {
             t ^= t + Math.imul(t ^ t >>> 7, t | 61);
             return ((t ^ t >>> 14) >>> 0) / 4294967296;
         };
-        
+
         const pool = [...ALL_BONUS_QUESTS];
         pool.sort((a, b) => rand(seed + a.id.charCodeAt(0)) - rand(seed + b.id.charCodeAt(0)));
-        
+
         data.bonusQuests = [...pool.slice(0, 2), ...customQuests];
         data.lastBonusRotation = today;
         saveData();
@@ -2655,7 +2667,7 @@ function init() {
     updateDashboard();
     renderQuests();
     updateQuestStates();
-    
+
     renderStoicDaily();
     renderKeys();
     updateStats();
@@ -2742,9 +2754,9 @@ init();
 // ============================================================
 
 // ===== ХРАНИЛИЩЕ =====
-const _loadGoals = () => { try { return JSON.parse(localStorage.getItem('ariseGoals') || 'null') || { goals:[], reviews:[] }; } catch(e){ return {goals:[],reviews:[]}; } };
+const _loadGoals = () => { try { return JSON.parse(localStorage.getItem('ariseGoals') || 'null') || { goals: [], reviews: [] }; } catch (e) { return { goals: [], reviews: [] }; } };
 const _saveGoals = g => localStorage.setItem('ariseGoals', JSON.stringify(g));
-const _loadAnime = () => { try { return JSON.parse(localStorage.getItem('ariseAnime') || 'null') || { list:[] }; } catch(e){ return {list:[]}; } };
+const _loadAnime = () => { try { return JSON.parse(localStorage.getItem('ariseAnime') || 'null') || { list: [] }; } catch (e) { return { list: [] }; } };
 const _saveAnime = a => localStorage.setItem('ariseAnime', JSON.stringify(a));
 
 let goalsData = _loadGoals();
@@ -2753,7 +2765,7 @@ let animeData = _loadAnime();
 // ===== НАВИГАЦИЯ =====
 // Расширяем refreshPage для goals
 const __origRefresh = refreshPage;
-window.refreshPage = function(page) {
+window.refreshPage = function (page) {
     __origRefresh(page);
     if (page === 'goals' || page === 'quests') renderGoalsPage();
 };
@@ -2763,21 +2775,21 @@ const _today = () => typeof getToday === 'function' ? getToday() : new Date().to
 
 function _daysLeft(ds) {
     if (!ds) return null;
-    const t = new Date(); t.setHours(0,0,0,0);
-    const d = new Date(ds); d.setHours(0,0,0,0);
+    const t = new Date(); t.setHours(0, 0, 0, 0);
+    const d = new Date(ds); d.setHours(0, 0, 0, 0);
     return Math.round((d - t) / 86400000);
 }
 function _fmtDate(ds) {
     if (!ds) return '';
     const d = new Date(ds);
-    const m = ['янв','фев','мар','апр','май','июн','июл','авг','сен','окт','ноя','дек'];
+    const m = ['янв', 'фев', 'мар', 'апр', 'май', 'июн', 'июл', 'авг', 'сен', 'окт', 'ноя', 'дек'];
     return `${d.getDate()} ${m[d.getMonth()]}`;
 }
 function _weekKey() {
     const n = new Date(), y = n.getFullYear();
     const s = new Date(y, 0, 1);
     const w = Math.ceil(((n - s) / 86400000 + s.getDay() + 1) / 7);
-    return `${y}-W${String(w).padStart(2,'0')}`;
+    return `${y}-W${String(w).padStart(2, '0')}`;
 }
 
 // ===== МОДАЛКИ =====
@@ -2799,7 +2811,7 @@ function _createModal(id, html) {
     for (let i = 1; i <= 10; i++) {
         const btn = document.createElement('button');
         btn.textContent = i; btn.dataset.s = i;
-        btn.style.cssText = `width:32px;height:32px;border-radius:7px;border:1px solid var(--border);background:${i===_reviewScore?'var(--purple)':'transparent'};color:${i===_reviewScore?'#fff':'var(--text-2)'};font-family:var(--font-d);font-weight:700;cursor:pointer;transition:all .15s;font-size:.88rem;`;
+        btn.style.cssText = `width:32px;height:32px;border-radius:7px;border:1px solid var(--border);background:${i === _reviewScore ? 'var(--purple)' : 'transparent'};color:${i === _reviewScore ? '#fff' : 'var(--text-2)'};font-family:var(--font-d);font-weight:700;cursor:pointer;transition:all .15s;font-size:.88rem;`;
         btn.onclick = () => {
             _reviewScore = i;
             row.querySelectorAll('button').forEach(b => {
@@ -2835,7 +2847,7 @@ function _renderMainTarget() {
     c.innerHTML = `
     <div class="goals-main-banner">
         <div style="font-size:.62rem;color:var(--purple);letter-spacing:3px;font-family:var(--font-d);margin-bottom:7px;">⚔️ ГЛАВНАЯ ЦЕЛЬ</div>
-        <div style="font-family:var(--font-d);font-size:1.15rem;font-weight:700;color:var(--text-1);margin-bottom:${g.why?'5px':'0'}">${g.name}</div>
+        <div style="font-family:var(--font-d);font-size:1.15rem;font-weight:700;color:var(--text-1);margin-bottom:${g.why ? '5px' : '0'}">${g.name}</div>
         ${g.why ? `<div style="font-size:.78rem;color:var(--text-2);font-style:italic;margin-bottom:9px;">"${g.why}"</div>` : '<div style="margin-bottom:9px;"></div>'}
         <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
             ${g.deadline ? `<span style="font-size:.78rem;color:${col};font-family:var(--font-d);font-weight:700;">${dlTxt} <span style="font-weight:400;color:var(--text-3);">${_fmtDate(g.deadline)}</span></span>` : ''}
@@ -2856,9 +2868,9 @@ function _renderGoalsList() {
         const dl = _daysLeft(g.deadline);
         const col = dl === null ? 'var(--text-3)' : dl < 0 ? 'var(--red)' : dl < 14 ? 'var(--yellow)' : 'var(--green)';
         const dlTxt = dl === null ? '' : dl > 0 ? `${dl} дн.` : dl === 0 ? '🔥 СЕГОДНЯ' : '❗';
-        const isMain = g.isMain || (!goalsData.goals.some(x=>x.isMain) && i === 0);
+        const isMain = g.isMain || (!goalsData.goals.some(x => x.isMain) && i === 0);
         const div = document.createElement('div');
-        div.className = `goal-card${isMain?' is-main':''}`;
+        div.className = `goal-card${isMain ? ' is-main' : ''}`;
         div.innerHTML = `
             <div style="display:flex;justify-content:space-between;align-items:flex-start;gap:8px;">
                 <div style="font-family:var(--font-d);font-size:.95rem;font-weight:700;color:var(--text-1);flex:1;">${g.name}</div>
@@ -2898,18 +2910,18 @@ function _renderReviewHistory() {
     const reviews = goalsData.reviews || [];
     if (!reviews.length) { c.innerHTML = ''; return; }
     c.innerHTML = `<div style="font-family:var(--font-d);font-size:.68rem;color:var(--text-3);letter-spacing:2px;margin-bottom:8px;">ПРОШЛЫЕ ОБЗОРЫ</div>` +
-        reviews.slice(0,4).map(r => `
+        reviews.slice(0, 4).map(r => `
         <div class="review-card" onclick="this.querySelector('.rb').style.display=this.querySelector('.rb').style.display==='block'?'none':'block'">
             <div style="display:flex;justify-content:space-between;align-items:center;">
                 <span style="font-family:var(--font-d);font-size:.82rem;color:var(--text-1);">${r.week}</span>
-                <span style="font-family:var(--font-d);font-weight:700;font-size:.9rem;color:${r.score>=7?'var(--green)':r.score>=5?'var(--yellow)':'var(--red)'};">${r.score}/10</span>
+                <span style="font-family:var(--font-d);font-weight:700;font-size:.9rem;color:${r.score >= 7 ? 'var(--green)' : r.score >= 5 ? 'var(--yellow)' : 'var(--red)'};">${r.score}/10</span>
             </div>
             <div class="rb" style="display:none;margin-top:9px;display:none;">
-                ${r.wins?`<div style="font-size:.77rem;color:var(--green);margin-bottom:5px;">✓ ${r.wins}</div>`:''}
-                ${r.blocks?`<div style="font-size:.77rem;color:var(--yellow);margin-bottom:5px;">⚡ ${r.blocks}</div>`:''}
-                ${r.change?`<div style="font-size:.77rem;color:var(--purple);margin-bottom:5px;">→ ${r.change}</div>`:''}
-                ${r.finance?`<div style="font-size:.77rem;color:var(--cyan);margin-bottom:5px;">💰 ${r.finance}</div>`:''}
-                ${r.relations?`<div style="font-size:.77rem;color:var(--pink);">❤️ ${r.relations}</div>`:''}
+                ${r.wins ? `<div style="font-size:.77rem;color:var(--green);margin-bottom:5px;">✓ ${r.wins}</div>` : ''}
+                ${r.blocks ? `<div style="font-size:.77rem;color:var(--yellow);margin-bottom:5px;">⚡ ${r.blocks}</div>` : ''}
+                ${r.change ? `<div style="font-size:.77rem;color:var(--purple);margin-bottom:5px;">→ ${r.change}</div>` : ''}
+                ${r.finance ? `<div style="font-size:.77rem;color:var(--cyan);margin-bottom:5px;">💰 ${r.finance}</div>` : ''}
+                ${r.relations ? `<div style="font-size:.77rem;color:var(--pink);">❤️ ${r.relations}</div>` : ''}
             </div>
         </div>`).join('');
 }
@@ -2923,7 +2935,7 @@ function _renderAnime() {
     } else {
         c.innerHTML = list.map((item, i) => `
             <div class="anime-item">
-                <span class="anime-num">${i+1}</span>
+                <span class="anime-num">${i + 1}</span>
                 <span class="anime-name">${item.name}</span>
                 <button class="anime-del" onclick="_delAnime(${i})">✕</button>
             </div>`).join('');
@@ -2945,7 +2957,7 @@ function _bindGoalsBtns() {
     if (addGoal && !addGoal._b) {
         addGoal._b = true;
         addGoal.addEventListener('click', () => {
-            ['goal-inp-name','goal-inp-date','goal-inp-why','goal-inp-next'].forEach(id => document.getElementById(id).value = '');
+            ['goal-inp-name', 'goal-inp-date', 'goal-inp-why', 'goal-inp-next'].forEach(id => document.getElementById(id).value = '');
             document.getElementById('goal-modal-ttl').textContent = 'Новая цель';
             document.getElementById('goal-modal').classList.remove('hidden');
             setTimeout(() => document.getElementById('goal-inp-name').focus(), 80);
@@ -2955,7 +2967,7 @@ function _bindGoalsBtns() {
 }
 
 // ===== ДЕЙСТВИЯ =====
-window._saveGoalModal = function() {
+window._saveGoalModal = function () {
     const name = document.getElementById('goal-inp-name').value.trim();
     if (!name) return;
     const g = {
@@ -2972,13 +2984,13 @@ window._saveGoalModal = function() {
     renderGoalsPage();
 };
 
-window._setMainGoal = function(i) {
+window._setMainGoal = function (i) {
     goalsData.goals.forEach((g, idx) => g.isMain = (idx === i));
     _saveGoals(goalsData);
     renderGoalsPage();
 };
 
-window._delGoal = async function(i) {
+window._delGoal = async function (i) {
     const ok = await ariseConfirm('Удалить миссию?', `"${goalsData.goals[i]?.name}" будет удалена навсегда.`, 'Удалить');
     if (!ok) return;
     goalsData.goals.splice(i, 1);
@@ -2987,18 +2999,18 @@ window._delGoal = async function(i) {
     renderGoalsPage();
 };
 
-window._openWeeklyReview = function() {
+window._openWeeklyReview = function () {
     document.getElementById('review-wk-label').textContent = 'Неделя ' + _weekKey();
-    ['review-wins','review-blocks','review-change'].forEach(id => document.getElementById(id).value = '');
+    ['review-wins', 'review-blocks', 'review-change'].forEach(id => document.getElementById(id).value = '');
     document.getElementById('review-modal').classList.remove('hidden');
 };
 
-window._saveReviewModal = function() {
+window._saveReviewModal = function () {
     const wins = document.getElementById('review-wins').value.trim();
     const blocks = document.getElementById('review-blocks').value.trim();
     const change = document.getElementById('review-change').value.trim();
-    const finance = (document.getElementById('review-finance')||{}).value?.trim()||'';
-    const relations = (document.getElementById('review-relations')||{}).value?.trim()||'';
+    const finance = (document.getElementById('review-finance') || {}).value?.trim() || '';
+    const relations = (document.getElementById('review-relations') || {}).value?.trim() || '';
     if (!wins && !blocks && !change) { document.getElementById('review-modal').classList.add('hidden'); return; }
     const wk = _weekKey();
     goalsData.reviews = (goalsData.reviews || []).filter(r => r.week !== wk);
@@ -3015,7 +3027,7 @@ window._saveReviewModal = function() {
     renderGoalsPage();
 };
 
-window._saveAnimeModal = function() {
+window._saveAnimeModal = function () {
     const name = document.getElementById('anime-inp-name').value.trim();
     if (!name) return;
     animeData.list = animeData.list || [];
@@ -3025,7 +3037,7 @@ window._saveAnimeModal = function() {
     _renderAnime();
 };
 
-window._delAnime = function(i) {
+window._delAnime = function (i) {
     animeData.list.splice(i, 1);
     _saveAnime(animeData);
     _renderAnime();
@@ -3054,12 +3066,12 @@ if (typeof renderGoalsPage === 'function') renderGoalsPage();
 (function _initCollapsibles() {
     const sections = [
         { toggleId: 'missions-toggle', bodyId: 'missions-body', arrowId: 'missions-arrow', key: 'arise_missions_open' },
-        { toggleId: 'review-toggle',   bodyId: 'review-body',   arrowId: 'review-arrow',   key: 'arise_review_open'   }
+        { toggleId: 'review-toggle', bodyId: 'review-body', arrowId: 'review-arrow', key: 'arise_review_open' }
     ];
     sections.forEach(({ toggleId, bodyId, arrowId, key }) => {
         const toggle = document.getElementById(toggleId);
-        const body   = document.getElementById(bodyId);
-        const arrow  = document.getElementById(arrowId);
+        const body = document.getElementById(bodyId);
+        const arrow = document.getElementById(arrowId);
         if (!toggle || !body || !arrow) return;
 
         const isOpen = localStorage.getItem(key) !== 'closed';

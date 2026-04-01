@@ -39,15 +39,17 @@
 
 
 
-            <div id="penalty-banner" class="penalty-banner hidden">
-                <div class="penalty-icon">☠️</div>
-                <div class="penalty-text">
-                    <strong>ПРОТОКОЛ ВОССТАНОВЛЕНИЯ</strong>
-                    <p>Система зафиксировала сбой. Выбери отработку:</p>
+            <div id="penalty-banner" class="penalty-banner hidden" style="flex-direction: column; align-items: stretch; gap: 12px; padding: 16px;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <div class="penalty-icon">☠️</div>
+                    <div class="penalty-text">
+                        <strong>ПРОТОКОЛ ВОССТАНОВЛЕНИЯ</strong>
+                        <p>Система зафиксировала сбой. Выбери отработку:</p>
+                    </div>
                 </div>
-                <div style="display:flex;flex-direction:column;gap:6px;margin-top:6px;">
-                    <button class="btn-penalty" id="btn-penalty-berpi" style="background:rgba(248,113,113,0.15);border:1px solid var(--red);color:var(--red);padding:7px 12px;border-radius:8px;font-family:var(--font-d);font-weight:700;font-size:0.78rem;cursor:pointer;">💥 50 Берпи</button>
-                    <button class="btn-penalty" id="btn-penalty-shower" style="background:rgba(96,165,250,0.15);border:1px solid var(--blue);color:var(--blue);padding:7px 12px;border-radius:8px;font-family:var(--font-d);font-weight:700;font-size:0.78rem;cursor:pointer;">🧊 Ледяной душ 3 мин</button>
+                <div style="display: flex; gap: 8px;">
+                    <button class="btn-penalty" id="btn-penalty-berpi" style="flex: 1; background: rgba(248,113,113,0.15); border: 1px solid var(--red); color: var(--red); padding: 10px; border-radius: 8px; font-family: var(--font-d); font-weight: 700; font-size: 0.8rem; cursor: pointer; white-space: normal; line-height: 1.2;">💥 50 Берпи</button>
+                    <button class="btn-penalty" id="btn-penalty-shower" style="flex: 1; background: rgba(96,165,250,0.15); border: 1px solid var(--blue); color: var(--blue); padding: 10px; border-radius: 8px; font-family: var(--font-d); font-weight: 700; font-size: 0.8rem; cursor: pointer; white-space: normal; line-height: 1.2;">🧊 Душ 3 мин</button>
                 </div>
             </div>
 
