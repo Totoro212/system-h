@@ -149,10 +149,7 @@
                 <div id="stoic-daily-author" style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 14px;"></div>
                 <div id="stoic-daily-source" style="font-size: 0.72rem; color: rgba(168,85,247,0.6); margin-bottom: 14px;"></div>
                 <div style="font-size: 0.75rem; color: var(--text-secondary); border-top: 1px solid var(--border-subtle); padding-top: 10px; margin-bottom: 10px;" id="stoic-practice-hint"></div>
-                <div style="display: flex; gap: 8px;">
-                    <button id="btn-stoic-reflect" style="flex: 1; background: rgba(168,85,247,0.1); border: 1px solid rgba(168,85,247,0.3); color: var(--purple); padding: 10px; border-radius: 10px; font-family: var(--font-display); font-weight: 600; font-size: 0.8rem; cursor: pointer;">🌙 Вечерний экзамен</button>
-                    <button id="btn-stoic-done" style="flex: 1; background: rgba(52,211,153,0.1); border: 1px solid rgba(52,211,153,0.3); color: var(--green); padding: 10px; border-radius: 10px; font-family: var(--font-display); font-weight: 600; font-size: 0.8rem; cursor: pointer;">✓ Применил сегодня</button>
-                </div>
+
             </div>
 
             <div style="display: flex; gap: 10px; margin-bottom: 24px;">
@@ -163,42 +160,15 @@
             </div>
 
 
-            <!-- ЦЕЛИ (перенесено из раздела Цели) -->
-            <div class="section-title-row" style="margin-top: 28px;">
-                <h2 class="section-title" style="cursor:pointer;display:flex;align-items:center;gap:6px;" id="missions-toggle">
-                    🏆 МИССИИ <span id="missions-arrow" style="font-size:0.75rem;color:var(--text-dim);transition:transform 0.2s;">▼</span>
-                </h2>
-                <button id="btn-add-goal" style="background:var(--purple-dim);border:1px solid rgba(168,85,247,.3);color:var(--purple);padding:6px 14px;border-radius:10px;font-family:var(--font-d);font-weight:700;font-size:.82rem;cursor:pointer;letter-spacing:.5px;">+ Цель</button>
-            </div>
-            <div id="missions-body">
-                <div id="goals-main-target" style="margin-bottom:18px;"></div>
-                <div id="goals-list" style="display:flex;flex-direction:column;gap:8px;margin-bottom:26px;"></div>
-            </div>
-
-            <div class="section-title-row" style="margin-top:4px;">
-                <span class="section-title" style="cursor:pointer;display:flex;align-items:center;gap:6px;" id="review-toggle">
-                    📋 РАЗБОР НЕДЕЛИ <span id="review-arrow" style="font-size:0.75rem;color:var(--text-dim);transition:transform 0.2s;">▼</span>
-                </span>
-            </div>
-            <div id="review-body">
-                <div id="weekly-review-card" style="margin-bottom:26px;"></div>
-                <div id="weekly-reviews-history" style="margin-bottom:26px;"></div>
-            </div>
         </section>
 
         <!-- CODEX -->
         <section id="page-codex" class="page">
             <div class="header">
                 <h1>📜 КОДЕКС ОХОТНИКА</h1>
-                <button class="btn-edit-toggle" id="btn-edit-habits">✏️</button>
             </div>
 
-            <div class="section-title-row">
-                <span class="section-title">⚡ РИТУАЛЫ ОХОТНИКА</span>
-                <span class="habit-counter" id="habit-counter">0/0</span>
-            </div>
-            <div class="habit-list" id="habit-list"></div>
-            <button class="btn-add hidden" id="btn-add-habit">+ Добавить привычку</button>
+
 
             <div class="section-title-row" style="margin-top:24px">
                 <span class="section-title">📜 СВОД ПРАВИЛ</span>
@@ -324,32 +294,7 @@
     </div>
 
 
-    <!-- STOIC EXAMEN MODAL (Evening) -->
-    <div id="examen-overlay" class="modal-overlay hidden" style="z-index: 400;">
-        <div class="modal" style="max-width: 360px;">
-            <div class="modal-glow"></div>
-            <div class="modal-title" style="font-size: 1.2rem; margin-bottom: 4px;">🌙 ВЕЧЕРНИЙ ЭКЗАМЕН</div>
-            <div style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 20px;">Практика Марка Аврелия</div>
-            <div style="text-align: left; display: flex; flex-direction: column; gap: 14px;">
-                <div>
-                    <label style="font-size: 0.75rem; color: var(--green); font-family: var(--font-display); letter-spacing: 1px; display: block; margin-bottom: 6px;">1. ЧТО БЫЛО ПОД МОИМ КОНТРОЛЕМ И Я СДЕЛАЛ ЭТО ХОРОШО?</label>
-                    <textarea id="examen-good" style="width:100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle); color: var(--text-primary); border-radius: 10px; padding: 10px; font-family: var(--font-body); font-size: 0.85rem; resize: none; min-height: 60px;" placeholder="Сегодня я контролировал..."></textarea>
-                </div>
-                <div>
-                    <label style="font-size: 0.75rem; color: var(--yellow); font-family: var(--font-display); letter-spacing: 1px; display: block; margin-bottom: 6px;">2. ГДЕ Я ДЕЙСТВОВАЛ НЕ КАК СТОИК? ПОЧЕМУ?</label>
-                    <textarea id="examen-improve" style="width:100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle); color: var(--text-primary); border-radius: 10px; padding: 10px; font-family: var(--font-body); font-size: 0.85rem; resize: none; min-height: 60px;" placeholder="Я отреагировал не так, потому что..."></textarea>
-                </div>
-                <div>
-                    <label style="font-size: 0.75rem; color: var(--purple); font-family: var(--font-display); letter-spacing: 1px; display: block; margin-bottom: 6px;">3. ЗАВТРА Я СДЕЛАЮ ИНАЧЕ:</label>
-                    <textarea id="examen-plan" style="width:100%; background: rgba(255,255,255,0.04); border: 1px solid var(--border-subtle); color: var(--text-primary); border-radius: 10px; padding: 10px; font-family: var(--font-body); font-size: 0.85rem; resize: none; min-height: 50px;" placeholder="Завтра я..."></textarea>
-                </div>
-            </div>
-            <div class="edit-actions" style="margin-top: 20px;">
-                <button class="modal-btn btn-secondary" id="examen-cancel">Пропустить</button>
-                <button class="modal-btn" id="examen-save">Сохранить +5 WIS</button>
-            </div>
-        </div>
-    </div>
+
 
     <!-- Level Up Modal -->
     <div class="modal-overlay hidden" id="modal-overlay">
@@ -436,22 +381,7 @@
     </div>
 
 
-    <!-- HABIT ADD MODAL -->
-    <div class="modal-overlay hidden" id="habit-add-modal">
-        <div class="modal edit-modal" style="max-width:320px;">
-            <div class="modal-glow"></div>
-            <div class="modal-title" style="font-size:1.1rem;margin-bottom:14px;">➕ Новая привычка</div>
-            <div class="edit-form">
-                <label class="edit-label">Название (с эмодзи)
-                    <input type="text" class="edit-input" id="habit-inp-name" placeholder="🏃 Пробежка 15 мин">
-                </label>
-            </div>
-            <div class="edit-actions" style="margin-top:16px;">
-                <button class="modal-btn btn-secondary" onclick="document.getElementById('habit-add-modal').classList.add('hidden')">Отмена</button>
-                <button class="modal-btn" onclick="_saveHabitModal()">Добавить</button>
-            </div>
-        </div>
-    </div>
+
     <script src="app.js"></script>
 </body>
 </html>

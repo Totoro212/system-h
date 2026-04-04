@@ -1026,16 +1026,15 @@ function calcDaysInSystem() {
 }
 
 function getWeekNumber() {
-    const start = new Date(data.startDate || getToday());
-    start.setHours(0, 0, 0, 0); // Обнуляем часы
-
-    const today = new Date();
-    today.setHours(0, 0, 0, 0); // Обнуляем часы сегодня
-
-    const diffTime = today - start;
-    const diffDays = Math.floor(diffTime / 86400000);
-
-    return Math.floor(diffDays / 7);
+    // Используем ISO номер календарной недели
+    // Испытание меняется каждый понедельник
+    const now = new Date();
+    now.setHours(0, 0, 0, 0);
+    // Четверг текущей ISO-недели определяет год
+    const thu = new Date(now);
+    thu.setDate(now.getDate() + 3 - ((now.getDay() + 6) % 7));
+    const jan1 = new Date(thu.getFullYear(), 0, 1);
+    return Math.ceil(((thu - jan1) / 86400000 + 1) / 7);
 }
 
 function getMultiplier(streak) {
@@ -1101,8 +1100,8 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 
 function refreshPage(page) {
     if (page === 'dashboard') updateDashboard();
-    if (page === 'quests') { renderQuests(); updateQuestStates(); renderStoicDaily(); if (typeof renderGoalsPage === 'function') renderGoalsPage(); }
-    if (page === 'codex') { (window.renderHabits || renderHabits)(); renderStoicDaily(); _renderAnime(); renderCodexReference(); }
+    if (page === 'quests') { renderQuests(); updateQuestStates(); renderStoicDaily(); }
+    if (page === 'codex') { _renderAnime(); renderCodexReference(); }
     if (page === 'training') renderTraining(currentTrainDay || 'push');
     if (page === 'stats') { updateStats(); renderKeys(); }
 }
@@ -1960,6 +1959,7 @@ function getHabitsToday() {
 
 function renderHabits() {
     const container = document.getElementById('habit-list');
+    if (!container) return;
     const today = getToday();
     const completedToday = getHabitsToday();
     const total = habits.list.length;
@@ -2013,25 +2013,34 @@ function deleteHabit(id) {
 }
 
 // Edit mode toggle
-document.getElementById('btn-edit-habits').addEventListener('click', () => {
-    habitEditMode = !habitEditMode;
-    document.getElementById('btn-edit-habits').classList.toggle('active', habitEditMode);
-    (window.renderHabits || renderHabits)();
-});
+const btnEditHabits = document.getElementById('btn-edit-habits');
+if (btnEditHabits) {
+    btnEditHabits.addEventListener('click', () => {
+        habitEditMode = !habitEditMode;
+        btnEditHabits.classList.toggle('active', habitEditMode);
+        (window.renderHabits || renderHabits)();
+    });
+}
 
 // Add habit
-document.getElementById('btn-add-habit').addEventListener('click', () => {
-    document.getElementById('habit-add-modal').classList.remove('hidden');
-    setTimeout(() => document.getElementById('habit-inp-name').focus(), 80);
-});
+const btnAddHabit = document.getElementById('btn-add-habit');
+if (btnAddHabit) {
+    btnAddHabit.addEventListener('click', () => {
+        document.getElementById('habit-add-modal').classList.remove('hidden');
+        setTimeout(() => document.getElementById('habit-inp-name').focus(), 80);
+    });
+}
 window._saveHabitModal = function () {
-    const name = document.getElementById('habit-inp-name').value.trim();
+    const nameInput = document.getElementById('habit-inp-name');
+    if (!nameInput) return;
+    const name = nameInput.value.trim();
     if (!name) return;
     habits.list.push({ id: 'h' + Date.now().toString(36), name });
     saveHabits();
     (window.renderHabits || renderHabits)();
-    document.getElementById('habit-inp-name').value = '';
-    document.getElementById('habit-add-modal').classList.add('hidden');
+    nameInput.value = '';
+    const modal = document.getElementById('habit-add-modal');
+    if (modal) modal.classList.add('hidden');
 };
 
 // Reference rendering
@@ -2364,34 +2373,16 @@ function renderStoicDaily() {
     const card = document.getElementById('stoic-daily-card');
     if (!card) return;
     const maxim = getStoicToday();
-    const today = getToday();
-
-    // Load stoic data
-    const stoicData = JSON.parse(localStorage.getItem('stoicData') || '{}');
-    const todayDone = stoicData.completedDays && stoicData.completedDays.includes(today);
-    const streak = calcStoicStreak(stoicData);
 
     document.getElementById('stoic-daily-text').textContent = maxim.text;
     document.getElementById('stoic-daily-author').textContent = `— ${maxim.author}`;
     document.getElementById('stoic-daily-source').textContent = maxim.source;
     document.getElementById('stoic-practice-hint').textContent = maxim.practice;
+
+    // Stoic streak badge (count days opened app on stoic page)
+    const stoicData = JSON.parse(localStorage.getItem('stoicData') || '{}');
+    const streak = calcStoicStreak(stoicData);
     document.getElementById('stoic-streak-badge').textContent = `${streak} дней`;
-
-    const doneBtn = document.getElementById('btn-stoic-done');
-    if (todayDone) {
-        doneBtn.style.background = 'rgba(52,211,153,0.3)';
-        doneBtn.style.borderColor = 'var(--green)';
-        doneBtn.textContent = '✓ Применено сегодня';
-        doneBtn.disabled = true;
-    } else {
-        doneBtn.disabled = false;
-        doneBtn.textContent = '✓ Применил сегодня';
-    }
-
-    // Apply visual card state
-    if (todayDone) {
-        card.style.borderColor = 'rgba(52,211,153,0.4)';
-    }
 }
 
 function calcStoicStreak(stoicData) {
@@ -2426,68 +2417,7 @@ function calcStoicStreak(stoicData) {
     return streak;
 }
 
-document.getElementById('btn-stoic-done').addEventListener('click', () => {
-    const today = getToday();
-    const stoicData = JSON.parse(localStorage.getItem('stoicData') || '{ "completedDays": [], "examens": {} }');
-    if (!stoicData.completedDays) stoicData.completedDays = [];
-    if (!stoicData.completedDays.includes(today)) {
-        stoicData.completedDays.push(today);
-        localStorage.setItem('stoicData', JSON.stringify(stoicData));
-        // Reward: +2 WIS for applying stoic principle
-        data.totalPoints += 2;
-        saveData();
-        showPointsPopup('+2 ⚔️');
-    }
-    renderStoicDaily();
-});
-
-document.getElementById('btn-stoic-reflect').addEventListener('click', () => {
-    document.getElementById('examen-overlay').classList.remove('hidden');
-    // Pre-fill with today's maxim for context
-    const maxim = getStoicToday();
-    document.getElementById('examen-good').placeholder = `Сегодняшний принцип: "${maxim.text.split('.')[0]}"...`;
-});
-
-document.getElementById('examen-cancel').addEventListener('click', () => {
-    document.getElementById('examen-overlay').classList.add('hidden');
-});
-
-document.getElementById('examen-save').addEventListener('click', () => {
-    const good = document.getElementById('examen-good').value.trim();
-    const improve = document.getElementById('examen-improve').value.trim();
-    const plan = document.getElementById('examen-plan').value.trim();
-
-    if (!good && !improve && !plan) {
-        document.getElementById('examen-overlay').classList.add('hidden');
-        return;
-    }
-
-    const today = getToday();
-    const stoicData = JSON.parse(localStorage.getItem('stoicData') || '{ "completedDays": [], "examens": {} }');
-    if (!stoicData.examens) stoicData.examens = {};
-    stoicData.examens[today] = { good, improve, plan, maxim: getStoicToday().text };
-    if (!stoicData.completedDays) stoicData.completedDays = [];
-    if (!stoicData.completedDays.includes(today)) stoicData.completedDays.push(today);
-
-    localStorage.setItem('stoicData', JSON.stringify(stoicData));
-
-    // Reward: +5 WIS for evening examen
-    const examKey = `examBonus_${today}`;
-    if (!localStorage.getItem(examKey)) {
-        data.totalPoints += 5;
-        saveData();
-        localStorage.setItem(examKey, '1');
-        showPointsPopup('+5 🌙');
-    }
-
-    document.getElementById('examen-overlay').classList.add('hidden');
-    document.getElementById('examen-good').value = '';
-    document.getElementById('examen-improve').value = '';
-    document.getElementById('examen-plan').value = '';
-
-    showModal('🌙 ЭКЗАМЕН ЗАВЕРШЁН', 'Марк Аврелий делал это каждый день.\n\nКаждый вечерний экзамен — это нейронная тренировка стоического мышления.\n\n+5 очков получено.');
-    renderStoicDaily();
-});
+// Stoic buttons removed — stoic daily is now read-only (quote + practice)
 
 // ========== MORNING BRIEFING ==========
 
@@ -2560,6 +2490,7 @@ const _originalRenderHabits = renderHabits;
 // Patch habit item rendering to show trigger
 function renderHabitsV2() {
     const container = document.getElementById('habit-list');
+    if (!container) return;
     const today = getToday();
     const completedToday = getHabitsToday();
     const total = habits.list.length;
