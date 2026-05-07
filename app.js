@@ -221,69 +221,7 @@ const ALL_BONUS_QUESTS = [
     { id: 'budget', name: '💰 Финансовый Контроль', desc: 'Записать все расходы за день, отложить 10%', stat: 'wis', hint: 'Трекинг финансов. Те, кто не считают деньги, всегда их теряют. Выработай привычку откладывать минимум 10% от любого прихода.' }
 ];
 
-// ========== AUTO-UNLOCK KEYS ==========
-// Keys unlock automatically when condition is met
-const AUTO_KEYS = [
-    {
-        name: '🔥 Первая неделя',
-        desc: '7 дней подряд без пропуска',
-        check: (d) => calcStreak() >= 7 || d.bestStreak >= 7,
-        reward: 50
-    },
-    {
-        name: '⚡ Несокрушимый',
-        desc: '30 дней подряд без пропуска',
-        check: (d) => calcStreak() >= 30 || d.bestStreak >= 30,
-        reward: 100
-    },
-    {
-        name: '🏆 Полтысячи',
-        desc: 'Набери 500 очков',
-        check: (d) => d.totalPoints >= 500,
-        progress: (d) => `${Math.min(d.totalPoints, 500)} / 500`,
-        reward: 50
-    },
-    {
-        name: '👑 Монарх',
-        desc: 'Набери 2000 очков',
-        check: (d) => d.totalPoints >= 2000,
-        progress: (d) => `${Math.min(d.totalPoints, 2000)} / 2000`,
-        reward: 200
-    },
-    {
-        name: '🌌 Легенда',
-        desc: 'Достигни 5000 очков',
-        check: (d) => d.totalPoints >= 5000,
-        progress: (d) => `${Math.min(d.totalPoints, 5000)} / 5000`,
-        reward: 500
-    },
-    {
-        name: '🔥 Титан',
-        desc: '100 дней стрик',
-        check: (d) => d.bestStreak >= 100,
-        progress: (d) => `${Math.min(d.bestStreak, 100)} / 100`,
-        reward: 300
-    }
-];
 
-// ========== STAT NAMES (kept for chest reward compatibility) ==========
-const STAT_NAMES = {
-    str: 'STR — Сила',
-    end: 'END — Выносливость',
-    int: 'INT — Интеллект',
-    wis: 'WIS — Мудрость',
-    dsc: 'DSC — Дисциплина'
-};
-
-// ========== RANKS ==========
-const RANKS = [
-    { name: 'E-РАНГ', title: 'Новичок', min: 0, max: 100 },
-    { name: 'D-РАНГ', title: 'Охотник', min: 100, max: 300 },
-    { name: 'C-РАНГ', title: 'Воин', min: 300, max: 600 },
-    { name: 'B-РАНГ', title: 'Элита', min: 600, max: 1000 },
-    { name: 'A-РАНГ', title: 'Мастер', min: 1000, max: 2000 },
-    { name: 'S-РАНГ', title: 'Монарх', min: 2000, max: Infinity }
-];
 
 const WEEKLY_CHALLENGES = [
     'Неделя полного отказа от добавленного сахара',
@@ -315,16 +253,16 @@ const PROGRAMS_CONFIG = {
         note: 'Дополнительные протоколы на кор и гибкость. Можно добавлять к основным тренировкам или делать в дни отдыха.',
         days: ['core', 'flex']
     },
-    pro: {
-        name: 'ELITE',
-        note: 'Высокоинтенсивные протоколы для экстремальной выносливости. ОПАСНО: Требуют идеального восстановления, использовать не чаще 1 раза в 10-14 дней (иначе перетрен ЦНС).',
-        days: ['titan', 'vo2max'],
-        unlock: 'streak7'
-    },
+
     quick: {
         name: 'ТОНУС',
         note: 'Минимальная тренировка на всё тело (турник + брусья). 5 упражнений × ~20 мин. Для дней когда нет времени на полную тренировку.',
         days: ['tonus']
+    },
+    info: {
+        name: '📖 БАЗА',
+        note: 'Прогрессия, восстановление, питание и дневник.',
+        days: ['info']
     }
 };
 
@@ -991,7 +929,7 @@ function loadData() {
         bonusQuests: ALL_BONUS_QUESTS.slice(0, 3), // Уменьшили с 5 до 3
         unlockedKeys: [],
         days: {},
-        penalty: false,
+
         customTraining: {},
         unlockedContent: [],
         lastBonusRotation: '',
@@ -1025,71 +963,9 @@ function getDayData(date) {
     return data.days[date];
 }
 
-function getRank(points) {
-    for (let i = RANKS.length - 1; i >= 0; i--) {
-        if (points >= RANKS[i].min) return RANKS[i];
-    }
-    return RANKS[0];
-}
 
-function getRankIndex(points) {
-    for (let i = RANKS.length - 1; i >= 0; i--) {
-        if (points >= RANKS[i].min) return i;
-    }
-    return 0;
-}
 
-function calcStreak() {
-    let streak = 0;
-    const today = new Date();
-    const todayStr = getToday();
-    const todayData = data.days[todayStr];
-    const mainCount = data.mainQuests.length;
 
-    if (todayData && (todayData.isRestDay || (todayData.main && todayData.main.length === mainCount))) {
-        streak = 1;
-    }
-
-    let checkDate = new Date(today);
-    checkDate.setDate(checkDate.getDate() - 1);
-    let freezesUsed = 0;
-    const MAX_FREEZES = 1; // Защитная заморозка на 1 пропущенный день
-
-    while (true) {
-        const ds = `${checkDate.getFullYear()}-${String(checkDate.getMonth() + 1).padStart(2, '0')}-${String(checkDate.getDate()).padStart(2, '0')}`;
-        const dData = data.days[ds];
-
-        if (!dData) {
-            if (freezesUsed < MAX_FREEZES) {
-                freezesUsed++;
-                checkDate.setDate(checkDate.getDate() - 1);
-                continue;
-            } else {
-                break;
-            }
-        }
-
-        if (dData.isRestDay) {
-            streak++;
-            checkDate.setDate(checkDate.getDate() - 1);
-            continue;
-        }
-
-        const requiredMainLength = dData.hardMode ? 2 : data.mainQuests.length;
-        if (dData.main && dData.main.length >= requiredMainLength) {
-            streak++;
-            checkDate.setDate(checkDate.getDate() - 1);
-        } else {
-            if (freezesUsed < MAX_FREEZES) {
-                freezesUsed++;
-                checkDate.setDate(checkDate.getDate() - 1);
-            } else {
-                break;
-            }
-        }
-    }
-    return streak;
-}
 
 function calcDaysInSystem() {
     const today = getToday();
@@ -1123,20 +999,7 @@ function genId() {
     return 'q' + Date.now().toString(36) + Math.random().toString(36).slice(2, 5);
 }
 
-function checkPenalty() {
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
-    const yData = data.days[yStr];
 
-    if (yData && (yData.done || yData.isRestDay)) return data.penalty || false;
-
-    if (yData && yData.main && yData.main.length < Math.ceil(data.mainQuests.length / 2)) {
-        if (yData.main.length > 0 || yData.bonus.length > 0) return true;
-    }
-    if (!yData && data.startDate && yStr >= data.startDate) return true;
-    return data.penalty || false;
-}
 
 // ========== NAVIGATION ==========
 function switchPage(page) {
@@ -1175,11 +1038,10 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
 });
 
 function refreshPage(page) {
-    if (page === 'dashboard') updateDashboard();
-    if (page === 'quests') { renderQuests(); updateQuestStates(); renderStoicDaily(); }
-    if (page === 'codex') { _renderAnime(); renderCodexReference(); }
+    if (page === 'dashboard') { updateDashboard(); }
+    if (page === 'codex') { renderStoicDaily(); renderCodexReference(); }
     if (page === 'training') renderTraining(currentTrainDay || 'push');
-    if (page === 'stats') { updateStats(); renderKeys(); }
+
 }
 
 // ========== MISSING BUTTON HANDLERS ==========
@@ -1238,66 +1100,13 @@ if (btnCloseTraining) {
 
 // ========== DASHBOARD ==========
 function updateDashboard() {
-    const rank = getRank(data.totalPoints);
-    const rankIdx = getRankIndex(data.totalPoints);
 
-    document.getElementById('rank-name').textContent = rank.name;
-    document.getElementById('rank-title').textContent = rank.title;
 
-    const progress = rank.max === Infinity ? 100 : ((data.totalPoints - rank.min) / (rank.max - rank.min)) * 100;
-    document.getElementById('rank-progress').style.width = `${Math.min(100, progress)}%`;
-    document.getElementById('progress-label').textContent = rank.max === Infinity ? `${Math.floor(data.totalPoints)} ∞` : `${Math.floor(data.totalPoints)} / ${rank.max}`;
-    document.getElementById('total-points').textContent = Math.floor(data.totalPoints);
 
-    // Apply Visual Era
-    document.body.className = `era-${Math.min(rankIdx, 5)}`;
 
-    const streak = calcStreak();
-    document.getElementById('streak-count').textContent = streak;
-
-    // Streak Shield indicator (shows freeze protection status)
-    const streakContainer = document.getElementById('streak-count') ? document.getElementById('streak-count').parentElement : null;
-    let shieldEl = document.getElementById('streak-shield');
-    if (!shieldEl && streakContainer) {
-        shieldEl = document.createElement('span');
-        shieldEl.id = 'streak-shield';
-        shieldEl.style.cssText = 'position: absolute; top: -5px; left: -20px; font-size: 0.8rem; cursor: help;';
-        streakContainer.appendChild(shieldEl);
-    }
-    // Check if freeze is still available (simplified: shield shows if streak > 0)
-    if (streak > 0) {
-        shieldEl.textContent = '🛡️';
-        shieldEl.title = 'Защита стрика: 1 пропуск не обнулит стрик';
-    } else {
-        shieldEl.textContent = '';
-    }
-
-    // Multiplier display
-    const mult = getMultiplier(streak);
-    const multSpan = document.getElementById('streak-mult');
-    if (multSpan) {
-        multSpan.style.display = 'inline-block';
-        multSpan.textContent = `x${mult}`;
-        if (mult > 1) {
-            multSpan.style.background = 'var(--amber)';
-            multSpan.style.color = '#fff';
-        } else {
-            multSpan.style.background = 'rgba(160, 120, 255, 0.1)';
-            multSpan.style.color = 'var(--text-dim)';
-        }
-    }
-
-    if (streak > data.bestStreak) { data.bestStreak = streak; saveData(); }
-
-    const today = getToday();
-    const todayData = getDayData(today);
-    document.getElementById('today-done').textContent = `${todayData.main.length}/${data.mainQuests.length}`;
-
-    const keysUnlocked = data.unlockedKeys.length;
-    document.getElementById('keys-unlocked').textContent = `${keysUnlocked}/${AUTO_KEYS.length}`;
 
     document.getElementById('day-counter').textContent = `ДЕНЬ ${calcDaysInSystem()}`;
-    document.getElementById('penalty-banner').classList.toggle('hidden', !checkPenalty());
+
 
     const weekNum = getWeekNumber();
     document.getElementById('weekly-rule').textContent = WEEKLY_CHALLENGES[weekNum % WEEKLY_CHALLENGES.length];
@@ -1333,52 +1142,27 @@ function updateDashboard() {
             slot.addEventListener('click', (e) => {
                 e.stopPropagation();
                 if (isActive) {
-                    // Clicking an active slot removes 1 progress (Undo)
                     data.weeklyCount = Math.max(0, data.weeklyCount - 1);
-                    const currentMult = getMultiplier(calcStreak());
-                    data.totalPoints = Math.max(0, data.totalPoints - (2 * currentMult));
-                    showPointsPopup(`Отменено (-1)`);
                 } else {
-                    // Clicking an empty slot adds 1 progress
                     if (data.weeklyCount < 7) {
                         data.weeklyCount++;
-                        const currentMult = getMultiplier(calcStreak());
-                        const pointsGained = 2 * currentMult;
-                        data.totalPoints += pointsGained;
-                        showPointsPopup(`+${pointsGained > 2 ? pointsGained.toFixed(1) : pointsGained}`);
                     }
                 }
                 saveData();
                 updateDashboard();
             });
 
+
             slotsContainer.appendChild(slot);
         }
     }
 
     // Render sphere radar on dashboard
-    renderSphereRadar();
     renderChallengeSection();
-
-    // Check auto-unlock keys
-    checkAutoKeys();
 }
 
 
-function _clearPenalty(type) {
-    data.penalty = false;
-    const yesterday = new Date();
-    yesterday.setDate(yesterday.getDate() - 1);
-    const yStr = `${yesterday.getFullYear()}-${String(yesterday.getMonth() + 1).padStart(2, '0')}-${String(yesterday.getDate()).padStart(2, '0')}`;
-    if (!data.days[yStr]) data.days[yStr] = { main: [], bonus: [], points: 0, done: true };
-    else data.days[yStr].done = true;
-    saveData();
-    const msg = type === 'berpi' ? '💥 50 БЕРПИ ВЫПОЛНЕНО\nПульс в космосе. Долг погашен.' : '🧊 ЛЕДЯНОЙ ДУШ 3 МИН\nДофамин восстановлен.';
-    showModal('ПРОТОКОЛ ЗАВЕРШЁН', msg + '\n\nТы сильнее своего оправдания.');
-    updateDashboard();
-}
-document.getElementById('btn-penalty-berpi').addEventListener('click', () => _clearPenalty('berpi'));
-document.getElementById('btn-penalty-shower').addEventListener('click', () => _clearPenalty('shower'));
+
 
 
 // ========== AUTO KEYS CHECK ==========
@@ -1420,18 +1204,15 @@ function renderQuestItem(quest, isBonus, isHardModeMain) {
     }
 
     let infoBtnHtml = quest.hint ? `<button class="quest-hint-btn" type="button">Подробнее ▸</button>` : '';
-    const _spKey = QUEST_TO_SPHERE[quest.id] || STAT_TO_SPHERE[quest.stat] || '';
-    const _sp = SIX_SPHERES.find(s => s.key === _spKey);
-    const sphereBadge = _sp ? `<span style="font-size:0.6rem;color:${_sp.color};background:${_sp.color}18;border:1px solid ${_sp.color}38;padding:1px 5px;border-radius:10px;margin-left:4px;vertical-align:middle;">${_sp.label.split(' ')[0]}</span>` : '';
 
     div.innerHTML = `
         <div class="quest-check"></div>
         <div class="quest-info">
-            <div class="quest-name">${quest.name}${sphereBadge}</div>
+            <div class="quest-name">${quest.name}</div>
             <div class="quest-desc">${quest.desc}${bonusHint}</div>
             ${infoBtnHtml}
         </div>
-        <div class="quest-stat">${quest.stat ? quest.stat.toUpperCase() : ''}</div>
+
         <div class="quest-edit-btns">
             <button class="btn-quest-edit">✏️</button>
             <button class="btn-quest-delete">🗑️</button>
@@ -1479,24 +1260,7 @@ function updateQuestStates() {
     });
 }
 
-function checkStatMilestones() {
-    if (!data.unlockedContent) data.unlockedContent = [];
-    // Разблокировка по стрику и очкам (статы убраны)
-    const streak = calcStreak();
-    if ((streak >= 7 || data.bestStreak >= 7) && !data.unlockedContent.includes('streak7')) {
-        data.unlockedContent.push('streak7');
-        saveData();
-        setTimeout(() => showModal('🔓 ELITE РАЗБЛОКИРОВАН', 'Ты держишь стрик 7+ дней.\n\nПротоколы TITAN и VO2MAX теперь доступны в Тренировках.'), 1000);
-    }
-    if (data.totalPoints >= 300 && !data.unlockedContent.includes('pts300')) {
-        data.unlockedContent.push('pts300');
-        saveData();
-    }
-    if (data.totalPoints >= 1000 && !data.unlockedContent.includes('pts1000')) {
-        data.unlockedContent.push('pts1000');
-        saveData();
-    }
-}
+
 
 function toggleQuest(questId, isBonus) {
     const today = getToday();
@@ -1506,45 +1270,21 @@ function toggleQuest(questId, isBonus) {
     if (!quest) return;
 
     const item = document.querySelector(`.quest-item[data-quest="${questId}"]`);
-    const pointsGained = 2 * getMultiplier(calcStreak());
 
     if (list.includes(questId)) {
         list.splice(list.indexOf(questId), 1);
         if (item) item.classList.remove('completed');
-        data.totalPoints = Math.max(0, data.totalPoints - pointsGained);
-        todayData.points = Math.max(0, todayData.points - pointsGained);
-        if (quest.stat) data.stats[quest.stat] = Math.max(0, (data.stats[quest.stat] || 0) - 1);
     } else {
         list.push(questId);
         if (item) {
             item.classList.add('completed', 'just-completed');
             setTimeout(() => item.classList.remove('just-completed'), 300);
         }
-        data.totalPoints += pointsGained;
-        todayData.points += pointsGained;
-        if (quest.stat) data.stats[quest.stat] = (data.stats[quest.stat] || 0) + 1;
-        showPointsPopup(`+${pointsGained > 2 ? pointsGained.toFixed(1) : pointsGained}`);
 
-        // All main quests done → open chest
+
+        // All main quests done
         if (!isBonus && todayData.main.length === data.mainQuests.length) {
-            if (!todayData.chestOpened) {
-                document.getElementById('chest-modal-overlay').classList.remove('hidden');
-                document.getElementById('chest-closed').style.display = 'inline-block';
-                const chestOpened = document.getElementById('chest-opened');
-                chestOpened.classList.add('hidden');
-                chestOpened.style.display = 'none';
-                const chestCloseBtn = document.getElementById('chest-close-btn');
-                chestCloseBtn.classList.add('hidden');
-                chestCloseBtn.style.display = 'none';
-                document.getElementById('chest-hint').classList.remove('hidden');
-                document.getElementById('chest-modal').classList.add('chest-pop');
-                setTimeout(() => document.getElementById('chest-modal').classList.remove('chest-pop'), 200);
-            } else {
-                showModal('КВЕСТЫ ВЫПОЛНЕНЫ!', `Все ежедневные квесты на сегодня!\n\nОтличная работа, Охотник.`);
-            }
-            const prev = getRankIndex(data.totalPoints - 2);
-            const cur = getRankIndex(data.totalPoints);
-            if (cur > prev) setTimeout(() => showModal('RANK UP!', `${RANKS[cur].name}\n"${RANKS[cur].title}"\nЭра ${cur} достигнута!`), 2500);
+            showModal('КВЕСТЫ ВЫПОЛНЕНЫ!', 'Все ежедневные квесты на сегодня!\n\nОтличная работа!');
         }
 
         // All bonus quests done → show "add more" button
@@ -1556,7 +1296,6 @@ function toggleQuest(questId, isBonus) {
     todayData.done = todayData.main.length >= Math.ceil(data.mainQuests.length / 2);
     saveData();
     updateDashboard();
-    checkStatMilestones();
 }
 
 function deleteQuest(questId, isBonus) {
@@ -1707,8 +1446,6 @@ function openEditModal(type, item) {
     document.getElementById('edit-modal-title').textContent = item ? 'Редактировать квест' : 'Новый квест';
     document.getElementById('edit-name').value = item ? item.name : '';
     document.getElementById('edit-desc').value = item ? item.desc : '';
-    document.getElementById('edit-stat').value = item ? item.stat : 'str';
-    document.getElementById('edit-stat-label').style.display = '';
     document.getElementById('edit-modal-overlay').classList.remove('hidden');
     setTimeout(() => document.getElementById('edit-name').focus(), 100);
 }
@@ -1723,7 +1460,6 @@ document.getElementById('edit-modal-overlay').addEventListener('click', (e) => {
 document.getElementById('edit-save').addEventListener('click', () => {
     const name = document.getElementById('edit-name').value.trim();
     const desc = document.getElementById('edit-desc').value.trim();
-    const stat = document.getElementById('edit-stat').value;
     if (!name) return;
 
     const { type, item } = editContext;
@@ -1731,9 +1467,9 @@ document.getElementById('edit-save').addEventListener('click', () => {
 
     if (item) {
         const q = list.find(q => q.id === item.id);
-        if (q) { q.name = name; q.desc = desc; q.stat = stat; }
+        if (q) { q.name = name; q.desc = desc; }
     } else {
-        list.push({ id: genId(), name, desc, stat });
+        list.push({ id: genId(), name, desc });
     }
     saveData();
     renderQuests();
@@ -1770,62 +1506,12 @@ function renderKeys() {
     });
 }
 
-// ========== MATRIX OF LIFE ==========
-function updateMatrix() {
-    const container = document.getElementById('matrix-container');
-    if (!container) return;
-    container.innerHTML = '';
 
-    const todayStr = getToday();
-
-    // Find the end of the current week (Sunday)
-    let endDate = new Date();
-    let dow = endDate.getDay();
-    let daysToSunday = dow === 0 ? 0 : 7 - dow;
-    endDate.setDate(endDate.getDate() + daysToSunday);
-
-    const WEEKS = 30; // ~7 months of history (fits nice, looks dense)
-    const totalDays = WEEKS * 7;
-
-    let currentDate = new Date(endDate);
-    currentDate.setDate(currentDate.getDate() - totalDays + 1);
-
-    for (let i = 0; i < totalDays; i++) {
-        const dStr = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
-
-        const box = document.createElement('div');
-        box.className = 'matrix-box empty';
-
-        if (dStr <= todayStr) {
-            const dd = data.days[dStr];
-            if (dd) {
-                if (dd.isRestDay) {
-                    box.className = 'matrix-box rest';
-                } else if (dd.hardMode && dd.main && dd.main.length >= 2) {
-                    box.className = 'matrix-box hard';
-                } else if (!dd.hardMode && dd.main && dd.main.length >= data.mainQuests.length) {
-                    box.className = 'matrix-box done';
-                }
-            }
-        }
-
-        // Quick format for tooltip (e.g. "14 Марта")
-        const months = ['Янв', 'Фев', 'Мар', 'Апр', 'Май', 'Июн', 'Июл', 'Авг', 'Сен', 'Окт', 'Ноя', 'Дек'];
-        const mName = months[currentDate.getMonth()];
-        box.title = `${currentDate.getDate()} ${mName}`;
-
-        container.appendChild(box);
-        currentDate.setDate(currentDate.getDate() + 1);
-    }
-}
 
 
 // ========== STATS ==========
 function updateStats() {
-    document.getElementById('stats-total-points').textContent = data.totalPoints;
-    document.getElementById('stats-best-streak').textContent = data.bestStreak;
-    document.getElementById('stats-total-days').textContent = calcDaysInSystem();
-    updateMatrix();
+    // Only keys and export/import remain on stats page
 }
 
 
@@ -1838,14 +1524,6 @@ function showModal(title, content) {
 }
 document.getElementById('modal-close').addEventListener('click', () => document.getElementById('modal-overlay').classList.add('hidden'));
 document.getElementById('modal-overlay').addEventListener('click', (e) => { if (e.target.id === 'modal-overlay') document.getElementById('modal-overlay').classList.add('hidden'); });
-
-function showPointsPopup(text) {
-    const p = document.createElement('div');
-    p.className = 'points-popup';
-    p.textContent = text;
-    document.body.appendChild(p);
-    setTimeout(() => p.remove(), 1000);
-}
 
 // ========== CODEX ==========
 const DEFAULT_HABITS = [
@@ -2198,12 +1876,15 @@ function renderTraining(day) {
 
     // 2. Render Tabs for current program
     let tabsHtml = '';
-    const visibleDays = [...PROGRAMS_CONFIG[currentProgram].days, 'info'];
+    const visibleDays = [...PROGRAMS_CONFIG[currentProgram].days];
 
-    visibleDays.forEach(d => {
-        const label = d === 'info' ? '📖' : d.toUpperCase();
-        tabsHtml += `<button class="train-tab ${currentTrainDay === d ? 'active' : ''}" data-day="${d}">${label}</button>`;
-    });
+    // Don't render tabs if it's the info section
+    if (currentProgram !== 'info') {
+        visibleDays.forEach(d => {
+            const label = d.toUpperCase();
+            tabsHtml += `<button class="train-tab ${currentTrainDay === d ? 'active' : ''}" data-day="${d}">${label}</button>`;
+        });
+    }
     tabsContainer.innerHTML = tabsHtml;
 
     // Re-bind tab clicks
@@ -2317,48 +1998,7 @@ themeToggle.addEventListener('click', () => {
 // ========== HARD WORK MODE TOGGLE ==========
 function updateHardModeUI() { /* Hard mode UI removed */ }
 
-// ========== EXPORT & RESET ==========
-document.getElementById('btn-export').addEventListener('click', () => {
-    const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = `hunter-backup-${getToday()}.json`;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-    showModal('💾 ДАННЫЕ СОХРАНЕНЫ', 'Файл скачан.\nИспользуй его для восстановления прогресса если что-то случится.');
-});
 
-document.getElementById('btn-import').addEventListener('click', () => {
-    document.getElementById('import-file').click();
-});
-
-document.getElementById('import-file').addEventListener('change', (e) => {
-    const file = e.target.files[0];
-    if (!file) return;
-
-    const reader = new FileReader();
-    reader.onload = (event) => {
-        try {
-            const importedData = JSON.parse(event.target.result);
-            if (importedData && importedData.stats && importedData.days) {
-                localStorage.setItem('hunterSystem', JSON.stringify(importedData));
-                showModal('📂 ДАННЫЕ ЗАГРУЖЕНЫ', 'Игра будет перезапущена для применения сохранения.', () => {
-                    location.reload();
-                });
-                // Fallback if modal is closed too fast
-                setTimeout(() => location.reload(), 2500);
-            } else {
-                alert('Ошибка: Неверный формат файла сохранения.');
-            }
-        } catch (err) {
-            alert('Ошибка при чтении файла!');
-        }
-    };
-    reader.readAsText(file);
-});
 
 // ========== FOCUS TIMER (REMOVED) ==========
 
@@ -2367,49 +2007,7 @@ if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('sw.js').catch(() => { });
 }
 
-// ========== CHEST ==========
-document.getElementById('chest-closed').addEventListener('click', () => {
-    document.getElementById('chest-closed').style.display = 'none';
-    const opened = document.getElementById('chest-opened');
-    opened.classList.remove('hidden');
-    opened.style.display = 'flex';
-    document.getElementById('chest-hint').classList.add('hidden');
 
-    const rand = Math.random();
-    let rewardText = '';
-
-    const currentMult = getMultiplier(calcStreak());
-
-    if (rand < 0.5) {
-        const reward = 5 * currentMult;
-        data.totalPoints += reward;
-        rewardText = `+${reward > 5 ? reward.toFixed(1) : reward} Опыта ✨`;
-    } else if (rand < 0.8) {
-        const reward = 10 * currentMult;
-        data.totalPoints += reward;
-        rewardText = `+${reward > 10 ? reward.toFixed(1) : reward} Опыта ✨`;
-    } else {
-        const statsKeys = Object.keys(STAT_NAMES);
-        const randStat = statsKeys[Math.floor(Math.random() * statsKeys.length)];
-        data.stats[randStat] = (data.stats[randStat] || 0) + 1;
-        rewardText = `+1 ${STAT_NAMES[randStat].split('—')[0].trim()} 🔋`;
-    }
-
-    const todayData = getDayData(getToday());
-    todayData.chestOpened = true;
-
-    document.getElementById('chest-reward-text').innerText = rewardText;
-    const closeBtn = document.getElementById('chest-close-btn');
-    closeBtn.classList.remove('hidden');
-    closeBtn.style.display = 'block';
-
-    saveData();
-    updateDashboard();
-});
-
-document.getElementById('chest-close-btn').addEventListener('click', () => {
-    document.getElementById('chest-modal-overlay').classList.add('hidden');
-});
 
 // ========== INIT ==========
 // Clear old data format if needed
@@ -2710,18 +2308,7 @@ _createModal('goal-modal', `
     </div>
 </div>`);
 
-_createModal('anime-modal', `
-<div class="modal edit-modal" style="max-width:320px;">
-    <div class="modal-glow"></div>
-    <div class="modal-title">🎌 Аниме</div>
-    <div class="edit-form">
-        <label class="edit-label">Название<input type="text" class="edit-input" id="anime-inp-name" placeholder="Solo Leveling, Naruto..."></label>
-    </div>
-    <div class="edit-actions">
-        <button class="modal-btn btn-secondary" onclick="document.getElementById('anime-modal').classList.add('hidden')">Отмена</button>
-        <button class="modal-btn" onclick="_saveAnimeModal()">Добавить</button>
-    </div>
-</div>`);
+
 
 _createModal('review-modal', `
 <div class="modal edit-modal" style="max-width:370px;">
@@ -2763,11 +2350,7 @@ init();
 // ===== ХРАНИЛИЩЕ =====
 const _loadGoals = () => { try { return JSON.parse(localStorage.getItem('ariseGoals') || 'null') || { goals: [], reviews: [] }; } catch (e) { return { goals: [], reviews: [] }; } };
 const _saveGoals = g => localStorage.setItem('ariseGoals', JSON.stringify(g));
-const _loadAnime = () => { try { return JSON.parse(localStorage.getItem('ariseAnime') || 'null') || { list: [] }; } catch (e) { return { list: [] }; } };
-const _saveAnime = a => localStorage.setItem('ariseAnime', JSON.stringify(a));
-
 let goalsData = _loadGoals();
-let animeData = _loadAnime();
 
 // ===== НАВИГАЦИЯ =====
 // Расширяем refreshPage для goals
@@ -2933,31 +2516,7 @@ function _renderReviewHistory() {
         </div>`).join('');
 }
 
-function _renderAnime() {
-    const c = document.getElementById('anime-list');
-    if (!c) return;
-    const list = animeData.list || [];
-    if (!list.length) {
-        c.innerHTML = `<div style="text-align:center;padding:14px;color:var(--text-3);font-size:.83rem;">Список пуст. Добавь первое аниме!</div>`;
-    } else {
-        c.innerHTML = list.map((item, i) => `
-            <div class="anime-item">
-                <span class="anime-num">${i + 1}</span>
-                <span class="anime-name">${item.name}</span>
-                <button class="anime-del" onclick="_delAnime(${i})">✕</button>
-            </div>`).join('');
-    }
-    // Bind add button (in codex page)
-    const addAnime = document.getElementById('btn-add-anime');
-    if (addAnime && !addAnime._b) {
-        addAnime._b = true;
-        addAnime.addEventListener('click', () => {
-            document.getElementById('anime-inp-name').value = '';
-            document.getElementById('anime-modal').classList.remove('hidden');
-            setTimeout(() => document.getElementById('anime-inp-name').focus(), 80);
-        });
-    }
-}
+
 
 function _bindGoalsBtns() {
     const addGoal = document.getElementById('btn-add-goal');
@@ -3034,21 +2593,7 @@ window._saveReviewModal = function () {
     renderGoalsPage();
 };
 
-window._saveAnimeModal = function () {
-    const name = document.getElementById('anime-inp-name').value.trim();
-    if (!name) return;
-    animeData.list = animeData.list || [];
-    animeData.list.push({ name, addedAt: _today() });
-    _saveAnime(animeData);
-    document.getElementById('anime-modal').classList.add('hidden');
-    _renderAnime();
-};
 
-window._delAnime = function (i) {
-    animeData.list.splice(i, 1);
-    _saveAnime(animeData);
-    _renderAnime();
-};
 
 // ===== ПЕРВИЧНЫЙ РЕНДЕР МИССИЙ =====
 if (typeof renderGoalsPage === 'function') renderGoalsPage();

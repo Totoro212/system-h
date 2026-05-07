@@ -24,42 +24,35 @@
                 </div>
             </div>
 
-            <div class="rank-card">
-                <div class="rank-glow"></div>
-                <div class="rank-label">ТЕКУЩИЙ РАНГ</div>
-                <div class="rank-name" id="rank-name">E-РАНГ</div>
-                <div class="rank-title" id="rank-title">Новичок</div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" id="rank-progress"></div>
-                    <span class="progress-label" id="progress-label">0 / 100</span>
-                </div>
-            </div>
 
 
 
-
-
-            <div id="penalty-banner" class="penalty-banner hidden" style="flex-direction: column; align-items: stretch; gap: 12px; padding: 16px;">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <div class="penalty-icon">☠️</div>
-                    <div class="penalty-text">
-                        <strong>ПРОТОКОЛ ВОССТАНОВЛЕНИЯ</strong>
-                        <p>Система зафиксировала сбой. Выбери отработку:</p>
+            <div class="weekly-rule-card" id="weekly-rule-card" style="margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                    <div class="rule-header" style="margin-bottom: 0;">
+                        <span style="font-size: 0.8rem;">🌀 ИСПЫТАНИЕ НЕДЕЛИ</span>
                     </div>
+                    <span id="weekly-progress" style="color: var(--purple); font-weight: bold; font-family: var(--font-display); font-size: 0.9rem;">0/7</span>
                 </div>
-                <div style="display: flex; gap: 8px;">
-                    <button class="btn-penalty" id="btn-penalty-berpi" style="flex: 1; background: rgba(248,113,113,0.15); border: 1px solid var(--red); color: var(--red); padding: 10px; border-radius: 8px; font-family: var(--font-d); font-weight: 700; font-size: 0.8rem; cursor: pointer; white-space: normal; line-height: 1.2;">💥 50 Берпи</button>
-                    <button class="btn-penalty" id="btn-penalty-shower" style="flex: 1; background: rgba(96,165,250,0.15); border: 1px solid var(--blue); color: var(--blue); padding: 10px; border-radius: 8px; font-family: var(--font-d); font-weight: 700; font-size: 0.8rem; cursor: pointer; white-space: normal; line-height: 1.2;">🧊 Душ 3 мин</button>
+                <div class="rule-text" id="weekly-rule" style="margin-bottom: 16px;">Загрузка...</div>
+                
+                <div class="weekly-slots-container" id="weekly-slots">
+                    <!-- 7 slots dynamically generated in JS -->
                 </div>
             </div>
 
-            <!-- БАЛАНС 6 СФЕР -->
-            <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-top:14px;">
-                <div style="font-family:var(--font-d);font-size:0.72rem;color:var(--purple);letter-spacing:2px;margin-bottom:10px;">⚖️ БАЛАНС 6 СФЕР — НЕДЕЛЯ</div>
-                <canvas id="spheres-radar" style="display:block;margin:0 auto;width:100%;max-width:280px;height:200px;"></canvas>
-                <div id="spheres-legend" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:10px;justify-content:center;"></div>
-                <div style="font-size:0.65rem;color:var(--text-3);text-align:center;margin-top:8px;line-height:1.4;">Каждая ось = % дней недели где ты выполнил хотя бы один квест из этой сферы</div>
+            <div style="display: flex; gap: 10px; margin-bottom: 20px;">
+                <button id="btn-open-training" style="flex: 1; background: linear-gradient(135deg, rgba(52, 211, 153, 0.1), rgba(16, 185, 129, 0.05)); border: 1px solid rgba(52, 211, 153, 0.3); color: var(--green); padding: 14px; border-radius: var(--radius-sm); font-family: var(--font-display); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
+                    <span style="font-size: 1.5rem;">💪</span>
+                    <span>ТРЕНИРОВКИ</span>
+                </button>
             </div>
+
+
+
+
+
+
 
             <div class="section-title-row" style="margin-top: 24px;">
                 <h2 class="section-title">📋 Ежедневные квесты</h2>
@@ -115,52 +108,7 @@
 
         </section>
 
-        <!-- QUESTS -->
-        <section id="page-quests" class="page">
-            <div class="header" style="align-items: flex-start; flex-direction: column; gap: 8px;">
-                <div style="display: flex; justify-content: space-between; width: 100%; align-items: center;">
-                    <h1>⚔️ ДОСКА ЗАДАНИЙ</h1>
-                    <button class="btn-rest-day" id="btn-rest-day" style="background: rgba(168, 85, 247, 0.15); border: 1px solid var(--purple); color: var(--purple); padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 0.8rem; cursor: pointer; transition: all 0.2s;">😴 Отдых</button>
-                </div>
-                <div class="quest-date" id="quest-date" style="align-self: flex-start;"></div>
-            </div>
 
-            <div class="weekly-rule-card" id="weekly-rule-card" style="margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
-                    <div class="rule-header" style="margin-bottom: 0;">
-                        <span style="font-size: 0.8rem;">🌀 ИСПЫТАНИЕ НЕДЕЛИ</span>
-                    </div>
-                    <span id="weekly-progress" style="color: var(--purple); font-weight: bold; font-family: var(--font-display); font-size: 0.9rem;">0/7</span>
-                </div>
-                <div class="rule-text" id="weekly-rule" style="margin-bottom: 16px;">Загрузка...</div>
-                
-                <div class="weekly-slots-container" id="weekly-slots">
-                    <!-- 7 slots dynamically generated in JS -->
-                </div>
-            </div>
-
-            <!-- STOIC DAILY (moved from Codex) -->
-            <div class="stoic-daily-card" id="stoic-daily-card" style="margin-bottom: 20px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
-                    <div style="font-size: 0.7rem; color: var(--purple); letter-spacing: 2px; font-family: var(--font-display);">⚔️ STOIC DAILY</div>
-                    <div id="stoic-streak-badge" style="font-size: 0.7rem; background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3); color: var(--purple); padding: 2px 8px; border-radius: 20px; font-family: var(--font-display);">0 дней</div>
-                </div>
-                <div id="stoic-daily-text" style="font-size: 1rem; color: var(--text-primary); font-style: italic; line-height: 1.6; margin-bottom: 6px;"></div>
-                <div id="stoic-daily-author" style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 14px;"></div>
-                <div id="stoic-daily-source" style="font-size: 0.72rem; color: rgba(168,85,247,0.6); margin-bottom: 14px;"></div>
-                <div style="font-size: 0.75rem; color: var(--text-secondary); border-top: 1px solid var(--border-subtle); padding-top: 10px; margin-bottom: 10px;" id="stoic-practice-hint"></div>
-
-            </div>
-
-            <div style="display: flex; gap: 10px; margin-bottom: 24px;">
-                <button id="btn-open-training" style="flex: 1; background: linear-gradient(135deg, rgba(52, 211, 153, 0.1), rgba(16, 185, 129, 0.05)); border: 1px solid rgba(52, 211, 153, 0.3); color: var(--green); padding: 14px; border-radius: var(--radius-sm); font-family: var(--font-display); font-size: 0.9rem; font-weight: 600; cursor: pointer; transition: all 0.2s; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px;">
-                    <span style="font-size: 1.5rem;">💪</span>
-                    <span>ТРЕНИРОВКИ</span>
-                </button>
-            </div>
-
-
-        </section>
 
         <!-- CODEX -->
         <section id="page-codex" class="page">
@@ -170,16 +118,22 @@
 
 
 
+            <!-- STOIC DAILY -->
+            <div class="stoic-daily-card" id="stoic-daily-card" style="margin-bottom: 20px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                    <div style="font-size: 0.7rem; color: var(--purple); letter-spacing: 2px; font-family: var(--font-display);">⚔️ STOIC DAILY</div>
+                    <div id="stoic-streak-badge" style="font-size: 0.7rem; background: rgba(168,85,247,0.15); border: 1px solid rgba(168,85,247,0.3); color: var(--purple); padding: 2px 8px; border-radius: 20px; font-family: var(--font-display);">0 дней</div>
+                </div>
+                <div id="stoic-daily-text" style="font-size: 1rem; color: var(--text-primary); font-style: italic; line-height: 1.6; margin-bottom: 6px;"></div>
+                <div id="stoic-daily-author" style="font-size: 0.75rem; color: var(--text-dim); margin-bottom: 14px;"></div>
+                <div id="stoic-daily-source" style="font-size: 0.72rem; color: rgba(168,85,247,0.6); margin-bottom: 14px;"></div>
+                <div style="font-size: 0.75rem; color: var(--text-secondary); border-top: 1px solid var(--border-subtle); padding-top: 10px; margin-bottom: 10px;" id="stoic-practice-hint"></div>
+            </div>
+
             <div class="section-title-row" style="margin-top:24px">
                 <span class="section-title">📜 СВОД ПРАВИЛ</span>
             </div>
             <div id="codex-reference"></div>
-
-            <div class="section-title-row" style="margin-top:28px;">
-                <span class="section-title">🎌 Аниме</span>
-                <button id="btn-add-anime" style="background:rgba(244,114,182,.1);border:1px solid rgba(244,114,182,.25);color:var(--pink);padding:4px 10px;border-radius:7px;font-size:.74rem;font-family:var(--font-d);font-weight:700;cursor:pointer;letter-spacing:.5px;">+ Добавить</button>
-            </div>
-            <div id="anime-list" style="display:flex;flex-direction:column;gap:6px;padding-bottom:8px;"></div>
         </section>
 
         <!-- FOCUS (REMOVED) -->
@@ -197,7 +151,6 @@
                 <button class="program-chip active" data-program="ppl">BASE (PPL)</button>
                 <button class="program-chip" data-program="ul">SPLIT (U/L)</button>
                 <button class="program-chip" data-program="extra">SUPPORT</button>
-                <button class="program-chip" data-program="pro">ELITE</button>
             </div>
             <div id="train-program-note" class="program-note">3-дневный базовый сплит (Push/Pull/Legs). Идеально для построения фундамента.</div>
             <div class="train-tabs-wrapper">
@@ -208,69 +161,7 @@
             <div id="train-content"></div>
         </section>
 
-        <!-- STATS + HISTORY + KEYS -->
-        <section id="page-stats" class="page">
-            <div class="header">
-                <h1>📊 СТАТЫ</h1>
-            </div>
 
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">🔥</div>
-                    <div class="stat-value" id="total-points">0</div>
-                    <div class="stat-label">Очки</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">⚡</div>
-                    <div class="stat-value" style="position: relative; display: inline-block;">
-                        <span id="streak-count">0</span>
-                        <span id="streak-mult" style="position: absolute; top: -5px; right: -25px; font-size: 0.7rem; background: var(--amber); color: #fff; padding: 2px 4px; border-radius: 6px; display: none;"></span>
-                    </div>
-                    <div class="stat-label">Streak</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">✅</div>
-                    <div class="stat-value" id="today-done">0/5</div>
-                    <div class="stat-label">Сегодня</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-icon">🗝️</div>
-                    <div class="stat-value" id="keys-unlocked">0/7</div>
-                    <div class="stat-label">Ключи</div>
-                </div>
-            </div>
-
-            <div class="total-stats-card">
-                <div class="total-stat">
-                    <span class="total-label">Всего очков</span>
-                    <span class="total-value" id="stats-total-points">0</span>
-                </div>
-                <div class="total-stat">
-                    <span class="total-label">Лучший streak</span>
-                    <span class="total-value" id="stats-best-streak">0</span>
-                </div>
-                <div class="total-stat">
-                    <span class="total-label">Дней в системе</span>
-                    <span class="total-value" id="stats-total-days">0</span>
-                </div>
-            </div>
-
-            <h2 class="section-title" style="margin: 20px 0 6px">🟩 МАТРИЦА ЖИЗНИ</h2>
-            <div style="font-size:0.65rem;color:var(--text-3);margin-bottom:10px;line-height:1.5;">
-                Каждый квадрат = один день. <span style="color:var(--purple);">■</span> Выполнил все квесты &nbsp;·&nbsp; <span style="color:var(--amber);">■</span> Hard режим &nbsp;·&nbsp; <span style="color:var(--blue);">■</span> День отдыха &nbsp;·&nbsp; <span style="color:var(--text-3);">□</span> Пустой день. Строки = дни недели (Пн→Вс), слева → сегодня.
-            </div>
-            <div class="matrix-scroll-wrapper">
-                <div class="matrix-container" id="matrix-container"></div>
-            </div>
-            <h2 class="section-title" style="margin: 20px 0 12px">🗝️ КЛЮЧИ</h2>
-            <div class="keys-list" id="keys-list"></div>
-
-            <div class="data-actions" style="margin-top: 18px">
-                <button class="btn-action btn-export" id="btn-export">💾 Экспорт</button>
-                <input type="file" id="import-file" accept=".json" style="display: none;">
-                <button class="btn-action" id="btn-import" style="background: rgba(52, 211, 153, 0.1); border: 1px solid var(--green); color: var(--green);">📂 Импорт</button>
-            </div>
-        </section>
 
         <!-- BOTTOM NAV -->
         <nav class="bottom-nav">
@@ -278,31 +169,27 @@
                 <span class="nav-icon">🏠</span>
                 <span class="nav-label">Главная</span>
             </button>
-            <button class="nav-btn" data-page="quests">
-                <span class="nav-icon">⚔️</span>
-                <span class="nav-label">Квесты</span>
-            </button>
+
             <button class="nav-btn" data-page="codex">
                 <span class="nav-icon">📜</span>
                 <span class="nav-label">Кодекс</span>
             </button>
-            <button class="nav-btn" data-page="stats">
-                <span class="nav-icon">📊</span>
-                <span class="nav-label">Статы</span>
-            </button>
+
         </nav>
     </div>
 
 
 
 
-    <!-- Level Up Modal -->
+
+
+    <!-- Generic Info Modal -->
     <div class="modal-overlay hidden" id="modal-overlay">
-        <div class="modal" id="level-up-modal">
+        <div class="modal" id="info-modal">
             <div class="modal-glow"></div>
-            <div class="modal-title" id="modal-title">LEVEL UP!</div>
-            <div class="modal-content" id="modal-content"></div>
-            <button class="modal-btn" id="modal-close">Принять</button>
+            <div class="modal-title" id="modal-title">Информация</div>
+            <div class="modal-content" id="modal-content" style="white-space: pre-wrap; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 20px; line-height: 1.5;"></div>
+            <button class="modal-btn" id="modal-close">Понятно</button>
         </div>
     </div>
 
@@ -318,15 +205,7 @@
                 <label class="edit-label">Описание
                     <input type="text" class="edit-input" id="edit-desc" placeholder="60 мин — силовая или кардио">
                 </label>
-                <label class="edit-label" id="edit-stat-label">Стат (STR, END, INT, WIS, DSC)
-                    <select class="edit-input edit-select" id="edit-stat">
-                        <option value="str">STR — Сила</option>
-                        <option value="end">END — Выносливость</option>
-                        <option value="int">INT — Интеллект</option>
-                        <option value="wis">WIS — Мудрость</option>
-                        <option value="dsc">DSC — Дисциплина</option>
-                    </select>
-                </label>
+
             </div>
             <div class="edit-actions">
                 <button class="modal-btn btn-secondary" id="edit-cancel">Отмена</button>
@@ -335,37 +214,8 @@
         </div>
     </div>
 
-    <!-- MYSTERY CHEST MODAL -->
-    <div id="chest-modal-overlay" class="modal-overlay hidden" style="z-index: 300;">
-        <div class="modal" id="chest-modal" style="background: linear-gradient(160deg, var(--bg-deep), var(--bg-card)); border: 2px solid var(--gold); box-shadow: 0 0 50px rgba(240, 185, 50, 0.3); transform: scale(0.9); transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);">
-            <div class="modal-glow" style="background: radial-gradient(circle, rgba(240, 185, 50, 0.2) 0%, transparent 60%);"></div>
-            <div class="modal-title" style="background: linear-gradient(135deg, var(--gold), var(--amber)); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; text-shadow: none; font-size: 1.8rem; margin-bottom: 20px;">🎁 СУНДУК ОХОТНИКА</div>
-            <div class="modal-content" style="font-size: 1.1rem; font-weight: 500;">
-                <div id="chest-closed" style="font-size: 4rem; cursor: pointer; animation: chestShake 2s infinite; display: inline-block;">📦</div>
-                <div id="chest-opened" class="hidden" style="display: none; flex-direction: column; gap: 10px; align-items: center;">
-                    <div style="font-size: 3.5rem; text-shadow: 0 0 20px var(--gold);">✨</div>
-                    <div id="chest-reward-text" style="color: var(--gold); font-size: 1.2rem; font-weight: bold; margin-top: 10px;"></div>
-                </div>
-                <p id="chest-hint" style="margin-top: 15px; font-size: 0.8rem; color: var(--text-dim);">Ежедневные квесты выполнены. Открой награду!</p>
-            </div>
-            <button class="modal-btn hidden" id="chest-close-btn" style="width: 100%; display: none; background: linear-gradient(135deg, var(--gold), var(--amber)); color: #111;">Забрать</button>
-        </div>
-    </div>
 
-    <style>
-        @keyframes chestShake {
-            0% { transform: scale(1) rotate(0deg); }
-            10% { transform: scale(1.1) rotate(-5deg); }
-            20% { transform: scale(1.1) rotate(5deg); }
-            30% { transform: scale(1.1) rotate(-5deg); }
-            40% { transform: scale(1.1) rotate(5deg); }
-            50% { transform: scale(1) rotate(0deg); }
-            100% { transform: scale(1) rotate(0deg); }
-        }
-        .chest-pop {
-            transform: scale(1.05) !important;
-        }
-    </style>
+
 
     <!-- CUSTOM CONFIRM MODAL -->
     <div id="confirm-overlay" class="modal-overlay hidden" style="z-index:600;">
